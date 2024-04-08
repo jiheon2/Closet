@@ -1,33 +1,54 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.2.4'
-    id 'io.spring.dependency-management' version '1.1.4'
+	id 'java'
+	id 'org.springframework.boot' version '3.2.3'
+	id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'jiheon'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+	sourceCompatibility = '17'
 }
 
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
+}
+
+ext {
+	set('springBootAdminVersion', "3.2.3")
+	set('springCloudVersion', "2023.0.1")
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'de.codecentric:spring-boot-admin-starter-client'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
