@@ -10,3 +10,4 @@ public record MsgDTO(
         String msg // 결과 메세지
 ) {
 }
+

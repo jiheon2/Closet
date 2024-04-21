@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Closet.iml" filepath="$PROJECT_DIR$/Closet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ClosetService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ClosetService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/UserService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/UserService.main.iml" />
     </modules>
   </component>
 </project>

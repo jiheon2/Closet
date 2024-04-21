@@ -18,11 +18,11 @@ public class RoutConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes().
                 // 연결될 서버 주소
-                route(r -> r.path("/community/**").uri("")).
-                route(r -> r.path("/user/**").uri("")).
-                route(r -> r.path("/security/**").uri("")).
-                route(r -> r.path("/style/**").uri("")).
-                route(r -> r.path("/closet/**").uri("")).
+                route(r -> r.path("/community/**").uri("lb://COMMUNITY-SERVICE:16000")).
+                route(r -> r.path("/user/**").uri("lb://USER-SERVICE:13000")).
+                route(r -> r.path("/security/**").uri("lb://USER-SERVICE:13000")).
+                route(r -> r.path("/style/**").uri("lb://STYLE-SERVICE:18000")).
+                route(r -> r.path("/closet/**").uri("lb://CLOSET-SERVICE:14000")).
                 build();
     }
 }

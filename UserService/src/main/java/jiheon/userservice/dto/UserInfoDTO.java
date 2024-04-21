@@ -4,7 +4,8 @@ import lombok.Builder;
 
 @Builder
 public record UserInfoDTO(
-        String _id, // ObjectId
+        // 자동으로 직렬화를 해주므로 Serializable 인터페이스를 구현 안해도 된다!
+
         int userSeq, // 회원번호
         String userId, // 회원 아이디
         String password, // 비밀번호

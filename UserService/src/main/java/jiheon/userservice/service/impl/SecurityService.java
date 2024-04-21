@@ -20,99 +20,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class SecurityService implements ISecurityService {
+
     private final UserInfoRepository userInfoRepository;
-
-    @Override
-    public int insertUserInfo(UserInfoDTO pDTO) {
-
-        log.info(this.getClass().getName() + ".insertUserInfo Start!");
-
-        int res = 0; // 성공 : 1, 중복으로 인한 가입 취소 : 2, 기타 에러 발생 : 0
-
-        String userId = CmmUtil.nvl(pDTO.userId());
-        String userName = CmmUtil.nvl(pDTO.name());
-        String nickName = CmmUtil.nvl(pDTO.nickName());
-        String password = CmmUtil.nvl(pDTO.password());
-        String email = CmmUtil.nvl(pDTO.email());
-        String age = CmmUtil.nvl(pDTO.age());
-        String gender = CmmUtil.nvl(pDTO.gender());
-        String isKakao = CmmUtil.nvl(pDTO.isKakao());
-        String roles = CmmUtil.nvl(pDTO.roles());
-        int userSeq = pDTO.userSeq() + 1;
-
-        // 회원가입 중복 방지를 위해 DB에서 조회
-        Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserId(userId);
-
-        log.info("userId : " + userId);
-        log.info("userName : " + userName);
-        log.info("nickName : " + nickName);
-        log.info("password : " + password);
-        log.info("email : " + email);
-        log.info("age : " + age);
-        log.info("gender : " + gender);
-        log.info("isKakao : " + isKakao);
-        log.info("roles : " + roles);
-        log.info("userSeq : " + userSeq);
-
-        // 값이 존재한다면
-        if (rEntity.isPresent()) {
-            res = 2;
-        } else {
-            // 회원가입 엔터티 생성
-            UserInfoEntity pEntity = UserInfoEntity.builder()
-                    .userId(userId)
-                    .name(userName)
-                    .nickName(nickName)
-                    .password(password)
-                    .email(email) // 암호화 해야하나?
-                    .age(age)
-                    .gender(gender)
-                    .isKakao(isKakao)
-                    .roles(roles)
-                    .userSeq(userSeq)
-                    .build();
-
-            // 회원가입 DB에 저장
-            userInfoRepository.save(pEntity);
-
-            // 회원가입 성공여부 확인 및 중복 방지 조회
-            rEntity = userInfoRepository.findByUserId(userId);
-
-            if (rEntity.isPresent()) {
-                res = 1;
-            }
-        }
-
-        log.info(this.getClass().getName() + ".insertUserInfo End!");
-
-        return res;
-    }
-
-    @Override
-    public UserInfoDTO getUserInfo(UserInfoDTO pDTO) throws Exception {
-
-        log.info(this.getClass().getName() + ".getUserInfo Start!");
-
-        // 회원아이디
-        String userId = CmmUtil.nvl(pDTO.userId());
-
-        log.info("userId : " + userId);
-
-        UserInfoDTO rDTO = null;
-
-        Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserId(userId);
-
-        if (rEntity.isPresent()) {
-
-            rDTO = new ObjectMapper().convertValue(rEntity,
-                    new TypeReference<UserInfoDTO>() {
-                    });
-        }
-
-        log.info(this.getClass().getName() + ".getUserInfo End!");
-
-        return rDTO;
-    }
 
     /**
      * Spring Security에서 로그인 처리를 하기 위해 실행하는 함수
@@ -130,6 +39,8 @@ public class SecurityService implements ISecurityService {
 
         log.info(this.getClass().getName() + ".loadUserByUserName Start!");
 
+        log.info("userId : " + userId);
+
         // 로그인 요청한 사용자 아이디를 검색
         UserInfoEntity rEntity = userInfoRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException(userId + " Not Found User"));
@@ -137,7 +48,73 @@ public class SecurityService implements ISecurityService {
         // rEntity 데이터를 DTO로 변환하기
         UserInfoDTO rDTO = new ObjectMapper().convertValue(rEntity, UserInfoDTO.class);
 
+        log.info("rEntity 데이터 : " + rEntity.getUserId());
+        log.info("rEntity 데이터 : " + rEntity.getPassword());
+
         // 비밀번호가 맞는지 체크 및 권한 부여를 위해 rDTO를 UserDetails를 구현한 AuthInfo에 넣어주기
         return new AuthInfo(rDTO);
+    }
+
+    @Override
+    public int insertUserInfo(UserInfoDTO pDTO) {
+
+        log.info(this.getClass().getName() + ".insertUserInfo Start!");
+
+        int res = 0; // 성공 : 1, 중복으로 인한 가입 취소 : 2, 기타 에러 발생 : 0
+
+        String userId = CmmUtil.nvl(pDTO.userId());
+        String userName = CmmUtil.nvl(pDTO.name());
+        String nickName = CmmUtil.nvl(pDTO.nickName());
+        String password = CmmUtil.nvl(pDTO.password());
+        String email = CmmUtil.nvl(pDTO.email());
+        String age = CmmUtil.nvl(pDTO.age());
+        String gender = CmmUtil.nvl(pDTO.gender());
+        String isKakao = CmmUtil.nvl(pDTO.isKakao());
+        String roles = CmmUtil.nvl(pDTO.roles());
+
+        log.info("userId : " + userId);
+        log.info("userName : " + userName);
+        log.info("nickName : " + nickName);
+        log.info("password : " + password);
+        log.info("email : " + email);
+        log.info("age : " + age);
+        log.info("gender : " + gender);
+        log.info("isKakao : " + isKakao);
+        log.info("roles : " + roles);
+
+        // 회원가입 중복 방지를 위해 DB에서 데이터 조회
+        Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserId(userId);
+
+        // 값이 존재한다면
+        if (rEntity.isPresent()) {
+            res = 2;
+        } else {
+            // 회원가입 엔터티 생성
+            UserInfoEntity pEntity = UserInfoEntity.builder()
+                    .userId(userId)
+                    .name(userName)
+                    .nickName(nickName)
+                    .password(password)
+                    .email(email) // 암호화 해야하나?
+                    .age(age)
+                    .gender(gender)
+                    .isKakao(isKakao)
+                    .roles(roles)
+                    .build();
+
+            // 회원가입 DB에 저장
+            userInfoRepository.save(pEntity);
+
+            // 회원가입 성공여부 확인 및 중복 방지 조회
+            rEntity = userInfoRepository.findByUserId(userId);
+
+            if (rEntity.isPresent()) {
+                res = 1;
+            }
+        }
+
+        log.info(this.getClass().getName() + ".insertUserInfo End!");
+
+        return res;
     }
 }

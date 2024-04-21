@@ -5,17 +5,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jiheon.userservice.auth.AuthInfo;
+import jiheon.userservice.auth.JwtTokenProvider;
+import jiheon.userservice.auth.JwtTokenType;
 import jiheon.userservice.auth.UserRole;
+import jiheon.userservice.controller.response.CommonResponse;
 import jiheon.userservice.dto.MsgDTO;
 import jiheon.userservice.dto.UserInfoDTO;
-import jiheon.userservice.repository.UserInfoRepository;
-import jiheon.userservice.repository.entity.UserInfoEntity;
+import jiheon.userservice.service.IRedisService;
 import jiheon.userservice.service.ISecurityService;
 import jiheon.userservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,26 +29,45 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = {"http://localhost:13000", "http://localhost:14000"},
+@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000"},
         allowedHeaders = {"POST, GET"},
-        allowCredentials = "true")
-@Tag(name = "회원가입을 위한 API", description = "회원가입을 위한 API 설명입니다.")
+        allowCredentials = "true",
+        methods = {RequestMethod.POST, RequestMethod.GET},
+        originPatterns = {"security/**"})
+@Tag(name = "Security Service API", description = "회원가입 및 로그인을 위한 API 설명입니다.")
 @Slf4j
-@RequestMapping(value = "/security")
+@RequestMapping(value = "/security/v1")
 @RequiredArgsConstructor
 @RestController
 public class SecurityController {
 
-    private final ISecurityService securityService;
+    @Value("${jwt.token.access.valid.time}")
+    private long accessTokenValidTime;
 
-    private final UserInfoRepository userInfoRepository;
+    @Value("${jwt.token.access.name}")
+    private String accessTokenName;
+
+    @Value("${jwt.token.refresh.valid.time}")
+    private long refreshTokenValidTime;
+
+    @Value("${jwt.token.refresh.name}")
+    private String refreshTokenName;
+
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final IRedisService redisService;
+
+    private final ISecurityService securityService;
 
     // Spring Security에서 제공하는 비밀번호 암호화 객체(해시 함수)
     private final PasswordEncoder bCryptPasswordEncoder;
 
-    /**
-     * 회원가입 화면 이동
-     */
+    @Operation(summary = "회원가입 페이지 API", description = "회원가입 페이지로 이동",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
     @GetMapping(value = "signUp")
     public String signUp() {
         log.info(this.getClass().getName() + ".signUp 페이지 이동");
@@ -51,6 +75,12 @@ public class SecurityController {
         return "/security/signUp";
     }
 
+    @Operation(summary = "로그인 페이지 API", description = "로그인 페이지로 이동",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
     @GetMapping(value = "login")
     public String login() {
         log.info(this.getClass().getName() + ".login 실행");
@@ -58,6 +88,12 @@ public class SecurityController {
         return "/security/login";
     }
 
+    @Operation(summary = "로그인 결과 API", description = "로그인 결과창으로 이동",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
     @GetMapping(value = "loginResult")
     public String loginResult(HttpServletRequest request) {
         log.info(this.getClass().getName() + ".loginResult 실행");
@@ -65,44 +101,94 @@ public class SecurityController {
         return "/security/loginResult";
     }
 
+    @Operation(summary = "로그인 성공 API", description = "로그인 성공시 실행되는 API",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
     @PostMapping(value = "loginSuccess")
-    public MsgDTO loginSuccess(@AuthenticationPrincipal AuthInfo authInfo, HttpSession session) {
+    public ResponseEntity<CommonResponse> loginSuccess(
+            @AuthenticationPrincipal AuthInfo authInfo, HttpServletResponse response) throws Exception {
 
         log.info(this.getClass().getName() + ".loginSuccess 실행");
 
+        // Spring Security에 저장된 정보 가져오기
         UserInfoDTO rDTO = Optional.ofNullable(authInfo.userInfoDTO())
                 .orElseGet(() -> UserInfoDTO.builder().build());
 
         String userId = CmmUtil.nvl(rDTO.userId());
         String userRoles = CmmUtil.nvl(rDTO.roles());
+        String userName = CmmUtil.nvl(rDTO.nickName());
 
         log.info("userId : " + userId);
         log.info("userRoles : " + userRoles);
 
-        // 세션에 값 담기(수정)
-        session.setAttribute(userId, "userId");
-        session.setAttribute(userRoles, "userRoles");
+        // Access Token 생성
+        String accessToken = jwtTokenProvider.createToken(userId, userRoles, JwtTokenType.ACCESS_TOKEN);
+        log.info("accessToken : " + accessToken);
 
-        // 레디스에 세션정보 저장하기(수정)
-        // try catch문으로 작성하기
+        ResponseCookie cookie = ResponseCookie.from(accessTokenName, accessToken)
+                .domain("localhost")
+                .path("/")
+                .maxAge(accessTokenValidTime)
+                .httpOnly(true)
+                .build();
 
-        return MsgDTO.builder().build();
+        // 기존쿠키 모두 삭제하고, Cookie에 Access Token 저장하기
+        response.setHeader("Set-Cookie", cookie.toString());
+
+        cookie = null;
+
+        // Refresh Token 생성
+        // Refresh Token은 보안상 노출되면, 위험하기에 Refresh Token은 DB에 저장하고,
+        // DB를 조회하기 위한 값만 Refresh Token으로 생성함
+        // Refresh Token은 Access Token에 비해 만료시간을 길게 설정함
+        String refreshToken = jwtTokenProvider.createToken(userId, userRoles, JwtTokenType.REFRESH_TOKEN);
+
+        log.info("refreshToken : " + refreshToken);
+
+        // 레디스에 리프레시 토큰 저장
+        redisService.setValues(refreshToken, userId);
+
+        // 결과 메시지 전달하기
+        MsgDTO dto = MsgDTO.builder().result(1).msg(userName + "님 로그인이 성공하였습니다.").build();
+
+        log.info(this.getClass().getName() + ".loginSuccess End!");
+
+        return ResponseEntity.ok(
+                CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+
     }
 
+    @Operation(summary = "로그인 실패 API", description = "로그인 실패 시 MSG 반환",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
     @PostMapping(value = "loginFail")
-    public MsgDTO loginFail() {
+    public ResponseEntity<CommonResponse> loginFail() {
 
         log.info(this.getClass().getName() + ".loginFail 실행");
 
-        MsgDTO dto = MsgDTO.builder().result(0).msg("로그인 실패").build();
+        MsgDTO dto = MsgDTO.builder().result(1).msg("로그인 실패").build();
 
         log.info(this.getClass().getName() + ".loginFail 종료");
 
-        return dto;
+        return ResponseEntity.ok(
+                CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
 
+    @Operation(summary = "로그아웃 API", description = "스프링 시큐리티를 통해 로그아웃 실행",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
     @PostMapping(value = "logout")
-    public MsgDTO logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<CommonResponse> logout(
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         log.info(this.getClass().getName() + ".logout 실행");
 
@@ -111,11 +197,15 @@ public class SecurityController {
                 request, response, SecurityContextHolder.getContext().getAuthentication()
         );
 
+        // redisDB에 있는 refreshToken 삭제
+        redisService.delValues(request.getHeader("refreshToken"));
+
         MsgDTO dto = MsgDTO.builder().result(1).msg("로그아웃 하였습니다").build();
 
         log.info(this.getClass().getName() + ".logout 끝");
 
-        return dto;
+        return ResponseEntity.ok(
+                CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
 
     @Operation(summary = "회원가입  API", description = "회원가입 API",
@@ -124,10 +214,10 @@ public class SecurityController {
                     @ApiResponse(responseCode = "404", description = "Page Not Found!"),
             }
     )
-    @PostMapping(value = "insertUserInfo")
-    public MsgDTO insertUserInfo(HttpServletRequest request) {
+    @PostMapping(value = "signUp")
+    public ResponseEntity<CommonResponse> singUp(HttpServletRequest request) {
 
-        log.info(this.getClass().getName() + ".insertUserInfo 실행");
+        log.info(this.getClass().getName() + ".signUp 실행");
 
         int res = 0; // 회원가입 결과
         String msg = ""; // 결과에 대한 메세지를 전달할 변수
@@ -136,17 +226,15 @@ public class SecurityController {
         UserInfoDTO pDTO = null; // 웹에서 받는 정보를 저장할 변수
 
         try {
-            String userId = CmmUtil.nvl(pDTO.userId());
-            String userName = CmmUtil.nvl(pDTO.name());
-            String nickName = CmmUtil.nvl(pDTO.nickName());
-            String password = CmmUtil.nvl(pDTO.password());
-            String email = CmmUtil.nvl(pDTO.email());
-            String age = CmmUtil.nvl(pDTO.age());
-            String gender = CmmUtil.nvl(pDTO.gender());
-            String isKakao = CmmUtil.nvl(pDTO.isKakao());
-            String roles = CmmUtil.nvl(pDTO.roles());
-            // 회원의 userSeq 자동증가를 위해 DB Count
-            int userSeq = (int) userInfoRepository.count();
+            String userId = CmmUtil.nvl(request.getParameter("userId"));
+            String userName = CmmUtil.nvl(request.getParameter("name"));
+            String nickName = CmmUtil.nvl(request.getParameter("nickName"));
+            String password = CmmUtil.nvl(request.getParameter("password"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
+            String age = CmmUtil.nvl(request.getParameter("age"));
+            String gender = CmmUtil.nvl(request.getParameter("gender"));
+            String isKakao = CmmUtil.nvl(request.getParameter("isKakao"));
+            String roles = CmmUtil.nvl(request.getParameter("roles"));
 
             log.info("userId : " + userId);
             log.info("userName : " + userName);
@@ -157,7 +245,6 @@ public class SecurityController {
             log.info("gender : " + gender);
             log.info("isKakao : " + isKakao);
             log.info("roles : " + roles);
-            log.info("userSeq : " + userSeq);
 
             pDTO = UserInfoDTO.builder()
                     .userId(userId)
@@ -169,7 +256,6 @@ public class SecurityController {
                     .gender(gender)
                     .isKakao(isKakao)
                     .roles(UserRole.USER.getValue())
-                    .userSeq(userSeq)
                     .build();
 
             res = securityService.insertUserInfo(pDTO); // 회원가입
@@ -193,6 +279,7 @@ public class SecurityController {
             log.info(this.getClass().getName() + ".insertUserInfo 종료");
         }
 
-        return dto;
+        return ResponseEntity.ok(
+                CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
 }

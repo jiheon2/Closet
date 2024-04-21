@@ -1,0 +1,21 @@
+spring:
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: classpath:/resources/closetproject-419105-297cdb4ae5b4.json
+        bucket: msa-closet-bucket
+        project-id: closetproject-419105
+
+#    config:
+#      name: closet
+#      profile: prod
+# MongoDB Connection
+  data:
+    mongodb:
+      host: 192.168.2.129
+      port: 27017
+      database: MyDB
+      username: myUser
+      password: 1234
+      uri: mongodb://myUser:1234@192.168.2.129:27017/MyDB

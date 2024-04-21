@@ -3,8 +3,10 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/ApiGateway" />
+    <file type="web" url="file://$PROJECT_DIR$/AppManager" />
     <file type="web" url="file://$PROJECT_DIR$/ClosetService" />
     <file type="web" url="file://$PROJECT_DIR$/CommunityService" />
+    <file type="web" url="file://$PROJECT_DIR$/EurekaServer" />
     <file type="web" url="file://$PROJECT_DIR$/FrontService" />
     <file type="web" url="file://$PROJECT_DIR$/LangChainService" />
     <file type="web" url="file://$PROJECT_DIR$/RedisSessionService" />
