@@ -14,6 +14,7 @@ import jiheon.userservice.dto.MsgDTO;
 import jiheon.userservice.dto.UserInfoDTO;
 import jiheon.userservice.service.IRedisService;
 import jiheon.userservice.service.ISecurityService;
+import jiheon.userservice.service.IUserInfoService;
 import jiheon.userservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,45 +62,6 @@ public class SecurityController {
 
     // Spring Security에서 제공하는 비밀번호 암호화 객체(해시 함수)
     private final PasswordEncoder bCryptPasswordEncoder;
-
-    @Operation(summary = "회원가입 페이지 API", description = "회원가입 페이지로 이동",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
-                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
-            }
-    )
-    @GetMapping(value = "signUp")
-    public String signUp() {
-        log.info(this.getClass().getName() + ".signUp 페이지 이동");
-
-        return "/security/signUp";
-    }
-
-    @Operation(summary = "로그인 페이지 API", description = "로그인 페이지로 이동",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
-                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
-            }
-    )
-    @GetMapping(value = "login")
-    public String login() {
-        log.info(this.getClass().getName() + ".login 실행");
-
-        return "/security/v1/login";
-    }
-
-    @Operation(summary = "로그인 결과 API", description = "로그인 결과창으로 이동",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
-                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
-            }
-    )
-    @GetMapping(value = "loginResult")
-    public String loginResult(HttpServletRequest request) {
-        log.info(this.getClass().getName() + ".loginResult 실행");
-
-        return "/security/loginResult";
-    }
 
     @Operation(summary = "로그인 성공 API", description = "로그인 성공시 실행되는 API",
             responses = {
@@ -197,6 +159,8 @@ public class SecurityController {
                 request, response, SecurityContextHolder.getContext().getAuthentication()
         );
 
+        // response.sedRedirect를 통해 로그아웃후 이동할 페이지 설정해야함
+
         // redisDB에 있는 refreshToken 삭제
         redisService.delValues(request.getHeader("refreshToken"));
 
@@ -207,6 +171,12 @@ public class SecurityController {
         return ResponseEntity.ok(
                 CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
+
+    @GetMapping(value = "logoutSuccess")
+    public int logoutSuccess() throws Exception {
+        return 1;
+    }
+
 
     @Operation(summary = "회원가입  API", description = "회원가입 API",
             responses = {
@@ -281,5 +251,174 @@ public class SecurityController {
 
         return ResponseEntity.ok(
                 CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+    }
+
+    @Operation(summary = "아이디 중복체크 API", description = "DB에 아이디가 중복으로 존재하는지 체크하는 API",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
+    @PostMapping(value = "checkId")
+    public ResponseEntity checkId(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".CheckId API Start");
+
+        String userId = CmmUtil.nvl(request.getParameter("userId"));
+
+        boolean res = securityService.existsByUserId(userId);
+
+        MsgDTO dto = null;
+
+        if (res) {
+            dto = MsgDTO.builder().result(1).msg("이미 존재하는 아이디입니다.").build();
+        } else {
+            dto = MsgDTO.builder().result(1).msg("가입 가능한 아이디 입니다.").build();
+        }
+
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+
+    }
+
+    @Operation(summary = "아이디 중복체크 API", description = "DB에 아이디가 중복으로 존재하는지 체크하는 API",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
+    @PostMapping(value = "checkNickname")
+    public ResponseEntity checkNickname(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".CheckNickname API Start");
+
+        String nickName = CmmUtil.nvl(request.getParameter("nickName"));
+
+        boolean res = securityService.existsByNickName(nickName);
+
+        MsgDTO dto = null;
+
+        if (res) {
+            dto = MsgDTO.builder().result(1).msg("이미 존재하는 닉네임입니다.").build();
+        } else {
+            dto = MsgDTO.builder().result(1).msg("가입 가능한 닉네임입니다.").build();
+        }
+
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+
+    }
+
+    @Operation(summary = "아이디 중복체크 API", description = "DB에 아이디가 중복으로 존재하는지 체크하는 API",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
+    @PostMapping(value = "checkEmail")
+    public ResponseEntity checkEmail(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".CheckEmail API Start");
+
+        String email = CmmUtil.nvl(request.getParameter("email"));
+
+        boolean res = securityService.existsByEmail(email);
+
+        MsgDTO dto = null;
+
+        if (res) {
+            dto = MsgDTO.builder().result(1).msg("이미 존재하는 이메일입니다.").build();
+        } else {
+            dto = MsgDTO.builder().result(1).msg("가입 가능한 이메일입니다.").build();
+        }
+
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+
+    }
+
+    // 아이디 찾기
+    @PostMapping(value = "findId")
+    public ResponseEntity findId(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".아이디 찾기");
+
+        String msg = ""; // 결과에 대한 메세지를 전달할 변수
+        MsgDTO dto; // 결과 메세지 구조
+
+        try {
+
+            String name = CmmUtil.nvl(request.getParameter("name"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
+
+            log.info("name : " + name);
+            log.info("email : " + name);
+
+            UserInfoDTO pDTO = UserInfoDTO.builder()
+                    .name(name)
+                    .email(email)
+                    .build();
+
+            UserInfoDTO rDTO = securityService.findId(pDTO);
+
+            log.info("userId : " + rDTO.userId());
+
+            if (rDTO.userId().isEmpty()) {
+                msg = "아이디가 존재하지 않습니다.";
+            } else {
+                msg = "회원님의 아이디는 " + rDTO.userId() + "입니다";
+            }
+
+        } catch (Exception e) {
+
+            msg = "실패하였습니다 : " + e;
+            log.info(e.toString());
+
+        } finally {
+
+            dto = MsgDTO.builder().result(1).msg(msg).build();
+
+            log.info(this.getClass().getName() + "아이디 찾기 종료");
+
+        }
+
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+    }
+
+    @PostMapping(value = "findPw")
+    public ResponseEntity findPw(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".비밀번호 찾기 시작");
+
+        String msg = ""; // 결과에 대한 메세지를 전달할 변수
+        MsgDTO dto; // 결과 메세지 구조
+        int res = 0; // 성공 : 1, 실패 : 0
+
+        try {
+
+            String userId = CmmUtil.nvl(request.getParameter("userId"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
+
+            log.info("userId : " + userId);
+            log.info("email : " + email);
+
+            UserInfoDTO pDTO = UserInfoDTO.builder()
+                    .userId(userId)
+                    .email(email)
+                    .build();
+
+            res = securityService.findPw(pDTO);
+
+            if (res == 1) {
+                msg = "회원님의 비밀번호가 0000으로 설정되었습니다. 비밀번호를 변경해주시길 바랍니다.";
+            } else {
+                res = 0;
+                msg = "입력하신 정보가 존재하지 않습니다.";
+            }
+        } catch (Exception e) {
+            log.info(e.toString());
+        } finally {
+            log.info(this.getClass().getName() + ".비밀번호 찾기 종료");
+            dto = MsgDTO.builder().result(res).msg(msg).build();
+        }
+
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
 }

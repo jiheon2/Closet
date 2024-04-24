@@ -1,9 +1,28 @@
 
+‰	java:S112°"FDefine and throw a dedicated exception instead of using a generic one.(ÈÆÐŠ8µ²©‡ñ1J$7b973f5f-e6d8-4f7a-bf51-d5816e18ca89
 w
-java:S3740o"/Provide the parametrized type for this generic.(ýýå´þÿÿÿÿ8¨¿Ê¢ï1J$610ef62b-8c54-4f5c-9351-de130b5044fe
+java:S3740I"/Provide the parametrized type for this generic.(ýýå´þÿÿÿÿ8¶²©‡ñ1J$5d1027fd-2ff4-4f5a-830b-1d94be5444b2
 x
-java:S3740«"/Provide the parametrized type for this generic.(³î˜¶ùÿÿÿÿ8©¿Ê¢ï1J$72b4fc5a-433e-4768-b9a8-0c71df4e107b
+java:S3740…"/Provide the parametrized type for this generic.(³î˜¶ùÿÿÿÿ8¶²©‡ñ1J$9d33c072-734b-4414-a0a3-be489c78ae80
 s
-java:S3740¾"/Provide the parametrized type for this generic.(å°ú×8©¿Ê¢ï1J$8a3cfed0-5517-460a-8df3-fd5990600ada
+java:S3740˜"/Provide the parametrized type for this generic.(å°ú×8¶²©‡ñ1J$3f37e198-410f-4309-9901-692c5e01e8f5
 s
-java:S3740Ú"/Provide the parametrized type for this generic.(ô×ñƒ8ˆ¼Ú§ï1J$10bc8f7b-7677-4ede-9fba-5ad4afad929f
+java:S3740¼"/Provide the parametrized type for this generic.(ô×ñƒ8¶²©‡ñ1J$84953827-1f69-4383-be16-009548ded61b
+s
+java:S3740‡"/Provide the parametrized type for this generic.(êê¾Ý8¶²©‡ñ1J$c68c30d0-6f46-4930-afe2-8b4bd6ff392c
+s
+java:S3740¢"/Provide the parametrized type for this generic.(Û¸ð©8¶²©‡ñ1J$5ae24bb5-a6c6-4aac-87cf-51f92f70b630
+x
+java:S3740½"/Provide the parametrized type for this generic.(ß¯´Øÿÿÿÿÿ8¶²©‡ñ1J$a0db051c-027d-48a2-93df-c04a8c636be1
+s
+java:S3740Ó"/Provide the parametrized type for this generic.(Á’¬²8¶²©‡ñ1J$420ab1e3-2ad7-4419-9d1d-d87553a3ecf2
+s
+java:S3740‚"/Provide the parametrized type for this generic.(ÕÄû÷8·²©‡ñ1J$0a866f8c-d9c0-4605-87fa-4148d6d8a8ce
+’
+java:S1192V"JDefine a constant instead of duplicating this literal "userId : " 4 times.(Îš£¯üÿÿÿÿ8¹²©‡ñ1J$7333b2e3-2ed8-4aa0-8038-58ea2c5710b0
+Š
+java:S1192Ë"FDefine a constant instead of duplicating this literal "email" 4 times.(’¬þÝ8º²©‡ñ1J$3c4331bc-a6fc-4e95-9a38-681b5a0fe1ea
+‹
+java:S1192Ç"GDefine a constant instead of duplicating this literal "userId" 3 times.(¦…‘ê8º²©‡ñ1J$dff2ac8f-ac0f-4594-97a2-f1c32beac61b
+’
+java:S1192Õ"IDefine a constant instead of duplicating this literal "email : " 3 times.(­ŸÕðÿÿÿÿÿ8º²©‡ñ1J$277ac985-8ff1-43d7-8442-8a27f23b7afe

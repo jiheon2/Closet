@@ -173,6 +173,7 @@ public class JwtTokenProvider {
         }
 
         HttpCookie cookie = request.getCookies().getFirst(tokenName);
+        log.info("cookie : " + cookie);
 
         if (cookie != null) {
             token = CmmUtil.nvl(cookie.getValue());

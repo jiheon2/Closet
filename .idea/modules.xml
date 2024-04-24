@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ApiGateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ApiGateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/Closet.iml" filepath="$PROJECT_DIR$/Closet.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ClosetService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ClosetService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/StyleService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/StyleService.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/UserService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/UserService.main.iml" />
     </modules>
   </component>

@@ -1,3 +1,11 @@
 
+
+java:S1128">Remove this unused import 'jakarta.transaction.Transactional'.(ß–Ê³8ùÏè‡ñ1J$5a78afa0-52b9-460f-8bb6-b7da4e5d7add
 ‚
-java:S1128"?Remove this unused import 'jiheon.userservice.dto.UserInfoDTO'.(Š‰ïÕ8×âÃ§ï1J$9f2b4fbb-5935-4ec0-bd48-f038e08f00b9
+java:S1128"?Remove this unused import 'jiheon.userservice.dto.UserInfoDTO'.(Š‰ïÕ8ùÏè‡ñ1J$494502c4-3864-4a5f-8af0-f27d37f05a10
+–
+java:S1128"NRemove this unused import 'org.springframework.data.jpa.repository.Modifying'.(—·Ñ”şÿÿÿÿ8ùÏè‡ñ1J$2c189074-3476-423b-b767-dd9f8b27ab28
+’
+java:S1128"JRemove this unused import 'org.springframework.data.jpa.repository.Query'.(Äºöïşÿÿÿÿ8ùÏè‡ñ1J$e2898efa-6960-4eea-864b-336a5f17b8bf
+Œ
+java:S1128	"DRemove this unused import 'org.springframework.http.ResponseEntity'.(¶¯ø¦úÿÿÿÿ8ùÏè‡ñ1J$a1544126-27af-4ca2-a8b4-b16d6174b63b

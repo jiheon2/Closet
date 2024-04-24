@@ -117,4 +117,93 @@ public class SecurityService implements ISecurityService {
 
         return res;
     }
+
+    @Override
+    public boolean existsByUserId(String userId) throws Exception {
+
+        log.info(this.getClass().getName() + ".아이디 중복체크");
+
+        return userInfoRepository.existsByUserId(userId);
+    }
+
+    @Override
+    public boolean existsByNickName(String nickName) throws Exception {
+
+        log.info(this.getClass().getName() + ".닉네임 중복체크");
+
+        return userInfoRepository.existsByNickName(nickName);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) throws Exception {
+
+        log.info(this.getClass().getName() + ".이메일 중복체크");
+
+        return userInfoRepository.existsByEmail(email);
+    }
+
+    @Override
+    public UserInfoDTO findId(UserInfoDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".아이디 찾기 시작");
+
+        String name = CmmUtil.nvl(pDTO.name());
+        String email = CmmUtil.nvl(pDTO.email());
+
+        log.info("name : " + name);
+        log.info("email : " + email);
+
+        UserInfoDTO rDTO = null;
+
+        Optional<UserInfoEntity> rEntity = userInfoRepository.findByEmailAndName(email, name);
+
+        if (rEntity.isPresent()) {
+
+            rDTO = new ObjectMapper().convertValue(rEntity,
+                    new TypeReference<UserInfoDTO>() {
+                    });
+
+        }
+
+        log.info(this.getClass().getName() + ".아이디 찾기 종료");
+
+        return rDTO;
+    }
+
+    @Override
+    public int findPw(UserInfoDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".비밀번호 찾기 시작");
+
+        // 성공 : 1, 실패 : 0
+        int res = 0;
+
+        try {
+
+            String userId = CmmUtil.nvl(pDTO.userId());
+            String email = CmmUtil.nvl(pDTO.email());
+
+            log.info("userId : " + userId);
+            log.info("email : " + email);
+
+            Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserIdAndEmail(userId, email);
+
+            if (rEntity.isPresent()) {
+
+                String newPassword = "0000";
+
+                userInfoRepository.save(UserInfoEntity.builder()
+                        .password(newPassword)
+                        .build());
+
+                res = 1;
+            }
+
+        } catch (Exception e) {
+            log.info(e.toString());
+        }
+
+        return res;
+    }
+
 }
