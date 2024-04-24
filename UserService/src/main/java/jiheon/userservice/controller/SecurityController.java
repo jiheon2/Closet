@@ -85,7 +85,7 @@ public class SecurityController {
     public String login() {
         log.info(this.getClass().getName() + ".login 실행");
 
-        return "/security/login";
+        return "/security/v1/login";
     }
 
     @Operation(summary = "로그인 결과 API", description = "로그인 결과창으로 이동",

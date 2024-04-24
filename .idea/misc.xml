@@ -9,6 +9,7 @@
     <file type="web" url="file://$PROJECT_DIR$/EurekaServer" />
     <file type="web" url="file://$PROJECT_DIR$/FrontService" />
     <file type="web" url="file://$PROJECT_DIR$/LangChainService" />
+    <file type="web" url="file://$PROJECT_DIR$/ReactService" />
     <file type="web" url="file://$PROJECT_DIR$/RedisSessionService" />
     <file type="web" url="file://$PROJECT_DIR$/SpringConfigServer" />
     <file type="web" url="file://$PROJECT_DIR$/StyleService" />

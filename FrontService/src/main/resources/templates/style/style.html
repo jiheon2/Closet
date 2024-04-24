@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Staging Template">
+    <meta name="keywords" content="Staging, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Style</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Offcanvas Menu Begin -->
+<div class="offcanvas-menu-overlay"></div>
+<div class="offcanvas-menu-wrapper">
+    <div class="offcanvas__logo">
+        <a href="#" style="font-size: 40px; color: white">MyCloset</a>
+    </div>
+    <div id="mobile-menu-wrap"></div>
+</div>
+<!-- Offcanvas Menu End -->
+
+<!-- Header Section Begin -->
+<header class="header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="header__logo">
+                    <a href="#" style="font-size: 40px; color: white">MyCloset</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li class="active"><a href="/templates/index.html">Home</a></li>
+                        <li><a href="/templates/user/myPage.html">MyPage</a></li>
+                        <li><a href="/templates/closet/closet.html">Closet</a></li>
+                        <li><a href="/templates/styleyle/styleAI.html">Chatbot</a></li>
+                        <li><a href="/templates/community/community.html">Community</a></li>
+                        <li><a href="/templates/styleyle/styleDictionary.html">Style Dictionary</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="canvas__open"><i class="fa fa-bars"></i></div>
+    </div>
+</header>
+<!-- Header Section End -->
+
+<!-- Breadcrumb Section Begin -->
+<div class="breadcrumb-option spad set-bg" data-setbg="/static/img/breadcrumb-bg.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Style</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb Section End -->
+
+<!-- Project Page Section Begin -->
+<section class="project-page spad"
+         style="background-image: url(/img/closet/closet1.jpg); background-repeat: no-repeat; background-size: cover; min-height: 520px">
+    <div class="container">
+        <div class="card border-secondary mb-3" style="height: 700px">
+            <div class="card-header">내 스타일</div>
+            <div class="card-body">
+                <div>
+                    <label for="style" class="form-label mt-4" style="width: 30%; text-align: center">스타일 종류</label>
+                    <select id="style" style="width: 60%" onchange="addAdditionalSelect()">
+                        <option value="none">스타일을 선택하세요</option>
+                        <option value="트래디셔널">트래디셔널</option>
+                        <option value="매니시">매니시</option>
+                        <option value="페미닌">페미닌</option>
+                        <option value="에스닉">에스닉</option>
+                        <option value="컨템포러리">컨템포러리</option>
+                        <option value="내추럴">내추럴</option>
+                        <option value="젠더플루이드">젠더플루이드</option>
+                        <option value="스포티">스포티</option>
+                        <option value="서브컬쳐">서브컬쳐</option>
+                        <option value="캐주얼">캐주얼</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="additionalSelect" class="form-label mt-4" style="width: 30%; text-align: center">세부 스타일</label>
+                    <select id="additionalSelect" style="width: 60%">
+                        <option value="none">세부 스타일을 선택하세요</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="parts" class="form-label mt-4" style="width: 30%; text-align: center">카테고리</label>
+                    <select id="parts" style="width: 60%" onchange="addPartsAndSize()">
+                        <option value="none">카테고리를 선택하세요</option>
+                        <option value="상의">상의</option>
+                        <option value="하의">하의</option>
+                        <option value="아우터">아우터</option>
+                        <option value="원피스">원피스</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="additionalParts" class="form-label mt-4" style="width: 30%; text-align: center">세부 카테고리</label>
+                    <select id="additionalParts" style="width: 60%">
+                        <option value="none">세부 카테고리를 선택하세요</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="size" class="form-label mt-4" style="width: 30%; text-align: center">사이즈</label>
+                    <select id="size" style="width: 60%">
+                        <option value="none">원하는 사이즈를 선택하세요</option>
+                    </select>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="width: 50%; vertical-align: center">
+                        <label class="form-label mt-4">성별</label>
+                        <div style="justify-content: space-between">
+                            <div class="form-check" style="margin-right: 10px">
+                                <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1"
+                                       value="option1" checked="">
+                                <label class="form-check-label" for="optionsRadios1">
+                                    남
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios2"
+                                       value="option2">
+                                <label class="form-check-label" for="optionsRadios2">
+                                    여
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width: 50%">
+                        <label for="age" class="form-label mt-4">나이</label>
+                        <input type="text" class="form-control" id="age" placeholder="age" style="width: 90%">
+                    </div>
+                </div>
+                <div>
+                    <label for="color" class="form-label mt-4">색상</label>
+                    <input type="text" class="form-control" id="color" aria-describedby="emailHelp" placeholder="원하는 색상을 입력하세요">
+                </div>
+                <div style="clear: both"></div>
+                <hr>
+                <div class="card-body" style="float: left; width: 49%">
+                    <button type="button" class="btn btn-success" style="width: 100%">빠르게 스타일 알아보기!</button>
+                </div>
+                <div class="card-body" style="float: right; width: 49%">
+                    <button type="button" class="btn btn-outline-dark" style="width: 100%">직접 상세하게 알아보기!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Project Page Section End -->
+
+<!-- Footer Section Begin -->
+<footer class="footer set-bg" data-setbg="/static/img/footer-bg.jpg">
+    <div class="container">
+        <div class="copyright" style="margin-top: -90px">
+            <div class="row">
+                <div class="col-lg-8 col-md-7">
+                    <div class="copyright__text">
+                        <p>Copyright ©
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-5">
+                    <div class="copyright__widget">
+                        <a href="#">Terms of use</a>
+                        <a href="#">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+
+<!-- Js Plugins -->
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.slicknav.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/slick.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+
+    function addPartsAndSize() {
+        addAdditionalParts();
+        addSizeOption();
+    }
+
+    function addAdditionalSelect() {
+        var styleSelect = document.getElementById("style");
+        var selectedStyle = styleSelect.value;
+        var additionalSelect = document.getElementById("additionalSelect");
+
+        // 이전에 추가한 옵션들 삭제
+        additionalSelect.innerHTML = '';
+
+        if (selectedStyle !== "none") {
+            // 선택한 스타일에 따라 옵션 추가
+            var options = [];
+
+            switch(selectedStyle) {
+                case "트래디셔널":
+                    options = ["클래식", "프레피"];
+                    break;
+                case "매니시":
+                    options = ["매니시", "톰보이"];
+                    break;
+                case "페미닌":
+                    options = ["페미닌", "로맨틱", "섹시"];
+                    break;
+                case "에스닉":
+                    options = ["히피", "웨스턴", "오리엔탈"];
+                    break;
+                case "컨템포러리":
+                    options = ["모던", "소피스트 케이티드", "아방가르드"];
+                    break;
+                case "내추럴":
+                    options = ["컨트리", "리조트"];
+                    break;
+                case "젠더플루이드":
+                    options = ["젠더리스"];
+                    break;
+                case "스포티":
+                    options = ["스포티"];
+                    break;
+                case "서브컬쳐":
+                    options = ["레트로", "키치/키덜트", "힙합", "펑크"];
+                    break;
+                case "캐주얼":
+                    options = ["밀리터리", "스트리트"];
+                    break;
+
+            }
+
+            // 옵션 추가
+            options.forEach(function(option) {
+                var optionElement = document.createElement("option");
+                optionElement.textContent = option;
+                additionalSelect.appendChild(optionElement);
+            });
+        }
+    }
+
+    function addAdditionalParts() {
+        var partsSelect = document.getElementById("parts");
+        var selectedPart = partsSelect.value;
+        var additionalPartsSelect = document.getElementById("additionalParts");
+
+        // 이전에 추가한 옵션들 삭제
+        additionalPartsSelect.innerHTML = '';
+
+        if (selectedPart !== "none") {
+            // 선택한 카테고리에 따라 세부 카테고리 추가
+            var options = [];
+
+            switch(selectedPart) {
+                case "상의":
+                    options = ["티셔츠", "셔츠", "후드티", "니트", "가디건"];
+                    break;
+                case "하의":
+                    options = ["청바지", "슬랙스", "치노팬츠", "반바지", "스커트", "레깅스"];
+                    break;
+                case "아우터":
+                    options = ["자켓", "코트", "패딩", "가디건"];
+                    break;
+                case "원피스":
+                    options = ["미니원피스", "미디원피스", "맥시원피스"];
+                    break;
+            }
+
+            // 옵션 추가
+            options.forEach(function(option) {
+                var optionElement = document.createElement("option");
+                optionElement.textContent = option;
+                additionalPartsSelect.appendChild(optionElement);
+            });
+        }
+    }
+
+    function addSizeOption() {
+        var partsSelect = document.getElementById("parts");
+        var selectedPart = partsSelect.value;
+        var size = document.getElementById("size")
+
+        size.innerHTML = '';
+
+        if (selectedPart !== "none") {
+            var options = [];
+
+            switch(selectedPart) {
+                case "상의":
+                    options = ["타이트", "노멀", "루즈", "오버사이즈"];
+                    break;
+                case "아우터":
+                    options = ["타이트", "노멀", "루즈", "오버사이즈"];
+                    break;
+                case "원피스":
+                    options = ["타이트", "노멀", "루즈", "오버사이즈"];
+                    break;
+                case "하의":
+                    options = ["스키니", "노멀", "와이드", "루즈", "벨보텀"];
+                    break;
+            }
+            // 옵션 추가
+            options.forEach(function(option) {
+                var optionElement = document.createElement("option");
+                optionElement.textContent = option;
+                size.appendChild(optionElement);
+            });
+        }
+    }
+</script>
+
+</body>
+
+</html>
