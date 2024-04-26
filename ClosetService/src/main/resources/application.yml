@@ -1,5 +1,11 @@
 spring:
+  config:
+    import: "optional:configserver:http://localhost:8888/"
   cloud:
+    config:
+      name: user
+      profile: prod
+
     gcp:
       storage:
         credentials:
@@ -7,9 +13,8 @@ spring:
         bucket: msa-closet-bucket
         project-id: closetproject-419105
 
-#    config:
-#      name: closet
-#      profile: prod
+
+
 # MongoDB Connection
 #  data:
 #    mongodb:

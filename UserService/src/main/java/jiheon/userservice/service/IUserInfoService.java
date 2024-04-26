@@ -1,7 +1,6 @@
 package jiheon.userservice.service;
 
 import jiheon.userservice.dto.UserInfoDTO;
-import org.springframework.web.bind.annotation.PostMapping;
 
 public interface IUserInfoService {
 

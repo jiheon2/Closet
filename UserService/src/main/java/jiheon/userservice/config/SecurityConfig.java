@@ -68,16 +68,18 @@ public class SecurityConfig {
                 .requestMatchers("/resources/**").permitAll()
                 .anyRequest().permitAll()
         ).formLogin(login -> login
-                .loginPage("/security/v1/login")
-                .loginProcessingUrl("/security/v1/loginProc")
+                .loginPage("/security/v1/login") // 로그인 페이지 html
+                .loginProcessingUrl("/security/v1/loginProc") // 로그인 수행
                 .usernameParameter("userId")
                 .passwordParameter("password")
-                .successForwardUrl("/security/v1/loginSuccess")
-                .failureForwardUrl("/security/v1/loginFail")
+                .successForwardUrl("/security/v1/loginSuccess") // 로그인 성공 URL
+                .failureForwardUrl("/security/v1/loginFail") // 로그인 실패 URL
+                .permitAll()
         ).logout(logout -> logout
-                .logoutUrl("/security/v1/logout")
+                .logoutUrl("/security/v1/logout") // 로그아웃 요청 URL
+                .clearAuthentication(true)
                 .deleteCookies(accessTokenName, refreshTokenName)
-                .logoutSuccessUrl("/security/v1/logoutSuccess")
+                .logoutSuccessUrl("/security/v1/logoutSuccess") // 로그아웃 처리 URL
 
         ).sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

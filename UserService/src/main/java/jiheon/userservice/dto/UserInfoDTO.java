@@ -1,8 +1,10 @@
 package jiheon.userservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 
 @Builder
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public record UserInfoDTO(
         // 자동으로 직렬화를 해주므로 Serializable 인터페이스를 구현 안해도 된다!
 

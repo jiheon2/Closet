@@ -2,7 +2,6 @@ package jiheon.closetservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
