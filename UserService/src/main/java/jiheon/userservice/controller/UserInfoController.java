@@ -66,10 +66,8 @@ public class UserInfoController {
 
         log.info("userId : " + userId);
 
-        UserInfoDTO pDTO = UserInfoDTO.builder().userId(userId).build();
-
         // 회원정보 조회
-        UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getUserInfo(pDTO))
+        UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getUserInfo(userId))
                 .orElseGet(() -> UserInfoDTO.builder().build());
 
         log.info(this.getClass().getName() + ".userInfo End!");
@@ -160,10 +158,8 @@ public class UserInfoController {
             log.info("oldPassword : " + oldPassword);
             log.info("newPassword : " + newPassword);
 
-            UserInfoDTO cDTO =  UserInfoDTO.builder().userId(userId).build();
-
             // 기존 비밀번호 가져오기
-            UserInfoDTO rDTO = userInfoService.getUserInfo(cDTO);
+            UserInfoDTO rDTO = userInfoService.getUserInfo(userId);
 
             // 스프링 시큐리티에서 제공하는 비밀번호 매치
             boolean checkPw = bCryptPasswordEncoder.matches(oldPassword, rDTO.password());

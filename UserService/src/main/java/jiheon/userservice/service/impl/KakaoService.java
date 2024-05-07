@@ -1,5 +1,9 @@
 package jiheon.userservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jiheon.userservice.dto.KakaoDTO;
+import jiheon.userservice.dto.KakaoUserDTO;
 import jiheon.userservice.service.IKakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +27,7 @@ public class KakaoService implements IKakaoService {
     private String kakaoKey;
 
     @Override
-    public ResponseEntity<String> getKakaoToken(String code) {
+    public KakaoDTO getKakaoToken(String code) throws JsonProcessingException {
 
         log.info(this.getClass().getName() + ".getKakaoToken Start!");
 
@@ -54,11 +58,14 @@ public class KakaoService implements IKakaoService {
         log.info("데이터 찍어보기");
         log.info("response : " + response.getBody());
 
-        return response;
+        // DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(response.getBody(), KakaoDTO.class);
     }
 
     @Override
-    public ResponseEntity<String> getKakaoInfo(String token) {
+    public KakaoUserDTO getKakaoInfo(String token) throws JsonProcessingException {
 
         // 사용자 정보 요청보내기 위한 헤더값 설정
         RestTemplate restTemplate = new RestTemplate();
@@ -71,13 +78,19 @@ public class KakaoService implements IKakaoService {
         HttpEntity<MultiValueMap<String, String>>kakaoProfileRequest = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                "http://kapi.kakao.com/v2/user/me",
+                "https://kapi.kakao.com/v2/user/me",
                 HttpMethod.POST,
                 kakaoProfileRequest,
                 String.class
         );
 
+        log.info("데이터 찍어보기");
+        log.info("response : " + response.getBody());
 
-        return null;
+        // DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.readValue(response.getBody(), KakaoUserDTO.class);
+
     }
 }

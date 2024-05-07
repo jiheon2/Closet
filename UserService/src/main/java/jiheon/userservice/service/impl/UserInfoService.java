@@ -26,12 +26,9 @@ public class UserInfoService implements IUserInfoService {
     private final UserInfoRepository userInfoRepository;
 
     @Override
-    public UserInfoDTO getUserInfo(UserInfoDTO pDTO) throws Exception {
+    public UserInfoDTO getUserInfo(String userId) throws Exception {
 
         log.info(this.getClass().getName() + ".getUserInfo Start!");
-
-        // 회원아이디
-        String userId = CmmUtil.nvl(pDTO.userId());
 
         log.info("userId : " + userId);
 
