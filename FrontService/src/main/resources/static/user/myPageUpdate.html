@@ -51,12 +51,12 @@
             <div class="col-lg-6">
                 <nav class="header__menu mobile-menu">
                     <ul>
-                        <li class="active"><a href="/index.html">Home</a></li>
-                        <li><a href="/templates/userser/myPage.html">MyPage</a></li>
-                        <li><a href="/closet/closet.html">Closet</a></li>
-                        <li><a href="/style/styleAI.html">Chatbot</a></li>
-                        <li><a href="/community/community.html">Community</a></li>
-                        <li><a href="/style/styleDictionary.html">Style Dictionary</a></li>
+                        <li class="active"><a id="goIndex" onclick="goToIndex()">Home</a></li>
+                        <li><a id="goMyPage" onclick="goToMyPage()">MyPage</a></li>
+                        <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
+                        <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
+                        <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
+                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -68,77 +68,88 @@
 
 <!-- Contact Section Begin -->
 <!-- DB 값 불러오는 영역 -->
-<section class="contact spad" style="background-color: #5a6268; margin-bottom: -100px">
-    <div class="container">
-        <div class="card border-secondary mb-3" style="height: 650px">
-            <div class="card-header">마이페이지</div>
-            <div class="card-body">
-                <div>
-                    <label for="name" class="form-label mt-4">name</label>
-                    <input type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="name">
-                </div>
-                <div>
-                    <label for="nickname" class="form-label mt-4">name</label>
-                    <input type="text" class="form-control" id="nickname" aria-describedby="emailHelp"
-                           placeholder="nickname">
-                </div>
-                <div>
-                    <label for="userId" class="form-label mt-4">ID</label>
-                    <input type="text" class="form-control" id="userId" aria-describedby="emailHelp" placeholder="ID"
-                           readonly>
-                </div>
-                <div>
-                    <label for="email" class="form-label mt-4">email</label>
-                    <input type="text" class="form-control" id="email" aria-describedby="emailHelp" placeholder="email">
-                </div>
-                <div style="float: right; width: 45%">
-                    <label for="userId" class="form-label mt-4">gender</label>
-                    <input type="text" class="form-control" id="gender" aria-describedby="emailHelp"
-                           placeholder="gender" readonly>
-                </div>
-                <div style="float: left; width: 45%">
-                    <label for="userId" class="form-label mt-4">age</label>
-                    <input type="text" class="form-control" id="age" aria-describedby="emailHelp" placeholder="age">
-                </div>
-                <div style="clear: both"></div>
-                <hr>
-                <div class="card-body" style="float: left; width: 49%">
-                    <button type="button" class="btn btn-danger" style="width: 100%" id="openModalBtn">탈퇴하기</button>
-                </div>
-                <div class="card-body" style="float: right; width: 49%">
-                    <button type="button" class="btn btn-outline-dark" style="width: 100%">내 정보 수정</button>
-                </div>
-
-                <!-- 회원탈퇴 확인 모달창 -->
-                <div class="modal align-items-center" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">알림</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalBtn" style="border: none; background-color: white">
-                                    <span aria-hidden="true">X</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>정말 탈퇴하시겠습니까?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger">탈퇴</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                            </div>
+<form id="f">
+    <section class="contact spad" style="background-color: #5a6268; margin-bottom: -100px">
+        <div class="container">
+            <div class="card border-secondary mb-3" style="height: 650px">
+                <div class="card-header">마이페이지</div>
+                <div class="card-body">
+                    <div>
+                        <label for="nickName" class="form-label mt-4">nickname</label>
+                        <div style="display: flex; justify-content: space-between">
+                            <input type="text" class="form-control" name="nickName" id="nickName" placeholder="nickname"
+                                   style="width: 75%">
+                            <button id="checkNickName" class="btn btn-outline-dark" type="button" style="width: 20%">
+                                확인
+                            </button>
                         </div>
                     </div>
+                    <div>
+                        <label for="userId" class="form-label mt-4">ID</label>
+                        <input type="text" class="form-control" name="userId" id="userId" aria-describedby="emailHelp"
+                               placeholder="ID"
+                               readonly>
+                    </div>
+                    <div>
+                        <label for="email" class="form-label mt-4">email</label>
+                        <div style="display: flex; justify-content: space-between">
+                            <input type="text" class="form-control" id="email" name="email" placeholder="name"
+                                   style="width: 75%">
+                            <button id="checkEmail" class="btn btn-outline-dark" type="button" style="width: 20%">확인
+                            </button>
+                        </div>
+                    </div>
+                    <div style="float: right; width: 45%">
+                        <label for="userId" class="form-label mt-4">gender</label>
+                        <input type="text" class="form-control" id="gender" name="gender" aria-describedby="emailHelp"
+                               placeholder="gender" readonly>
+                    </div>
+                    <div style="float: left; width: 45%">
+                        <label for="userId" class="form-label mt-4">age</label>
+                        <input type="text" class="form-control" id="age" name="age" aria-describedby="emailHelp" placeholder="age">
+                    </div>
+                    <div style="clear: both"></div>
+                    <hr>
+                    <div class="card-body" style="float: left; width: 49%">
+                        <button type="button" class="btn btn-danger" style="width: 100%" id="openModalBtn">탈퇴하기</button>
+                    </div>
+                    <div class="card-body" style="float: right; width: 49%">
+                        <button id="btnUpdateUserInfo" type="button" class="btn btn-outline-dark" style="width: 100%">내
+                            정보 수정
+                        </button>
+                    </div>
                 </div>
-                <!-- 모달창 끝 -->
-
+            </div>
+        </div>
+    </section>
+</form>
+<!-- 회원탈퇴 확인 모달창 -->
+<div class="modal align-items-center" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalBtn"
+                        style="border: none; background-color: white">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>정말 탈퇴하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnLeave" type="button" class="btn btn-danger">탈퇴</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
-</section>
+</div>
+<!-- 모달창 끝 -->
 <!-- Contact Section End -->
 
 <!-- Footer Section Begin -->
-<footer class="footer set-bg" data-setbg="/static/img/footer-bg.jpg">
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
     <div class="container">
         <div class="copyright" style="margin-top: -90px">
             <div class="row">
@@ -167,28 +178,239 @@
 <!-- Footer Section End -->
 
 <!-- Js Plugins -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.slicknav.js"></script>
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
-
+<script src="/js/common.js"></script>
+<script src="/js/jquery.serializeObject.min.js"></script>
 <script>
     // 모달 열기 버튼에 이벤트 핸들러 추가
-    document.getElementById('openModalBtn').addEventListener('click', function() {
+    document.getElementById('openModalBtn').addEventListener('click', function () {
         $('#exampleModal').modal('show');
     });
 
     // X 버튼 클릭 시 모달 닫기
-    document.getElementById('closeModalBtn').addEventListener('click', function() {
+    document.getElementById('closeModalBtn').addEventListener('click', function () {
         $('#exampleModal').modal('hide');
     });
 
     // 취소 버튼 클릭 시 모달 닫기
-    document.querySelector('#exampleModal .btn-secondary').addEventListener('click', function() {
+    document.querySelector('#exampleModal .btn-secondary').addEventListener('click', function () {
         $('#exampleModal').modal('hide');
     });
+
+    let olderEmail = "";
+    let olderNickName = "";
+
+    // HTML 로딩이 완료되고, 실행
+    $(document).ready(function () {
+
+        let f = document.getElementById("f");
+        f.addEventListener('submit', ev => {
+            console.log(ev);
+            ev.stopPropagation();
+            ev.preventDefault();
+        })
+
+        let emailResult = 0;
+        let nickNameResult = 0;
+
+        // 로그인 된 사용자인지 확인하기
+        loginInfo();
+        console.log(loginUserId);
+
+        // 회원정보 가져오기
+        userInfo();
+
+        // 탈퇴하기
+        $("#btnLeave").on("click", function () {
+            $.ajax({
+                url: "http://" + apiServer + "/user/v1/deleteUserInfo",
+                type: "post",
+                dataType: "JSON",
+                xhrFields: {
+                    withCredentials: true
+                }
+            }).then(function (json) {
+                if (json.data.result === 1) {
+                    alert(json.data.msg);
+                    location.href = "/index.html"
+                } else {
+                    alert(json.data.msg);
+                    f.name.focus();
+                }
+            })
+        })
+
+        // 회원정보 수정
+        $("#btnUpdateUserInfo").on("click", function () {
+
+            if (f.nickName.value === "") {
+                alert("닉네임을 입력하세요.");
+                f.nickName.focus();
+                return;
+            }
+            if (f.email.value === "") {
+                alert("이메일을 입력하세요.");
+                f.email.focus();
+                return;
+            }
+            if (f.userId.value === "") {
+                alert("아이디를 입력하세요.");
+                f.userId.focus();
+                return;
+            }
+            if (f.age.value === "") {
+                alert("나이를 입력하세요.");
+                f.age.focus();
+                return;
+            }
+
+            $.ajax({
+                url: "http://" + apiServer + "/user/v1/updateUserInfo",
+                type: "post",
+                dataType: "JSON",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: $("#f").serializeObject()
+            }).then(
+                function (json) {
+                    if (json.data.result === 1) {
+                        alert(json.data.msg);
+                        console.log("이거실행")
+                        location.href = "/user/myPage.html"
+                    } else {
+                        alert(json.data.msg);
+                        console.log("이거실행")
+                        $("#name").focus();
+                    }
+                }
+            )
+        })
+
+        $("#checkEmail").on("click", function () {
+
+                console.log(olderEmail);
+
+                if (f.email.value === "") {
+                    alert("이메일을 입력하세요.");
+                    f.email.focus();
+                    return;
+                }
+
+                if (!(f.email.value === olderEmail)) {
+                    $.ajax({
+                        url: "http://" + apiServer + "/security/v1/checkEmail",
+                        type: "post",
+                        dataType: "JSON",
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        data: {email: f.email.value}
+                    }).then(
+                        function (json) {
+                            if (json.data.result == 1) {
+                                alert(json.data.msg);
+                                emailResult = 1;
+                                console.log(emailResult);
+                                $("#userId").focus();
+                            } else {
+                                alert(json.data.msg);
+                                console.log(emailResult);
+                                $("#email").focus();
+                            }
+                        }
+                    )
+                } else {
+                    alert("동일한 이메일을 사용합니다.")
+                    console.log(f.email.value)
+                }
+            }
+        )
+
+        $("#checkNickName").on("click", function () {
+
+            console.log(olderNickName);
+
+            if (f.nickName.value === "") {
+                alert("닉네임을 입력하세요.");
+                f.nickName.focus();
+                return;
+            }
+
+            if (!(f.nickName.value === olderNickName)) {
+                $.ajax({
+                    url: "http://" + apiServer + "/security/v1/checkNickName",
+                    type: "post",
+                    dataType: "JSON",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {nickName: f.nickName.value}
+                }).then(
+                    function (json) {
+                        if (json.data.result == 1) {
+                            alert(json.data.msg);
+                            nickNameResult = 1;
+                            console.log(nickNameResult);
+                            $("#email").focus();
+                        } else {
+                            alert(json.data.msg);
+                            console.log(nickNameResult);
+                            $("#nickname").focus();
+                        }
+                    }
+                )
+            } else {
+                alert("동일한 닉네임을 사용합니다.");
+                console.log(f.nickName.value);
+            }
+        })
+
+    })
+
+    // 회원정보 불러오기 함수
+    function userInfo() {
+        // 컨트롤러에 요청하기
+        $.ajax({
+            url: "http://" + apiServer + "/user/v1/userInfo",
+            type: "post",
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            }
+        }).then(
+            function (json) {
+                const userInfo = json.data;
+
+                $("#userId").val(userInfo.userId);
+                $("#nickName").val(userInfo.nickName);
+                $("#name").val(userInfo.name);
+                $("#email").val(userInfo.email);
+                $("#gender").val(userInfo.gender);
+                $("#age").val(userInfo.age);
+
+                console.log(userInfo.userId);
+                console.log(userInfo.nickName);
+                console.log(userInfo.name);
+                console.log(userInfo.email);
+                console.log(userInfo.gender);
+                console.log(userInfo.age);
+
+                olderEmail = userInfo.email;
+                olderNickName = userInfo.nickName;
+            },
+            function () {
+                alert("접근 권한이 없습니다.");
+
+            }
+        );
+    }
+
 </script>
 
 </body>

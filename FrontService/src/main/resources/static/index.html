@@ -52,11 +52,11 @@
                 <nav class="header__menu mobile-menu">
                     <ul>
                         <li class="active"><a href="/index.html">Home</a></li>
-                        <li><a href="/user/myPage.html">MyPage</a></li>
-                        <li><a href="/closet/closet.html">Closet</a></li>
-                        <li><a href="/style/styleAI.html">Chatbot</a></li>
-                        <li><a href="/community/community.html">Community</a></li>
-                        <li><a href="/style/styleDictionary.html">Style Dictionary</a></li>
+                        <li><a href="/security/login.html">MyPage</a></li>
+                        <li><a href="/security/login.html">Closet</a></li>
+                        <li><a href="/security/login.html">Chatbot</a></li>
+                        <li><a href="/security/login.html">Community</a></li>
+                        <li><a href="/security/login.html">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -66,21 +66,21 @@
 </header>
 
 <!-- 로그인 전 슬라이드 창 문구 -->
-<section class="hero" th:if="${#authentication.principal eq 'anonymousUser'}">
+<section class="hero">
     <div class="hero__slider owl-carousel">
-        <div class="hero__items set-bg" data-setbg="/static/img/hero/hero-1.jpg">
+        <div class="hero__items set-bg" data-setbg="/img/hero/hero-1.jpg">
             <div class="hero__text">
                 <h2>Fashion, your space</h2>
-                <a class="primary-btn loginButton">로그인</a>
+                <a class="primary-btn loginButton" style="color: white">로그인</a>
                 <div class="hero__social">
                     <a href="#"><i class="fa fa-github"></i></a>
                 </div>
             </div>
         </div>
-        <div class="hero__items set-bg" data-setbg="/static/img/hero/hero-1.jpg">
+        <div class="hero__items set-bg" data-setbg="/img/hero/hero-1.jpg">
             <div class="hero__text">
                 <h2>Complete style, compose now!</h2>
-                <a class="primary-btn loginButton">로그인</a>
+                <a class="primary-btn loginButton" style="color: white">로그인</a>
                 <div class="hero__social">
                     <a href="#"><i class="fa fa-github"></i></a>
                 </div>
@@ -90,37 +90,9 @@
     <div class="slide-num"></div>
     <div class="slider__progress"><span></span></div>
 </section>
-
-
-<!-- 로그인 후 슬라이드 창 문구 -->
-<section class="hero" th:unless="${#authentication.principal eq 'anonymousUser'}">
-    <div class="hero__slider owl-carousel">
-        <div class="hero__items set-bg" data-setbg="/static/img/hero/hero-1.jpg">
-            <div class="hero__text">
-                <h2>홍길동님 환영합니다</h2>
-                <a href="#" class="primary-btn logOut">로그아웃</a>
-                <div class="hero__social">
-                    <a href="#"><i class="fa fa-github"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="hero__items set-bg" data-setbg="/static/img/hero/hero-1.jpg">
-            <div class="hero__text">
-                <h2>Complete style, compose now!</h2>
-                <a href="#" class="primary-btn logOut">로그아웃</a>
-                <div class="hero__social">
-                    <a href="#"><i class="fa fa-github"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="slide-num"></div>
-    <div class="slider__progress"><span></span></div>
-</section>
-
 
 <!-- 푸터 -->
-<footer class="footer set-bg" data-setbg="/static/img/footer-bg.jpg">
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
     <div class="container">
         <div class="copyright" style="margin-top: -50px">
             <div class="row">
@@ -149,7 +121,7 @@
 </footer>
 
 <!-- Js Plugins -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.slicknav.js"></script>
 <script src="/js/owl.carousel.min.js"></script>
@@ -157,19 +129,12 @@
 <script src="/js/main.js"></script>
 <script src="/js/common.js"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
 
+    $(document).ready(function () {
         // 로그인 페이지로 이동
-        $(".loginButton").on("click", function() {
+        $(".loginButton").on("click", function () {
             location.href = "security/login.html";
         })
-
-        // 로그아웃 실행
-        $(".logOut").on("click", function() {
-            alert("로그아웃 되었습니다.")
-            location.href = "/templates/index.html"
-        })
-
     })
 
 </script>

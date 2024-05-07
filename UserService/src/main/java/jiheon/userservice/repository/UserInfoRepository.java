@@ -1,12 +1,7 @@
 package jiheon.userservice.repository;
 
-import jakarta.transaction.Transactional;
-import jiheon.userservice.dto.UserInfoDTO;
 import jiheon.userservice.repository.entity.UserInfoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -26,10 +21,19 @@ public interface UserInfoRepository extends JpaRepository<UserInfoEntity, String
     // 이메일 중복체크
     boolean existsByEmail(String email);
 
+    // 회원탈퇴
+    void deleteByUserIdAndUserSeq(String userId, int userSeq);
+
     // 아이디 찾기
-    Optional<UserInfoEntity> findByEmailAndName(String email, String name);
+    Optional<UserInfoEntity> findByEmailAndNickName(String email, String nickName);
 
     // 비밀번호 찾기
     Optional<UserInfoEntity> findByUserIdAndEmail(String userId, String email);
+
+    // 이메일 중복세기
+    Long countByEmail(String email);
+
+    // 닉네임 중복세기
+    Long countByNickName(String nickName);
 }
 

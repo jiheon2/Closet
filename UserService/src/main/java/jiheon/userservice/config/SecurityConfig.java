@@ -32,8 +32,6 @@ public class SecurityConfig {
 
     private final CorsConfigurationSource corsConfigurationSource; // CORS 매핑처리
 
-
-    final String role = "ROLE_USER";
     @Bean
     public PasswordEncoder passwordEncoder() {
 
@@ -56,32 +54,33 @@ public class SecurityConfig {
 
         log.info(this.getClass().getName() + ".filterChain Start!");
 
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(config -> config.configurationSource(corsConfigurationSource));
 
-        http.authorizeHttpRequests(authz -> authz
-                .requestMatchers("/user/v1/**").hasAnyAuthority(role)
-                .requestMatchers("/style/v1/**").hasAnyAuthority(role)
-                .requestMatchers("/closet/v1/**").hasAnyAuthority(role)
-                .requestMatchers("/community/v1/**").hasAnyAuthority(role)
-                .requestMatchers("/security/v1/**").permitAll()
-                .requestMatchers("/resources/**").permitAll()
-                .anyRequest().permitAll()
-        ).formLogin(login -> login
-                .loginPage("/security/v1/login") // 로그인 페이지 html
-                .loginProcessingUrl("/security/v1/loginProc") // 로그인 수행
-                .usernameParameter("userId")
-                .passwordParameter("password")
-                .successForwardUrl("/security/v1/loginSuccess") // 로그인 성공 URL
-                .failureForwardUrl("/security/v1/loginFail") // 로그인 실패 URL
-                .permitAll()
-        ).logout(logout -> logout
-                .logoutUrl("/security/v1/logout") // 로그아웃 요청 URL
-                .clearAuthentication(true)
-                .deleteCookies(accessTokenName, refreshTokenName)
-                .logoutSuccessUrl("/security/v1/logoutSuccess") // 로그아웃 처리 URL
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(config -> config.configurationSource(corsConfigurationSource))
+//                .authorizeHttpRequests(authz -> authz
+//                .requestMatchers("/user/v1/**").hasAnyAuthority(role)
+//                .requestMatchers("/style/v1/**").hasAnyAuthority(role)
+//                .requestMatchers("/closet/v1/**").hasAnyAuthority(role)
+//                .requestMatchers("/community/v1/**").hasAnyAuthority(role)
+//                .requestMatchers("/security/v1/**").permitAll()
+//                .requestMatchers("/resources/**").permitAll()
+//                .anyRequest().permitAll()
+                .formLogin(login -> login
+                        .loginPage("/security/login.html") // 로그인 페이지 html
+                        .loginProcessingUrl("/security/v1/loginProc") // 로그인 수행
+                        .usernameParameter("userId")
+                        .passwordParameter("password")
+                        .successForwardUrl("/security/v1/loginSuccess") // 로그인 성공 URL
+                        .failureForwardUrl("/security/v1/loginFail") // 로그인 실패 URL
 
-        ).sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                ).logout(logout -> logout
+                        .logoutUrl("/security/v1/logout") // 로그아웃 요청 URL
+                        .clearAuthentication(true)
+                        .deleteCookies(accessTokenName, refreshTokenName)
+                        .logoutSuccessUrl("http://localhost:12000/security/login.html") // 로그아웃 처리 URL
+
+                ).sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }

@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.swing.text.html.Option;
 import java.util.Optional;
@@ -38,8 +40,8 @@ public class UserInfoService implements IUserInfoService {
         Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserId(userId);
 
         if (rEntity.isPresent()) {
-
-            rDTO = new ObjectMapper().convertValue(rEntity,
+            // FIXME 여기 .get() 해줘야 하는거 아니야??
+            rDTO = new ObjectMapper().convertValue(rEntity.get(),
                     new TypeReference<UserInfoDTO>() {
                     });
         }
@@ -50,6 +52,7 @@ public class UserInfoService implements IUserInfoService {
     }
 
     @Override
+    @Transactional
     public int updateUserInfo(UserInfoDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".updateUserInfo Start!");
@@ -57,44 +60,57 @@ public class UserInfoService implements IUserInfoService {
         int res = 0; // 성공 : 1, 실패 : 0
 
         String userId = CmmUtil.nvl(pDTO.userId());
-        String name = CmmUtil.nvl(pDTO.name());
         String nickName = CmmUtil.nvl(pDTO.nickName());
         String email = CmmUtil.nvl(pDTO.email());
         String age = CmmUtil.nvl(pDTO.age());
 
         log.info("userId : " + userId);
-        log.info("name : " + name);
         log.info("nickName : " + nickName);
         log.info("email : " + email);
         log.info("age : " + age);
 
-        // 이메일 수정 시 회원가입하는 데이터와 중복방지를 위해 DB 조회
-        if (userInfoRepository.existsByEmail(email) || userInfoRepository.existsByNickName(nickName)) {
-            log.warn("이메일 혹은 닉네임이 중복되어 회원정보 수정을 할 수 없습니다.");
-            return 0;
+        try {
+            // 정보 가져오기
+            Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserId(userId);
 
-        } else {
+            // 수정한 값 반영
+            UserInfoEntity pEntity = UserInfoEntity.builder()
+                    .userSeq(rEntity.get().getUserSeq())
+                    .userId(userId)
+                    .nickName(nickName)
+                    .email(email)
+                    .age(age)
+                    .password(rEntity.get().getPassword())
+                    .roles(rEntity.get().getRoles())
+                    .gender(rEntity.get().getGender())
+                    .isKakao(rEntity.get().getIsKakao())
+                    .build();
+
             // 정보 수정
-            userInfoRepository.save(
-                    UserInfoEntity.builder()
-                            .name(name)
-                            .nickName(nickName)
-                            .email(email)
-                            .age(age)
-                            .build()
-            );
+            userInfoRepository.save(pEntity);
             log.info("회원정보 수정을 성공하였습니다.");
 
             // 수정된 값 확인
             Optional<UserInfoEntity> userInfoEntity = userInfoRepository.findByUserId(userId);
 
             log.info("수정된 값");
-            log.info("name : " + userInfoEntity.get().getName());
             log.info("nickName : " + userInfoEntity.get().getNickName());
             log.info("email : " + userInfoEntity.get().getEmail());
             log.info("age : " + userInfoEntity.get().getAge());
 
-            res = 1;
+            if (userInfoRepository.countByEmail(email) + userInfoRepository.countByNickName(nickName) >= 5) {
+                log.info("새로운 회원가입으로 인해 값이 중복되므로 롤백처리");
+                log.info("이메일 중복 조회 : " + userInfoRepository.countByEmail(email));
+                log.info("닉네임 중복 조회 : " + userInfoRepository.countByNickName(nickName));
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                res = 0;
+            } else {
+                log.info("회원정보 수정완료");
+                res = 1;
+            }
+        } catch (Exception e) {
+            log.info("회원정보 수정 중 에러 발생 : " + e.toString());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
 
         log.info(this.getClass().getName() + ".updateUserInfo End!");
@@ -108,24 +124,41 @@ public class UserInfoService implements IUserInfoService {
         log.info(this.getClass().getName() + ".updatePassword Start!");
 
         // 성공 : 1, 실패 : 0
-        int res = 0;
+        int res;
 
-        String password = CmmUtil.nvl(pDTO.password());
+        try {
+            String userId = CmmUtil.nvl(pDTO.userId());
+            String password = CmmUtil.nvl(pDTO.password());
 
-        log.info("password : " + password);
+            log.info("userId : " + userId);
+            log.info("password : " + password);
 
-        if (StringUtils.isEmpty(password)) {
-            log.warn("비밀번호 값이 존재하지 않습니다.");
-            return 0;
+            // 정보 가져오기
+            Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserId(userId);
 
-        } else {
+            // 수정한 값 반영
+            UserInfoEntity pEntity = UserInfoEntity.builder()
+                    .userSeq(rEntity.get().getUserSeq())
+                    .userId(userId)
+                    .nickName(rEntity.get().getNickName())
+                    .email(rEntity.get().getEmail())
+                    .age(rEntity.get().getAge())
+                    .password(password)
+                    .roles(rEntity.get().getRoles())
+                    .gender(rEntity.get().getGender())
+                    .isKakao(rEntity.get().getIsKakao())
+                    .build();
+
             // 비밀번호 수정
-            userInfoRepository.save(
-                    UserInfoEntity.builder().password(password).build()
-            );
+            userInfoRepository.save(pEntity);
+
             log.info("비밀번호를 수정했습니다.");
 
             res = 1;
+
+        } catch (Exception e) {
+            log.info("에러 : " + e);
+            res = 0;
         }
 
         log.info(this.getClass().getName() + ".updatePassword End!");
@@ -134,23 +167,36 @@ public class UserInfoService implements IUserInfoService {
     }
 
     @Override
-    public int deleteUserInfo(String userId) throws Exception {
+    @Transactional
+    public int deleteUserInfo(UserInfoDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".deleteUserInfo Start!");
 
         // 성공 : 1, 실패 : 0
         int res = 0;
 
-        if (StringUtils.isEmpty(userId)) {
-            log.warn("아이디 값이 존재하지 않습니다.");
-            return 0;
+        try {
+            String userId = CmmUtil.nvl(pDTO.userId());
+            int userSeq = pDTO.userSeq();
 
-        } else {
+            log.info("userId : " + userId);
+            log.info("userSeq : " + userSeq);
+
             // 회원 삭제
-            userInfoRepository.deleteById(userId);
-            log.info(userId + "님이 회원탈퇴를 하였습니다.");
+            userInfoRepository.deleteByUserIdAndUserSeq(userId, userSeq);
 
-            res = 1;
+            // 회원 삭제값 확인
+            Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserId(userId);
+
+            if (rEntity.isEmpty()) {
+                res = 1;
+                log.info(userId + "님께서 회원탈퇴 하셨습니다.");
+            } else {
+                log.info("회원탈퇴가 되지 않았습니다.");
+                log.info("userId : " + rEntity.get().getUserId());
+            }
+        } catch (Exception e) {
+            log.info(e.toString());
         }
 
         log.info(this.getClass().getName() + ".deleteUserInfo End!");

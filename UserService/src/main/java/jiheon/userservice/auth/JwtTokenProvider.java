@@ -54,11 +54,12 @@ public class JwtTokenProvider {
      * @param tokenType token 유형
      * @return 인증 처리한 정보(로그인 성공, 실패)
      */
-    public String createToken(String userId, String roles, JwtTokenType tokenType) {
+    public String createToken(String userId, String roles, int userSeq, JwtTokenType tokenType) {
 
         log.info(this.getClass().getName() + ".createToken Start!");
 
         log.info("userId : " + userId);
+        log.info("userSeq : " + userSeq);
 
 
         long validTime = 0;
@@ -76,6 +77,7 @@ public class JwtTokenProvider {
                 .setSubject(userId); // 회원아이디 저장 : PK 저장(userId)
 
         claims.put("roles", roles); // JWT Paylaod에 정의된 기본 옵션 외 정보를 추가 - 사용자 권한 추가
+        claims.put("userSeq", userSeq);
         Date now = new Date();
 
         log.info(this.getClass().getName() + ".createToken End!");
@@ -110,12 +112,14 @@ public class JwtTokenProvider {
 
         String userId = CmmUtil.nvl(claims.getSubject());
         String role = CmmUtil.nvl((String) claims.get("roles")); // LoginService 생성된 토큰의 권한명과 동일
+        Integer userSeq = claims.get("userSeq", Integer.class);
 
         log.info("userId : " + userId);
         log.info("role : " + role);
+        log.info("userSeq : " + userSeq);
 
         // TokenDTO는 자바17의 Record 객체 사용했기에 빌더패턴 적용함
-        TokenDTO rDTO = TokenDTO.builder().userId(userId).role(role).build();
+        TokenDTO rDTO = TokenDTO.builder().userId(userId).userSeq(userSeq).role(role).build();
 
         log.info(this.getClass().getName() + ".getTokenInfo End!");
 

@@ -1,5 +1,6 @@
 package jiheon.userservice.controller;
 
+import ch.qos.logback.core.util.NetworkAddressUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,8 +31,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000"},
-        allowedHeaders = {"POST, GET"},
+@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000", "http://localhost:13000"},
+        allowedHeaders = {"*"},
         allowCredentials = "true",
         methods = {RequestMethod.POST, RequestMethod.GET},
         originPatterns = {"security/**"})
@@ -47,12 +48,6 @@ public class SecurityController {
 
     @Value("${jwt.token.access.name}")
     private String accessTokenName;
-
-    @Value("${jwt.token.refresh.valid.time}")
-    private long refreshTokenValidTime;
-
-    @Value("${jwt.token.refresh.name}")
-    private String refreshTokenName;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -82,12 +77,14 @@ public class SecurityController {
         String userId = CmmUtil.nvl(rDTO.userId());
         String userRoles = CmmUtil.nvl(rDTO.roles());
         String userName = CmmUtil.nvl(rDTO.nickName());
+        int userSeq = rDTO.userSeq();
 
         log.info("userId : " + userId);
         log.info("userRoles : " + userRoles);
+        log.info("userSeq : " + userSeq);
 
         // Access Token 생성
-        String accessToken = jwtTokenProvider.createToken(userId, userRoles, JwtTokenType.ACCESS_TOKEN);
+        String accessToken = jwtTokenProvider.createToken(userId, userRoles, userSeq, JwtTokenType.ACCESS_TOKEN);
         log.info("accessToken : " + accessToken);
 
         ResponseCookie cookie = ResponseCookie.from(accessTokenName, accessToken)
@@ -106,7 +103,7 @@ public class SecurityController {
         // Refresh Token은 보안상 노출되면, 위험하기에 Refresh Token은 DB에 저장하고,
         // DB를 조회하기 위한 값만 Refresh Token으로 생성함
         // Refresh Token은 Access Token에 비해 만료시간을 길게 설정함
-        String refreshToken = jwtTokenProvider.createToken(userId, userRoles, JwtTokenType.REFRESH_TOKEN);
+        String refreshToken = jwtTokenProvider.createToken(userId, userRoles, userSeq, JwtTokenType.REFRESH_TOKEN);
 
         log.info("refreshToken : " + refreshToken);
 
@@ -134,47 +131,12 @@ public class SecurityController {
 
         log.info(this.getClass().getName() + ".loginFail 실행");
 
-        MsgDTO dto = MsgDTO.builder().result(1).msg("로그인 실패").build();
+        MsgDTO dto = MsgDTO.builder().result(0).msg("로그인 실패").build();
 
         log.info(this.getClass().getName() + ".loginFail 종료");
 
         return ResponseEntity.ok(
                 CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
-    }
-
-    @Operation(summary = "로그아웃 API", description = "스프링 시큐리티를 통해 로그아웃 실행",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
-                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
-            }
-    )
-    @PostMapping(value = "logout")
-    public ResponseEntity<CommonResponse> logout(
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        log.info(this.getClass().getName() + ".logout 실행");
-
-        // 로그아웃 실행
-        new SecurityContextLogoutHandler().logout(
-                request, response, SecurityContextHolder.getContext().getAuthentication()
-        );
-
-        // response.sedRedirect를 통해 로그아웃후 이동할 페이지 설정해야함
-
-        // redisDB에 있는 refreshToken 삭제
-        redisService.delValues(request.getHeader("refreshToken"));
-
-        MsgDTO dto = MsgDTO.builder().result(1).msg("로그아웃 하였습니다").build();
-
-        log.info(this.getClass().getName() + ".logout 끝");
-
-        return ResponseEntity.ok(
-                CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
-    }
-
-    @GetMapping(value = "logoutSuccess")
-    public int logoutSuccess() throws Exception {
-        return 1;
     }
 
 
@@ -196,8 +158,8 @@ public class SecurityController {
         UserInfoDTO pDTO = null; // 웹에서 받는 정보를 저장할 변수
 
         try {
+
             String userId = CmmUtil.nvl(request.getParameter("userId"));
-            String userName = CmmUtil.nvl(request.getParameter("name"));
             String nickName = CmmUtil.nvl(request.getParameter("nickName"));
             String password = CmmUtil.nvl(request.getParameter("password"));
             String email = CmmUtil.nvl(request.getParameter("email"));
@@ -207,7 +169,6 @@ public class SecurityController {
             String roles = CmmUtil.nvl(request.getParameter("roles"));
 
             log.info("userId : " + userId);
-            log.info("userName : " + userName);
             log.info("nickName : " + nickName);
             log.info("password : " + password);
             log.info("email : " + email);
@@ -218,7 +179,6 @@ public class SecurityController {
 
             pDTO = UserInfoDTO.builder()
                     .userId(userId)
-                    .name(userName)
                     .nickName(nickName)
                     .password(bCryptPasswordEncoder.encode(password))
                     .email(email) // 암호화 해야하나?
@@ -266,14 +226,15 @@ public class SecurityController {
 
         String userId = CmmUtil.nvl(request.getParameter("userId"));
 
-        boolean res = securityService.existsByUserId(userId);
+        int res = 0;
 
         MsgDTO dto = null;
 
-        if (res) {
-            dto = MsgDTO.builder().result(1).msg("이미 존재하는 아이디입니다.").build();
+        if (securityService.existsByUserId(userId)) {
+            dto = MsgDTO.builder().result(res).msg("이미 존재하는 아이디입니다.").build();
         } else {
-            dto = MsgDTO.builder().result(1).msg("가입 가능한 아이디 입니다.").build();
+            res = 1;
+            dto = MsgDTO.builder().result(res).msg("가입 가능한 아이디 입니다.").build();
         }
 
         return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
@@ -286,21 +247,22 @@ public class SecurityController {
                     @ApiResponse(responseCode = "404", description = "Page Not Found!"),
             }
     )
-    @PostMapping(value = "checkNickname")
+    @PostMapping(value = "checkNickName")
     public ResponseEntity checkNickname(HttpServletRequest request) throws Exception {
 
         log.info(this.getClass().getName() + ".CheckNickname API Start");
 
         String nickName = CmmUtil.nvl(request.getParameter("nickName"));
 
-        boolean res = securityService.existsByNickName(nickName);
+        int res = 0;
 
         MsgDTO dto = null;
 
-        if (res) {
-            dto = MsgDTO.builder().result(1).msg("이미 존재하는 닉네임입니다.").build();
+        if (securityService.existsByNickName(nickName)) {
+            dto = MsgDTO.builder().result(res).msg("이미 존재하는 닉네임입니다.").build();
         } else {
-            dto = MsgDTO.builder().result(1).msg("가입 가능한 닉네임입니다.").build();
+            res = 1;
+            dto = MsgDTO.builder().result(res).msg("가입 가능한 닉네임입니다.").build();
         }
 
         return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
@@ -320,21 +282,30 @@ public class SecurityController {
 
         String email = CmmUtil.nvl(request.getParameter("email"));
 
-        boolean res = securityService.existsByEmail(email);
+        int res = 0;
 
         MsgDTO dto = null;
 
-        if (res) {
-            dto = MsgDTO.builder().result(1).msg("이미 존재하는 이메일입니다.").build();
+        if (securityService.existsByEmail(email)) {
+            dto = MsgDTO.builder().result(res).msg("이미 존재하는 이메일입니다.").build();
         } else {
-            dto = MsgDTO.builder().result(1).msg("가입 가능한 이메일입니다.").build();
+            res = 1;
+            dto = MsgDTO.builder().result(res).msg("가입 가능한 이메일입니다.").build();
         }
+
+        log.info(dto.toString());
 
         return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
 
     }
 
     // 아이디 찾기
+    @Operation(summary = "아이디 찾기 API", description = "이름과 이메일을 기준으로 DB에 아이디가 존재하는지 체크하는 API",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
     @PostMapping(value = "findId")
     public ResponseEntity findId(HttpServletRequest request) throws Exception {
 
@@ -345,14 +316,14 @@ public class SecurityController {
 
         try {
 
-            String name = CmmUtil.nvl(request.getParameter("name"));
+            String nickName = CmmUtil.nvl(request.getParameter("nickName"));
             String email = CmmUtil.nvl(request.getParameter("email"));
 
-            log.info("name : " + name);
-            log.info("email : " + name);
+            log.info("nickName : " + nickName);
+            log.info("email : " + email);
 
             UserInfoDTO pDTO = UserInfoDTO.builder()
-                    .name(name)
+                    .nickName(nickName)
                     .email(email)
                     .build();
 
@@ -382,6 +353,13 @@ public class SecurityController {
         return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
 
+
+    @Operation(summary = "비밀번호 찾기 API", description = "아이디와 이메일을 기준으로 비밀번호를 재설정해주는 API",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Page Not Found!"),
+            }
+    )
     @PostMapping(value = "findPw")
     public ResponseEntity findPw(HttpServletRequest request) throws Exception {
 

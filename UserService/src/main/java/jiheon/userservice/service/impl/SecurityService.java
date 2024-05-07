@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,6 +23,8 @@ import java.util.Optional;
 public class SecurityService implements ISecurityService {
 
     private final UserInfoRepository userInfoRepository;
+
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     /**
      * Spring Security에서 로그인 처리를 하기 위해 실행하는 함수
@@ -63,7 +66,6 @@ public class SecurityService implements ISecurityService {
         int res = 0; // 성공 : 1, 중복으로 인한 가입 취소 : 2, 기타 에러 발생 : 0
 
         String userId = CmmUtil.nvl(pDTO.userId());
-        String userName = CmmUtil.nvl(pDTO.name());
         String nickName = CmmUtil.nvl(pDTO.nickName());
         String password = CmmUtil.nvl(pDTO.password());
         String email = CmmUtil.nvl(pDTO.email());
@@ -73,7 +75,6 @@ public class SecurityService implements ISecurityService {
         String roles = CmmUtil.nvl(pDTO.roles());
 
         log.info("userId : " + userId);
-        log.info("userName : " + userName);
         log.info("nickName : " + nickName);
         log.info("password : " + password);
         log.info("email : " + email);
@@ -92,7 +93,6 @@ public class SecurityService implements ISecurityService {
             // 회원가입 엔터티 생성
             UserInfoEntity pEntity = UserInfoEntity.builder()
                     .userId(userId)
-                    .name(userName)
                     .nickName(nickName)
                     .password(password)
                     .email(email) // 암호화 해야하나?
@@ -147,19 +147,21 @@ public class SecurityService implements ISecurityService {
 
         log.info(this.getClass().getName() + ".아이디 찾기 시작");
 
-        String name = CmmUtil.nvl(pDTO.name());
+        String nickName = CmmUtil.nvl(pDTO.nickName());
         String email = CmmUtil.nvl(pDTO.email());
 
-        log.info("name : " + name);
+        log.info("nickName : " + nickName);
         log.info("email : " + email);
 
         UserInfoDTO rDTO = null;
 
-        Optional<UserInfoEntity> rEntity = userInfoRepository.findByEmailAndName(email, name);
+        Optional<UserInfoEntity> rEntity = userInfoRepository.findByEmailAndNickName(email, nickName);
+
+        log.info("rEntity : " + rEntity);
 
         if (rEntity.isPresent()) {
 
-            rDTO = new ObjectMapper().convertValue(rEntity,
+            rDTO = new ObjectMapper().convertValue(rEntity.get(),
                     new TypeReference<UserInfoDTO>() {
                     });
 
@@ -187,13 +189,22 @@ public class SecurityService implements ISecurityService {
             log.info("email : " + email);
 
             Optional<UserInfoEntity> rEntity = userInfoRepository.findByUserIdAndEmail(userId, email);
+            log.info("rEntity id : " + rEntity.get().getUserId());
 
             if (rEntity.isPresent()) {
 
                 String newPassword = "0000";
 
                 userInfoRepository.save(UserInfoEntity.builder()
-                        .password(newPassword)
+                        .userId(userId)
+                        .age(rEntity.get().getAge())
+                        .email(rEntity.get().getEmail())
+                        .nickName(rEntity.get().getNickName())
+                        .userSeq(rEntity.get().getUserSeq())
+                        .roles(rEntity.get().getRoles())
+                        .isKakao(rEntity.get().getIsKakao())
+                        .gender(rEntity.get().getGender())
+                        .password(bCryptPasswordEncoder.encode(newPassword))
                         .build());
 
                 res = 1;

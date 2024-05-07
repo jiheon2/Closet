@@ -52,11 +52,11 @@
                 <nav class="header__menu mobile-menu">
                     <ul>
                         <li class="active"><a href="/index.html">Home</a></li>
-                        <li><a href="/user/myPage.html">MyPage</a></li>
-                        <li><a href="/closet/closet.html">Closet</a></li>
-                        <li><a href="/style/styleAI.html">Chatbot</a></li>
-                        <li><a href="/community/community.html">Community</a></li>
-                        <li><a href="/style/styleDictionary.html">Style Dictionary</a></li>
+                        <li><a href="/security/login.html">MyPage</a></li>
+                        <li><a href="/security/login.html">Closet</a></li>
+                        <li><a href="/security/login.html">Chatbot</a></li>
+                        <li><a href="/security/login.html">Community</a></li>
+                        <li><a href="/security/login.html">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -67,75 +67,83 @@
 <!-- Header Section End -->
 
 <!-- Contact Section Begin -->
-<section class="contact spad" style="background-color: #5a6268; margin-bottom: -75px">
-    <div class="container">
-        <div class="card border-secondary mb-3" style="height: 750px">
-            <div class="card-header">회원가입</div>
-            <div class="card-body">
-                <div>
-                    <label for="name" class="form-label mt-4">name</label>
-                    <input type="text" class="form-control" id="name" placeholder="name">
-                </div>
-                <div>
-                    <label for="nickname" class="form-label mt-4">nickname</label>
-                    <div style="display: flex; justify-content: space-between">
-                        <input type="text" class="form-control" id="nickname" placeholder="nickname" style="width: 75%">
-                        <button class="btn btn-outline-dark" type="button" style="width: 20%">확인</button>
-                    </div>
-                </div>
-                <div>
-                    <label for="email" class="form-label mt-4">email</label>
-                    <div style="display: flex; justify-content: space-between">
-                        <input type="text" class="form-control" id="email" placeholder="name" style="width: 75%">
-                        <button class="btn btn-outline-dark" type="button" style="width: 20%">확인</button>
-                    </div>
-                </div>
-                <div>
-                    <label for="userId" class="form-label mt-4">ID</label>
-                    <div style="display: flex; justify-content: space-between">
-                        <input type="text" class="form-control" id="userId" placeholder="ID" style="width: 75%">
-                        <button class="btn btn-outline-dark" type="button" style="width: 20%">확인</button>
-                    </div>
-                </div>
-                <div>
-                    <label for="password" class="form-label mt-4">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off">
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <div style="width: 50%; vertical-align: center">
-                        <label class="form-label mt-4">성별</label>
-                        <div style="justify-content: space-between">
-                            <div class="form-check" style="margin-right: 10px">
-                                <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1"
-                                       value="option1" checked="">
-                                <label class="form-check-label" for="optionsRadios1">
-                                    남
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios2"
-                                       value="option2">
-                                <label class="form-check-label" for="optionsRadios2">
-                                    여
-                                </label>
-                            </div>
+<form id="f">
+    <section class="contact spad" style="background-color: #5a6268; margin-bottom: -75px">
+        <div class="container">
+            <div class="card border-secondary mb-3" style="height: 750px">
+                <div class="card-header">회원가입</div>
+                <div class="card-body">
+                    <div>
+                        <label for="nickname" class="form-label mt-4">nickname</label>
+                        <div style="display: flex; justify-content: space-between">
+                            <input type="text" class="form-control" name="nickName" id="nickName" placeholder="nickname"
+                                   style="width: 75%">
+                            <button id="checkNickName" class="btn btn-outline-dark" type="button" style="width: 20%">
+                                확인
+                            </button>
                         </div>
                     </div>
-                    <div style="width: 50%">
-                        <label for="age" class="form-label mt-4">나이</label>
-                        <input type="text" class="form-control" id="age" placeholder="age" style="width: 90%">
+                    <div>
+                        <label for="email" class="form-label mt-4">email</label>
+                        <div style="display: flex; justify-content: space-between">
+                            <input type="text" class="form-control" id="email" name="email" placeholder="name" style="width: 75%">
+                            <button id="checkEmail" class="btn btn-outline-dark" type="button" style="width: 20%">확인
+                            </button>
+                        </div>
                     </div>
+                    <div>
+                        <label for="userId" class="form-label mt-4">ID</label>
+                        <div style="display: flex; justify-content: space-between">
+                            <input type="text" class="form-control" id="userId" name="userId" placeholder="ID" style="width: 75%">
+                            <button id="checkUserId" class="btn btn-outline-dark" type="button" style="width: 20%">확인
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="password" class="form-label mt-4">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                               autocomplete="off">
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div style="width: 50%; vertical-align: center">
+                            <label class="form-label mt-4">성별</label>
+                            <div style="justify-content: space-between">
+                                <div class="form-check" style="margin-right: 10px">
+                                    <input class="form-check-input" type="radio" name="gender" id="option1"
+                                           value="남" checked="">
+                                    <label class="form-check-label" for="option1">
+                                        남
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id="options2"
+                                           value="여">
+                                    <label class="form-check-label" for="options2">
+                                        여
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 50%">
+                            <label for="age" class="form-label mt-4">나이</label>
+                            <input type="text" class="form-control" id="age" name="age" placeholder="age" style="width: 90%">
+                        </div>
+                        <div style="display: none">
+                            <label for="age" class="form-label mt-4">isKakao</label>
+                            <input type="text" class="form-control" id="isKakao" value="normal" name="isKakao" placeholder="age" style="width: 90%">
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="submit" id="insertUser" class="btn btn-dark" style="width: 100%">회원가입</button>
                 </div>
-                <hr>
-                <button type="button" class="btn btn-dark" style="width: 100%">회원가입</button>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</form>
 <!-- Contact Section End -->
 
 <!-- Footer Section Begin -->
-<footer class="footer set-bg" data-setbg="/static/img/footer-bg.jpg">
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
     <div class="container">
         <div class="copyright" style="margin-top: -90px">
             <div class="row">
@@ -165,11 +173,189 @@
 <!-- Footer Section End -->
 
 <!-- Js Plugins -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.slicknav.js"></script>
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/jquery.serializeObject.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        let f = document.getElementById("f");
+        f.addEventListener('submit', ev => {
+            console.log(ev);
+            ev.stopPropagation();
+            ev.preventDefault();
+        })
+
+        let emailResult = 0;
+        let nickNameResult = 0;
+        let userIdResult = 0;
+
+        $("#checkEmail").on("click", function () {
+
+                if (f.email.value === "") {
+                    alert("이메일을 입력하세요.");
+                    f.email.focus();
+                    return;
+                }
+
+                $.ajax({
+                    url: "http://" + apiServer + "/security/v1/checkEmail",
+                    type: "post",
+                    dataType: "JSON",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {email: f.email.value}
+                }).then(
+                    function (json) {
+                        if (json.data.result == 1) {
+                            alert(json.data.msg);
+                            emailResult = 1;
+                            console.log(emailResult);
+                            $("#userId").focus();
+                        } else {
+                            alert(json.data.msg);
+                            console.log(emailResult);
+                            $("#email").focus();
+                        }
+                    }
+                )
+            }
+        )
+
+        $("#checkNickName").on("click", function () {
+            if (f.nickName.value === "") {
+                alert("닉네임을 입력하세요.");
+                f.nickName.focus();
+                return;
+            }
+
+            $.ajax({
+                url: "http://" + apiServer + "/security/v1/checkNickName",
+                type: "post",
+                dataType: "JSON",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: {nickName : f.nickName.value}
+            }).then(
+                function (json) {
+                    if (json.data.result == 1) {
+                        alert(json.data.msg);
+                        nickNameResult = 1;
+                        console.log(nickNameResult);
+                        $("#email").focus();
+                    } else {
+                        alert(json.data.msg);
+                        console.log(nickNameResult);
+                        $("#nickname").focus();
+                    }
+                }
+            )
+        })
+
+        $("#checkUserId").on("click", function () {
+            if (f.userId.value === "") {
+                alert("아이디를 입력하세요.");
+                f.userId.focus();
+                return;
+            }
+
+            $.ajax({
+                url: "http://" + apiServer + "/security/v1/checkId",
+                type: "post",
+                dataType: "JSON",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: {userId : f.userId.value}
+            }).then(
+                function (json) {
+                    if (json.data.result == 1) {
+                        alert(json.data.msg);
+                        userIdResult = 1;
+                        console.log(userIdResult);
+                        $("#").focus();
+                    } else {
+                        alert(json.data.msg);
+                        console.log(userIdResult);
+                        $("#email").focus();
+                    }
+                }
+            )
+        })
+
+
+        $("#insertUser").on("click", function () {
+
+            if (f.nickName.value === "") {
+                alert("닉네임을 입력하세요.");
+                f.nickName.focus();
+                return;
+            }
+            if (f.email.value === "") {
+                alert("이메일을 입력하세요.");
+                f.email.focus();
+                return;
+            }
+            if (f.userId.value === "") {
+                alert("아이디를 입력하세요.");
+                f.userId.focus();
+                return;
+            }
+            if (f.password.value === "") {
+                alert("비밀번호를 입력하세요.");
+                f.password.focus();
+                return;
+            }
+            if (f.age.value === "") {
+                alert("나이를 입력하세요.");
+                f.age.focus();
+                return;
+            }
+
+            console.log(userIdResult)
+            console.log(emailResult)
+            console.log(nickNameResult)
+            if (userIdResult === 1 && emailResult === 1 && nickNameResult === 1) {
+
+                $.ajax({
+                    url: "http://" + apiServer + "/security/v1/signUp",
+                    type: "post",
+                    dataType: "JSON",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: $("#f").serializeObject()
+                }).then(
+                    function (json) {
+                        if (json.data.result === 1) {
+                            alert(json.data.msg);
+                            console.log("이거실행")
+                            location.href = "/security/login.html"
+                        } else if (json.data.result === 2) {
+                            alert(json.data.msg);
+                            console.log("이거실행")
+                            $("#userId").focus();
+                        } else {
+                            alert(json.data.msg);
+                            console.log("이거실행")
+                            $("#userId").focus();
+                        }
+                    }
+                )
+            }
+        })
+    })
+
+</script>
 </body>
 </html>

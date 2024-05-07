@@ -51,12 +51,12 @@
             <div class="col-lg-6">
                 <nav class="header__menu mobile-menu">
                     <ul>
-                        <li class="active"><a href="/index.html">Home</a></li>
-                        <li><a href="/templates/userser/myPage.html">MyPage</a></li>
-                        <li><a href="/closet/closet.html">Closet</a></li>
-                        <li><a href="/style/styleAI.html">Chatbot</a></li>
-                        <li><a href="/community/community.html">Community</a></li>
-                        <li><a href="/style/styleDictionary.html">Style Dictionary</a></li>
+                        <li class="active"><a id="goIndex" onclick="goToIndex()">Home</a></li>
+                        <li><a id="goMyPage" onclick="goToMyPage()">MyPage</a></li>
+                        <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
+                        <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
+                        <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
+                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -75,8 +75,8 @@
             <div class="card-body">
                 <div class="card-body" style="margin-top: -40px">
                     <div>
-                        <label for="originPassword" class="form-label mt-4">기존 비밀번호</label>
-                        <input type="password" class="form-control" id="originPassword" placeholder="Password"
+                        <label for="oldPassword" class="form-label mt-4">기존 비밀번호</label>
+                        <input type="password" class="form-control" id="oldPassword" placeholder="Password"
                                autocomplete="off">
                     </div>
                 </div>
@@ -88,10 +88,10 @@
                     </div>
                 </div>
                 <div class="card-body" style="float: left; width: 49%">
-                    <button type="button" class="btn btn-success" style="width: 100%">비밀번호 변경</button>
+                    <button id="changePw" type="button" class="btn btn-success" style="width: 100%">비밀번호 변경</button>
                 </div>
                 <div class="card-body" style="float: right; width: 49%">
-                    <button type="button" class="btn btn-outline-dark" style="width: 100%">취소</button>
+                    <button onclick="goBack()" type="button" class="btn btn-outline-dark" style="width: 100%">취소</button>
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@
 <!-- Contact Section End -->
 
 <!-- Footer Section Begin -->
-<footer class="footer set-bg" data-setbg="/static/img/footer-bg.jpg">
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
     <div class="container" style="height: 400px">
         <div class="copyright" style="margin-top: -90px">
             <div class="row">
@@ -129,12 +129,65 @@
 <!-- Footer Section End -->
 
 <!-- Js Plugins -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.slicknav.js"></script>
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script>
+
+    // 취소 버튼 누를 시 마이페이지로 돌아가기
+    function goBack() {
+        window.history.back();
+    }
+
+    // 비밀번호 수정
+    $("#changePw").on("click", function () {
+
+        let oldPassword = $("#oldPassword").val();
+        let newPassword = $("#newPassword").val();
+
+        console.log(oldPassword);
+        console.log(newPassword);
+
+        if (oldPassword === "") {
+            alert("기존 비밀번호를 입력하세요.");
+            oldPassword.focus();
+            return;
+        }
+        if (newPassword === "") {
+            alert("새 비밀번호를 입력하세요.");
+            newPassword.focus();
+            return;
+        }
+
+        $.ajax({
+            url: "http://" + apiServer + "/user/v1/updatePassword",
+            type: "post",
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            }
+        }).then(
+            function (json) {
+                if (json.data.result === 1) {
+                    alert(json.data.msg);
+                    location.href = "/user/myPage.html"
+                } else {
+                    alert(json.data.msg);
+                    $("#newPassword").focus();
+                }
+            }
+        )
+    })
+
+</script>
 </body>
 
 </html>

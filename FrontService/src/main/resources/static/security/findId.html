@@ -7,7 +7,7 @@
     <meta name="keywords" content="Staging, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>비밀번호 찾기</title>
+    <title>ID찾기</title>
 
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,11 +52,11 @@
                 <nav class="header__menu mobile-menu">
                     <ul>
                         <li class="active"><a href="/index.html">Home</a></li>
-                        <li><a href="/templates/userser/myPage.html">MyPage</a></li>
-                        <li><a href="/closet/closet.html">Closet</a></li>
-                        <li><a href="/style/styleAI.html">Chatbot</a></li>
-                        <li><a href="/community/community.html">Community</a></li>
-                        <li><a href="/style/styleDictionary.html">Style Dictionary</a></li>
+                        <li><a href="/security/login.html">MyPage</a></li>
+                        <li><a href="/security/login.html">Closet</a></li>
+                        <li><a href="/security/login.html">Chatbot</a></li>
+                        <li><a href="/security/login.html">Community</a></li>
+                        <li><a href="/security/login.html">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -71,27 +71,27 @@
 <section class="contact spad" style="background-color: #5a6268; margin-bottom: -100px">
     <div class="container">
         <div class="card border-secondary mb-3" style="height: 350px">
-            <div class="card-header">비밀번호 찾기</div>
+            <div class="card-header">ID찾기</div>
             <div class="card-body">
                 <div class="card-body" style="margin-top: -40px">
                     <div>
-                        <label for="userId" class="form-label mt-4">ID</label>
-                        <input type="text" class="form-control" id="userId" placeholder="ID"
+                        <label for="nickName" class="form-label mt-4">닉네임</label>
+                        <input type="text" class="form-control" id="nickName" placeholder="nickName"
                                autocomplete="off">
                     </div>
                 </div>
                 <div class="card-body" style="margin-top: -45px">
                     <div>
                         <label for="email" class="form-label mt-4">이메일</label>
-                        <input type="email" class="form-control" id="email" placeholder="email"
+                        <input type="eamil" class="form-control" id="email" placeholder="email"
                                autocomplete="off">
                     </div>
                 </div>
                 <div class="card-body" style="float: left; width: 49%">
-                    <button type="button" class="btn btn-success" style="width: 100%">메일전송</button>
+                    <button type="button" id="findId" class="btn btn-success" style="width: 100%">아이디 찾기</button>
                 </div>
                 <div class="card-body" style="float: right; width: 49%">
-                    <button type="button" class="btn btn-outline-dark" style="width: 100%">취소</button>
+                    <button onclick="goBack()" type="button" class="btn btn-outline-dark" style="width: 100%">취소</button>
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@
 <!-- Contact Section End -->
 
 <!-- Footer Section Begin -->
-<footer class="footer set-bg" data-setbg="/static/img/footer-bg.jpg">
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
     <div class="container" style="height: 400px">
         <div class="copyright" style="margin-top: -90px">
             <div class="row">
@@ -129,12 +129,47 @@
 <!-- Footer Section End -->
 
 <!-- Js Plugins -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.slicknav.js"></script>
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script type="text/javascript">
+
+    // 취소 버튼 누를 시 뒤로가기
+    function goBack() {
+        window.history.back();
+    }
+
+    // 아이디 찾기 실행
+    $("#findId").on("click", function () {
+
+        let nickName = $("#nickName").val();
+        let email = $("#email").val();
+
+        console.log(nickName);
+        console.log(email);
+
+        $.ajax({
+            url: "http://" + apiServer + "/security/v1/findId",
+            type: "POST",
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                nickName: nickName,
+                email: email
+            }
+        }).then(function (json) {
+            alert(json.data.msg);
+            location.href = "/security/login.html";
+        })
+    })
+
+</script>
 </body>
 
 </html>

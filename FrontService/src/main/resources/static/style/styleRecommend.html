@@ -51,12 +51,12 @@
             <div class="col-lg-6">
                 <nav class="header__menu mobile-menu">
                     <ul>
-                        <li class="active"><a href="/index.html">Home</a></li>
-                        <li><a href="/user/myPage.html">MyPage</a></li>
-                        <li><a href="/closet/closet.html">Closet</a></li>
-                        <li><a href="/templates/styleyle/styleAI.html">Chatbot</a></li>
-                        <li><a href="/community/community.html">Community</a></li>
-                        <li><a href="/templates/styleyle/styleDictionary.html">Style Dictionary</a></li>
+                        <li class="active"><a id="goIndex" onclick="goToIndex()">Home</a></li>
+                        <li><a id="goMyPage" onclick="goToMyPage()">MyPage</a></li>
+                        <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
+                        <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
+                        <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
+                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -67,7 +67,7 @@
 <!-- Header Section End -->
 
 <!-- Breadcrumb Section Begin -->
-<div class="breadcrumb-option spad set-bg" data-setbg="/static/img/breadcrumb-bg.jpg">
+<div class="breadcrumb-option spad set-bg" data-setbg="/img/breadcrumb-bg.jpg">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -94,7 +94,7 @@
                                 <li>
                                     <div class="blog__item__quote" style="display: flex">
                                         <div style="width: 100px; height: 100px; align-items: center; justify-content: center; display: flex">
-                                            <image src="/static/img/closet/closet1.jpg" alt="" style="width: auto; height: auto; max-height: 100%; max-width: 100%; margin: 0 auto"></image>
+                                            <image src="/img/closet/closet1.jpg" alt="" style="width: auto; height: auto; max-height: 100%; max-width: 100%; margin: 0 auto"></image>
                                         </div>
                                         <div style="margin-left: 10px; align-items: center; display: flex; flex-direction: column; justify-content: center">
                                             <div style="font-size: 15px" th:text="${item.name}">상품명 :</div>
@@ -115,7 +115,7 @@
                                 <li>
                                     <div class="blog__item__quote" style="display: flex">
                                         <div style="width: 100px; height: 100px; align-items: center; justify-content: center; display: flex">
-                                            <image src="/static/img/closet/closet1.jpg" alt="" style="width: auto; height: auto; max-height: 100%; max-width: 100%; margin: 0 auto"></image>
+                                            <image src="/img/closet/closet1.jpg" alt="" style="width: auto; height: auto; max-height: 100%; max-width: 100%; margin: 0 auto"></image>
                                         </div>
                                         <div style="margin-left: 10px; align-items: center; display: flex; flex-direction: column; justify-content: center">
                                             <div style="font-size: 15px" th:text="${item.name}">상품명 :</div>
@@ -136,7 +136,7 @@
                                 <li>
                                     <div class="blog__item__quote" style="display: flex">
                                         <div style="width: 100px; height: 100px; align-items: center; justify-content: center; display: flex">
-                                            <image src="/static/img/closet/closet1.jpg" alt="" style="width: auto; height: auto; max-height: 100%; max-width: 100%; margin: 0 auto"></image>
+                                            <image src="/img/closet/closet1.jpg" alt="" style="width: auto; height: auto; max-height: 100%; max-width: 100%; margin: 0 auto"></image>
                                         </div>
                                         <div style="margin-left: 10px; align-items: center; display: flex; flex-direction: column; justify-content: center">
                                             <div style="font-size: 15px" th:text="${item.name}">상품명 :</div>
@@ -157,7 +157,7 @@
                                 <li>
                                     <div class="blog__item__quote" style="display: flex">
                                         <div style="width: 100px; height: 100px; align-items: center; justify-content: center; display: flex">
-                                            <image src="/static/img/closet/closet1.jpg" alt="" style="width: auto; height: auto; max-height: 100%; max-width: 100%; margin: 0 auto"></image>
+                                            <image src="/img/closet/closet1.jpg" alt="" style="width: auto; height: auto; max-height: 100%; max-width: 100%; margin: 0 auto"></image>
                                         </div>
                                         <div style="margin-left: 10px; align-items: center; display: flex; flex-direction: column; justify-content: center">
                                             <div style="font-size: 15px" th:text="${item.name}">상품명 :</div>
@@ -178,7 +178,7 @@
 <!-- Project Page Section End -->
 
 <!-- Footer Section Begin -->
-<footer class="footer set-bg" data-setbg="/static/img/footer-bg.jpg">
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
     <div class="container">
         <div class="copyright" style="margin-top: -90px">
             <div class="row">
@@ -208,7 +208,7 @@
 
 
 <!-- Js Plugins -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.slicknav.js"></script>
 <script src="/js/owl.carousel.min.js"></script>

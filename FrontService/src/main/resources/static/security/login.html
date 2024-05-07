@@ -46,18 +46,18 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href="#" style="font-size: 40px; color: white">MyCloset</a>
+                    <a href="/index.html" style="font-size: 40px; color: white">MyCloset</a>
                 </div>
             </div>
             <div class="col-lg-6">
                 <nav class="header__menu mobile-menu">
                     <ul>
                         <li class="active"><a href="/index.html">Home</a></li>
-                        <li><a href="/user/myPage.html">MyPage</a></li>
-                        <li><a href="/closet/closet.html">Closet</a></li>
-                        <li><a href="/style/styleAI.html">Chatbot</a></li>
-                        <li><a href="/community/community.html">Community</a></li>
-                        <li><a href="/style/styleDictionary.html">Style Dictionary</a></li>
+                        <li><a href="/security/login.html">MyPage</a></li>
+                        <li><a href="/security/login.html">Closet</a></li>
+                        <li><a href="/security/login.html">Chatbot</a></li>
+                        <li><a href="/security/login.html">Community</a></li>
+                        <li><a href="/security/login.html">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -72,28 +72,34 @@
     <div class="container">
         <div class="card border-secondary mb-3" style="height: 650px">
             <div class="card-header">login</div>
-            <div class="card-body">
-                <div>
-                    <label for="userId" class="form-label mt-4">ID</label>
-                    <input type="text" class="form-control" id="userId" aria-describedby="emailHelp" placeholder="ID">
+            <form id="f">
+                <div class="card-body">
+                    <div>
+                        <label for="userId" class="form-label mt-4">ID</label>
+                        <input type="text" class="form-control" name="userId" id="userId" placeholder="ID">
+                    </div>
+                    <div>
+                        <label for="password" class="form-label mt-4">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password"
+                               autocomplete="off">
+                    </div>
+                    <div class="card-body" style="margin-top: 30px">
+                        <button type="button" id="BtnCommonLogin" class="btn btn-dark"
+                                style="width: 100%; height: 48px">로그인
+                        </button>
+                    </div>
+                    <div class="card-body" style="margin-top: -20px">
+                        <a href="javascript:loginWithKakao()"><img src="/img/kakao/kakao_login_medium_wide.png"
+                                style="width: 100%; object-fit: contain"></a>
+                        <hr>
+                    </div>
+                    <div style="justify-content: space-between; display: flex; margin-left: 30px; margin-right: 30px">
+                        <a><div id="btnUserReg" style="font-size: 12px;">회원가입</div></a>
+                        <a><div id="btnFindId" style="font-size: 12px;">아이디 찾기</div></a>
+                        <a><div id="btnFindPw" style="font-size: 12px;">비밀번호 찾기</div></a>
+                    </div>
                 </div>
-                <div>
-                    <label for="exampleInputPassword1" class="form-label mt-4">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
-                           autocomplete="off">
-                </div>
-                <div class="card-body" style="margin-top: 30px">
-                    <button type="button" class="btn btn-dark" style="width: 100%; height: 48px">로그인</button>
-                </div>
-                <div class="card-body" style="margin-top: -20px">
-                    <a><img src="/img/kakao/kakao_login_medium_wide.png" style="width: 100%; object-fit: contain"></a>
-                    <hr>
-                </div>
-                <div style="justify-content: space-between; display: flex; margin-left: 30px; margin-right: 30px">
-                    <div style="font-size: 12px;">회원가입</div>
-                    <div style="font-size: 12px;">아이디/비밀번호 찾기</div>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </section>
@@ -129,11 +135,87 @@
 <!-- Footer Section End -->
 
 <!-- Js Plugins -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.slicknav.js"></script>
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.1/kakao.min.js"
+        integrity="sha384-kDljxUXHaJ9xAb2AzRd59KxjrFjzHa5TAoFQ6GbYTCAG0bjM55XohjjDT7tDDC01" crossorigin="anonymous"></script>
+<script>
+    Kakao.init('ed10bfc27141294be50ae347e58f1008'); // 사용하려는 앱의 JavaScript 키 입력
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#btnUserReg").on("click", function () {
+            location.href = "/security/signUp.html";
+        })
+
+        $("#btnFindId").on("click", function () {
+            location.href = "/security/findId.html"
+        })
+
+        $("#btnFindPw").on("click", function () {
+            location.href = "/security/findPw.html"
+        })
+
+        $("#BtnCommonLogin").on("click", function () {
+            let f = document.getElementById("f");
+
+            if (f.userId.value === "") {
+                alert("아이디를 입력하세요.");
+                f.userId.focus();
+                return;
+            }
+
+            if (f.password.value === "") {
+                alert("비밀번호를 입력하세요.");
+                f.password.focus();
+                return;
+            }
+
+            $.ajax({
+                url: "http://" + apiServer + "/security/v1/loginProc",
+                type: "post",
+                dataType: "JSON",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: $("#f").serialize(),
+            }).then(
+                function (json) {
+
+                    if (json.data.result === 1) {
+                        alert(json.data.msg);
+                        location.href = "/security/afterLogin.html"
+
+                    } else {
+                        alert(json.data.msg);
+                        $("#userId").focus();
+                    }
+                },
+                function () {
+                    alert("에러가 발생하였습니다. \n다음에 다시 시도하길 바랍니다.");
+                    $("#userId").focus();
+                }
+            );
+        })
+
+    })
+
+    // 카카오톡으로 로그인하기(인가코드 받기)
+    function loginWithKakao() {
+        Kakao.Auth.authorize({
+            redirectUri: 'http://localhost:13000/kakao/kakaoLogin'
+        })
+    }
+
+
+</script>
 </body>
 </html>

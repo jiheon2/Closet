@@ -9,7 +9,8 @@ import lombok.Builder;
 public record TokenDTO(
         String userId, // 회원아이디
 
-        String role // 토큰에 저장되는 권한
+        String role, // 토큰에 저장되는 권한
 
+        int userSeq // 회원번호
 ) {
 }

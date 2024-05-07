@@ -11,7 +11,6 @@ public record UserInfoDTO(
         int userSeq, // 회원번호
         String userId, // 회원 아이디
         String password, // 비밀번호
-        String name, // 이름
         String nickName, // 닉네임
         String age, // 연령
         String gender, // 성별

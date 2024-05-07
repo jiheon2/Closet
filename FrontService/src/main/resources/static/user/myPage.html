@@ -51,12 +51,12 @@
             <div class="col-lg-6">
                 <nav class="header__menu mobile-menu">
                     <ul>
-                        <li class="active"><a href="/index.html">Home</a></li>
-                        <li><a href="/templates/userser/myPage.html">MyPage</a></li>
-                        <li><a href="/closet/closet.html">Closet</a></li>
-                        <li><a href="/style/styleAI.html">Chatbot</a></li>
-                        <li><a href="/community/community.html">Community</a></li>
-                        <li><a href="/style/styleDictionary.html">Style Dictionary</a></li>
+                        <li class="active"><a id="goIndex" onclick="goToIndex()">Home</a></li>
+                        <li><a id="goMyPage" onclick="goToMyPage()">MyPage</a></li>
+                        <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
+                        <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
+                        <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
+                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -74,36 +74,39 @@
             <div class="card-header">마이페이지</div>
             <div class="card-body">
                 <div>
-                    <label for="name" class="form-label mt-4">name</label>
-                    <input type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="name" readonly>
-                </div>
-                <div>
-                    <label for="nickname" class="form-label mt-4">name</label>
-                    <input type="text" class="form-control" id="nickname" aria-describedby="emailHelp" placeholder="nickname" readonly>
+                    <label for="nickName" class="form-label mt-4">nickName</label>
+                    <input type="text" class="form-control" id="nickName" aria-describedby="emailHelp"
+                           placeholder="nickName" readonly>
                 </div>
                 <div>
                     <label for="userId" class="form-label mt-4">ID</label>
-                    <input type="text" class="form-control" id="userId" aria-describedby="emailHelp" placeholder="ID" readonly>
+                    <input type="text" class="form-control" id="userId" aria-describedby="emailHelp" placeholder="ID"
+                           readonly>
                 </div>
                 <div>
                     <label for="email" class="form-label mt-4">email</label>
-                    <input type="text" class="form-control" id="email" aria-describedby="emailHelp" placeholder="email" readonly>
+                    <input type="text" class="form-control" id="email" aria-describedby="emailHelp" placeholder="email"
+                           readonly>
                 </div>
                 <div style="float: right; width: 45%">
                     <label for="userId" class="form-label mt-4">gender</label>
-                    <input type="text" class="form-control" id="gender" aria-describedby="emailHelp" placeholder="gender" readonly>
+                    <input type="text" class="form-control" id="gender" aria-describedby="emailHelp"
+                           placeholder="gender" readonly>
                 </div>
                 <div style="float: left; width: 45%">
                     <label for="userId" class="form-label mt-4">age</label>
-                    <input type="text" class="form-control" id="age" aria-describedby="emailHelp" placeholder="age" readonly>
+                    <input type="text" class="form-control" id="age" aria-describedby="emailHelp" placeholder="age"
+                           readonly>
                 </div>
                 <div style="clear: both"></div>
                 <hr>
                 <div class="card-body" style="float: left; width: 49%">
-                    <button type="button" class="btn btn-success" style="width: 100%">비밀번호 변경</button>
+                    <button id="btnUpdatePw" type="button" class="btn btn-success" style="width: 100%">비밀번호 변경</button>
                 </div>
                 <div class="card-body" style="float: right; width: 49%">
-                    <button type="button" class="btn btn-outline-dark" style="width: 100%">내 정보 수정</button>
+                    <button id="btnUpdateUserInfo" type="button" class="btn btn-outline-dark" style="width: 100%">내
+                        정보 수정
+                    </button>
                 </div>
             </div>
         </div>
@@ -112,7 +115,7 @@
 <!-- Contact Section End -->
 
 <!-- Footer Section Begin -->
-<footer class="footer set-bg" data-setbg="/static/img/footer-bg.jpg">
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
     <div class="container">
         <div class="copyright" style="margin-top: -90px">
             <div class="row">
@@ -122,7 +125,9 @@
                             <script>
                                 document.write(new Date().getFullYear());
                             </script>
-                            All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
                         </p>
                     </div>
                 </div>
@@ -139,12 +144,71 @@
 <!-- Footer Section End -->
 
 <!-- Js Plugins -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.slicknav.js"></script>
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script>
+
+    // HTML 로딩이 완료되고, 실행
+    $(document).ready(function () {
+
+        // 로그인 된 사용자인지 확인하기
+        loginUserId = loginInfo();
+
+        // 회원정보 가져오기
+        userInfo();
+
+        // 비밀번호 수정
+        $("#btnUpdatePw").on("click", function () {
+            location.href = "/user/updatePw.html"
+        })
+
+        // 회원정보 수정
+        $("#btnUpdateUserInfo").on("click", function () {
+            location.href = "/user/myPageUpdate.html"
+        })
+
+    })
+
+    // 회원정보 불러오기 함수
+    function userInfo() {
+        // 컨트롤러에 요청하기
+        $.ajax({
+            url: "http://" + apiServer + "/user/v1/userInfo",
+            type: "post",
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            }
+        }).then(
+            function (json) {
+                const userInfo = json.data;
+
+                $("#userId").val(userInfo.userId);
+                $("#nickName").val(userInfo.nickName);
+                $("#email").val(userInfo.email);
+                $("#gender").val(userInfo.gender);
+                $("#age").val(userInfo.age);
+
+                console.log(userInfo.userId);
+                console.log(userInfo.nickName);
+                console.log(userInfo.email);
+                console.log(userInfo.gender);
+                console.log(userInfo.age);
+            },
+            function () {
+                alert("접근 권한이 없습니다.");
+                location.href = loginPage;
+            }
+        );
+    }
+
+</script>
 </body>
 
 </html>

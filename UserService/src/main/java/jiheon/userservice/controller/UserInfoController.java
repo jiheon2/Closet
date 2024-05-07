@@ -1,7 +1,5 @@
 package jiheon.userservice.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jiheon.userservice.auth.JwtTokenProvider;
@@ -10,7 +8,6 @@ import jiheon.userservice.controller.response.CommonResponse;
 import jiheon.userservice.dto.MsgDTO;
 import jiheon.userservice.dto.TokenDTO;
 import jiheon.userservice.dto.UserInfoDTO;
-import jiheon.userservice.repository.entity.UserInfoEntity;
 import jiheon.userservice.service.IUserInfoService;
 import jiheon.userservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000"},
-        allowedHeaders = {"POST, GET", "FEIGN"},
-        allowCredentials = "true",
-        methods = {RequestMethod.POST, RequestMethod.GET},
-        originPatterns = {"user/**"})
+@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000", "http://localhost:13000"},
+        allowedHeaders = {"POST", "GET", "FEIGN"},
+        allowCredentials = "true")
 @Tag(name = "로그인된 사용자들이 접근하는 API", description = "로그인된 사용자들이 접근하는 API 설명입니다.")
 @Slf4j
 @RequestMapping(value = "/user/v1")
@@ -81,6 +76,24 @@ public class UserInfoController {
 
         return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), rDTO));
     }
+    @PostMapping(value = "loginCheck")
+    public ResponseEntity loginCheck(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".loginCheck Start!");
+
+        // AccessToken에 저장된 회원아이디 가져오기
+        String userId = CmmUtil.nvl(this.getTokenInfo(request).userId());
+
+        log.info("userId : " + userId);
+
+        UserInfoDTO pDTO = UserInfoDTO.builder().userId(userId).build();
+
+        log.info(this.getClass().getName() + ".loginCheck End!");
+
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), pDTO));
+    }
+
+
 
     @PostMapping(value = "updateUserInfo")
     public ResponseEntity updateUserInfo(HttpServletRequest request) throws Exception {
@@ -94,19 +107,17 @@ public class UserInfoController {
 
         try {
             String userId = CmmUtil.nvl(this.getTokenInfo(request).userId());
-            String name = CmmUtil.nvl(request.getParameter("name"));
             String nickName = CmmUtil.nvl(request.getParameter("nickName"));
             String email = CmmUtil.nvl(request.getParameter("email"));
             String age = CmmUtil.nvl(request.getParameter("age"));
 
             log.info("userId : " + userId);
-            log.info("name : " + name);
             log.info("nickName : " + nickName);
             log.info("email : " + email);
             log.info("age : " + age);
 
             UserInfoDTO pDTO = UserInfoDTO.builder()
-                    .name(name)
+                    .userId(userId)
                     .nickName(nickName)
                     .age(age)
                     .email(email)
@@ -142,24 +153,34 @@ public class UserInfoController {
 
         try {
             String userId = CmmUtil.nvl(this.getTokenInfo(request).userId());
-            String password = CmmUtil.nvl(request.getParameter("password"));
+            String newPassword = CmmUtil.nvl(request.getParameter("newPassword"));
+            String oldPassword = CmmUtil.nvl(request.getParameter("oldPassword"));
 
             log.info("userId : " + userId);
-            log.info("password : " + password);
+            log.info("oldPassword : " + oldPassword);
+            log.info("newPassword : " + newPassword);
 
-            UserInfoDTO pDTO = UserInfoDTO.builder()
-                    .userId(userId)
-                    .password(bCryptPasswordEncoder.encode(password))
-                    .build();
+            UserInfoDTO cDTO =  UserInfoDTO.builder().userId(userId).build();
 
-            res = userInfoService.updatePassword(pDTO);
+            // 기존 비밀번호 가져오기
+            UserInfoDTO rDTO = userInfoService.getUserInfo(cDTO);
 
-            if (res == 1) {
-                msg = "비밀번호가 수정되었습니다. 다시 로그인해주시기 바랍니다.";
+            // 스프링 시큐리티에서 제공하는 비밀번호 매치
+            boolean checkPw = bCryptPasswordEncoder.matches(oldPassword, rDTO.password());
 
+            if (!checkPw) {
+                msg = "기존의 비밀번호가 일치하지 않습니다.";
             } else {
-                msg = "오류로 인해 비밀번호 수정에 실패하였습니다.";
+
+                UserInfoDTO pDTO = UserInfoDTO.builder()
+                        .userId(userId)
+                        .password(bCryptPasswordEncoder.encode(newPassword))
+                        .build();
+
+                res = userInfoService.updatePassword(pDTO);
+                msg = "비밀번호 수정에 성공하였습니다.";
             }
+
         } catch (Exception e) {
             log.info(e.toString());
         } finally {
@@ -172,7 +193,7 @@ public class UserInfoController {
     }
 
     @PostMapping(value = "deleteUserInfo")
-    public ResponseEntity deleteUserInfo(HttpServletRequest request, String userId) throws Exception {
+    public ResponseEntity deleteUserInfo(HttpServletRequest request) throws Exception {
 
         log.info(this.getClass().getName() + ".deleteUserInfo Start!");
 
@@ -182,20 +203,15 @@ public class UserInfoController {
 
         try {
             // 토큰에서 userId 가져오기
-            userId = CmmUtil.nvl(this.getTokenInfo(request).userId());
+            String userId = CmmUtil.nvl(this.getTokenInfo(request).userId());
+            int userSeq = this.getTokenInfo(request).userSeq();
+
+            UserInfoDTO pDTO = UserInfoDTO.builder().userId(userId).userSeq(userSeq).build();
 
             // 회원탈퇴
-            res = userInfoService.deleteUserInfo(userId);
+            res = userInfoService.deleteUserInfo(pDTO);
 
-            UserInfoDTO pDTO = UserInfoDTO.builder().userId(userId).build();
-
-            // 회원정보 조회
-            UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getUserInfo(pDTO))
-                    .orElseGet(() -> UserInfoDTO.builder().build());
-
-            log.info("rDTO : " + rDTO);
-
-            if (res == 1 && rDTO == null) {
+            if (res == 1) {
                 msg = "회원탈퇴가 완료되었습니다.";
             } else {
                 msg = "오류로 인해 회원탈퇴가 완료되지 않았습니다.";

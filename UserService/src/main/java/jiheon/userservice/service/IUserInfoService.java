@@ -14,6 +14,6 @@ public interface IUserInfoService {
     int updatePassword(UserInfoDTO pDTO) throws Exception;
 
     // 회원탈퇴
-    int deleteUserInfo(String userId) throws Exception;
+    int deleteUserInfo(UserInfoDTO pDTO) throws Exception;
 
 }
