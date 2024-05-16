@@ -1,12 +1,15 @@
 package jiheon.communityservice.repository.entity;
 
+import jiheon.communityservice.dto.PostDTO;
 import lombok.Builder;
+import lombok.Getter;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Builder
+@Getter
 @Document(collection = "post") // MongoDB 컬렉션 이름 지정
 public class PostEntity {
 
@@ -17,7 +20,7 @@ public class PostEntity {
     @Field
     private String nickName; // 닉네임
     @Field
-    private int postSeq; // 게시글 번호
+    private long postSeq; // 게시글 번호
     @Field
     private String title; // 게시글 제목
     @Field
@@ -25,10 +28,19 @@ public class PostEntity {
     @Field
     private String regDt; // 등록시간
     @Field
-    private String chgDt; // 수정시간
-    @Field
-    private String imageName; // 이미지 경로
+    private String imagePath; // 이미지 경로
 
-    @Field
-    private Binary image; // 이미지
+    @Override
+    public String toString() {
+        return "PostEntity {" +
+                "id : " + id +
+                ", userId : " + userId +
+                ", nickName : " + nickName +
+                ", postSeq : " + postSeq +
+                ", title : " + title +
+                ", contents : " + contents +
+                ", regDt : " + regDt +
+                ", imagePath : " + imagePath +
+                "}";
+    }
 }

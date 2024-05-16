@@ -1,8 +1,6 @@
 package jiheon.closetservice.service.impl;
 
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
-import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.*;
 import jiheon.closetservice.dto.ClosetDTO;
 import jiheon.closetservice.repository.ClosetRepository;
@@ -13,18 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
-import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.UUID;
-
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Slf4j
 @RequiredArgsConstructor

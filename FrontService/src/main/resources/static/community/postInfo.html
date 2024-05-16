@@ -88,49 +88,43 @@
                 <div class="blog__details__content">
                     <div class="blog__details__title">
                         <div style="text-align: center; margin-bottom: 15px">
-                            <button type="button" class="btn btn-outline-dark" style="width: 30%">게시판 목록</button>
-                            <button type="button" class="btn btn-outline-dark" style="width: 30%">게시글 수정</button>
-                            <button type="button" class="btn btn-outline-dark" style="width: 30%">게시글 삭제</button>
+                            <button type="button" id="communityList" class="btn btn-outline-dark" style="width: 30%">게시판
+                                목록
+                            </button>
+                            <button type="button" id="postUpdate" class="btn btn-outline-dark" style="width: 30%">게시글
+                                수정
+                            </button>
+                            <button type="button" id="postDelete" class="btn btn-outline-dark" style="width: 30%">게시글
+                                삭제
+                            </button>
                         </div>
                         <div style="margin: 25px 10px 25px 10px">
-                            <h3>게시글 예제파일</h3>
+                            <h3 id="title"></h3>
                         </div>
                         <div style="margin-bottom: -18px">
                             <ul style="list-style: none">
-                                <li style="font-size: 10px">날짜</li>
-                                <li style="font-size: 10px">작성자</li>
-                                <li style="font-size: 10px">조회수</li>
+                                <li style="font-size: 10px" id="regDt">날짜</li>
+                                <li style="font-size: 10px" id="nickName">작성자</li>
                             </ul>
                         </div>
                     </div>
-                    <img src="/img/blog/details/blog-details.jpg" alt="" style="margin-bottom: 25px">
+                    <img src="" alt="" style="margin-bottom: 25px; height: 300px; object-fit: contain" id="image">
                     <div class="blog__details__text">
-                        <div>주택가격 급등이 탈서울화의 주요 요인이 되고 있다. 매매가와 전·월세값이 가파르게 오르면서 서울을 떠나 인접한 지역으로 보금자리를 옮기는 것이다.
-                            21일 통계청 인구이동 자료에 따르면 지난해 서울에서 인천·경기지역으로 전입한 인구는 각각 4만5942명과 27만9375명으로 집계됐다. 전입 사유
-                            7가지(직업·가족·주택·교육·주거환경·자연환경·기타) 가운데 1위는 주택 문제가 차지했다.
-                            서울에서 인천으로 주택 때문에 전입한 인구는 1만5863명으로 전체 전입 인구의 34%로 집계됐다. 같은 사유로 경기도 전입을 선택한 인구는 8만9636명으로 전체
-                            전입 인구의 32%에 달했다. 10만명이 넘는 인구가 주택 마련의 어려움 때문에 서울에서 인천·경기로 이동한 것이다.
-                        </div>
+                        <div id="contents"></div>
                     </div>
                     <div>댓글</div>
                     <hr>
-                    <div>
-                        <div style="margin-bottom: 10px; display: flex; justify-content: space-between">
-                            <div style="margin-bottom: 10px;">홍길동</div>
-                            <textarea rows="1" style="overflow: hidden; overflow-wrap: break-word;
-                                      max-height: 500px; width: 75%; border: 0; font-size: 13px; height: 25px; resize: none; outline: 0;">이건 첫번째 댓글입니다.</textarea>
-                            <div style="font-size: 10px;">수정</div>
-                            <div style="font-size: 10px;">삭제</div>
-                        </div>
-                    </div>
+                    <div class="commentList"></div>
                     <div style="margin: 12px 0; padding: 16px 10px 10px 18px; border: 2px solid darkgray;
                                 border-radius: 6px; box-sizing: border-box; background: white;">
                         <div style="margin-bottom: 10px">
-                            <div style="margin-bottom: 10px;">홍길동</div>
+                            <div style="margin-bottom: 10px;" id="userNickName"></div>
                             <div style="display: flex">
                             <textarea placeholder="댓글 남겨보세요" rows="1" style="overflow: hidden; overflow-wrap: break-word;
-                                      max-height: 500px; width: 80%; border: 0; font-size: 13px; height: 25px; resize: none; outline: 0;">이건 첫번째 댓글입니다.</textarea>
-                                <button style="width: 15%; border: 1px solid darkgray; border-radius: 5px; font-size: 13px; height: 25px; resize: none;">
+                                      max-height: 500px; width: 80%; border: 0; font-size: 13px; height: 25px; resize: none; outline: 0;"
+                                      id="insertComment"></textarea>
+                                <button style="width: 15%; border: 1px solid darkgray; border-radius: 5px; font-size: 13px; height: 25px; resize: none;"
+                                        id="btnComment">
                                     등록
                                 </button>
                             </div>
@@ -180,6 +174,308 @@
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
-</body>
+<script src="/js/common.js"></script>
+<script type="text/javascript">
 
+    let param = new URLSearchParams(window.location.search);
+    const postSeq = param.get("postSeq")
+    let data1;
+    let data2;
+
+    function userInfo() {
+        loginInfo().then(function (nickName) {
+            document.getElementById("userNickName").textContent = nickName;
+        }).catch(function (error) {
+            // 프라미스가 실패 상태가 되면 해당 함수가 호출됩니다.
+            console.error("에러 : " + error);
+        });
+    }
+
+    function postInfo() {
+        $.ajax({
+            url: "http://" + apiServer + "/community/v1/postInfo",
+            type: "POST",
+            data: {
+                postSeq: postSeq
+            },
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (json) {
+                // 서버 응답 처리
+                data1 = json.data1;
+                data2 = json.data2;
+                console.log("게시글 정보 : ", data1);
+                console.log("댓글 정보 : ", data2)
+                $("#title").append(data1.title)
+                $("#nickName").text("작성자 : " + data1.nickName)
+                $("#regDt").text("날짜 : " + data1.regDt)
+                $("#contents").append(data1.contents)
+                if (data1.imagePath !== null) {
+                    $("#image").attr("src", data1.imagePath)
+                }
+
+                // 기존의 .commentList를 비움
+                $(".commentList").empty();
+
+                // 새로운 .commentList 생성
+                let newCommentListDiv = $("<div></div>").addClass("commentList");
+
+                for (const comment of json.data2) {
+                    // commentDiv 생성
+                    let commentDiv = $("<div></div>");
+
+                    // commentListDiv 생성 및 스타일 추가
+                    let commentListDiv = $("<div></div>").css({
+                        "margin-bottom": "10px",
+                        "display": "flex",
+                        "justify-content": "space-between"
+                    });
+
+                    // commentNickNameDiv 생성, 텍스트 설정, 스타일 추가
+                    let commentNickNameDiv = $("<div></div>").text(comment.nickName).css("margin-bottom", "10px");
+
+                    // textarea 생성 및 스타일 추가
+                    let textarea = $("<textarea></textarea>").attr({
+                        "rows": "1",
+                        "style": "overflow: hidden; overflow-wrap: break-word; max-height: 500px; width: 70%; border: 0; font-size: 13px; height: 25px; resize: none; outline: 0;",
+                        "id": "comment",
+                        "readonly": true
+                    }).val(comment.comment);
+
+                    // 수정 버튼 생성
+                    let updateButton = $("<button></button>").text("수정").attr("type", "button").addClass("commentUpdate").css({
+                        "font-size": "10px",
+                        "border": "none",
+                        "background": "white",
+                        "height": "10px"
+                    });
+
+                    // 삭제 버튼 생성
+                    let deleteButton = $("<button></button>").text("삭제").attr("type", "button").addClass("commentDelete").css({
+                        "font-size": "10px",
+                        "border": "none",
+                        "background": "white",
+                        "height": "10px"
+                    });
+
+                    // 댓글 번호
+                    let commentSeq = $("<div></div>").addClass("commentSeq").css("display", "none").text(comment.commentSeq);
+
+                    // commentListDiv에 commentNickNameDiv, textarea, updateButton, deleteButton, commentSeq 추가
+                    commentListDiv.append(commentNickNameDiv, textarea, updateButton, deleteButton, commentSeq);
+
+                    // commentDiv에 commentListDiv 추가
+                    commentDiv.append(commentListDiv);
+
+                    // 생성한 commentDiv를 newCommentListDiv에 추가
+                    newCommentListDiv.append(commentDiv);
+                }
+
+                // 생성한 newCommentListDiv를 .commentList에 추가
+                $(".commentList").append(newCommentListDiv);
+            },
+            error: function (xhr, status, error) {
+                console.error("서버 요청 실패:", error);
+            }
+        });
+    }
+
+    userInfo();
+    postInfo();
+
+    function communityList() {
+        location.href = "/community.html"
+    }
+
+    function postUpdate() {
+        console.log(loginUserId)
+        if (loginUserId !== data1.userId) {
+            alert("본인이 작성한 글만 수정할 수 있습니다.")
+        } else {
+            location.href = "/community/postUpdate.html?postSeq=" + postSeq;
+        }
+    }
+
+    function postDelete() {
+        if (loginUserId === data1.userId) {
+            if (confirm("작성한 글을 삭제하시겠습니까?")) {
+
+                // Ajax 호출해서 글 삭제하기
+                $.ajax({
+                    url: "http://" + apiServer + "/community/v1/deletePost",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {"postSeq": postSeq}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    xhrFields: {
+                        withCredentials: true
+                    }
+                }).then(function (json) {
+                    alert(json.data.msg); // 메시지 띄우기
+                    location.href = "/community.html";
+                })
+            }
+        } else {
+            alert("본인이 작성한 글만 삭제 가능합니다.");
+        }
+    }
+
+    function commentUpdate(clickedButton) {
+        if (loginUserId === data1.userId) {
+            console.log($(this));
+            // 클릭된 요소를 변수에 할당하여 사용
+            let $clickedButton = $(clickedButton);
+            // 해당 댓글의 텍스트 영역과 수정 버튼 가져오기
+            let textarea = $clickedButton.siblings("textarea");
+            console.log("textarea : " + textarea.length);
+            let commentSeq = $clickedButton.siblings(".commentSeq").text();
+            console.log("commentSeq : " + commentSeq);
+
+            // textarea에 border와 radius 추가
+            textarea.css({
+                "border": "1px solid darkgray",
+                "border-radius": "5px"
+            });
+
+            // 수정 버튼을 누를 때마다 텍스트 영역의 속성을 변경하여 수정 가능하게 함
+            if (textarea.prop("readonly")) {
+                textarea.prop("readonly", false).css("background-color", "white");
+                $clickedButton.text("완료");
+
+                // 수정 완료 버튼 클릭 이벤트
+                $clickedButton.on("click", function () {
+                    // 수정된 내용 가져오기
+                    let updatedComment = textarea.val();
+
+                    // 서버로 수정된 내용 전송
+                    $.ajax({
+                        url: "http://" + apiServer + "/community/v1/updateComment",
+                        type: "POST",
+                        data: {
+                            commentSeq: commentSeq,
+                            comment: updatedComment
+                        },
+                        dataType: "JSON",
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        success: function (response) {
+                            // 성공적으로 수정되면 텍스트 영역의 상태를 원래대로 되돌림
+                            textarea.prop("readonly", true).css({
+                                "border": "0",
+                                "overflow": "hidden",
+                                "overflow-wrap": "break-word",
+                                "max-height": "500px",
+                                "font-size": "13px",
+                                "height": "25px",
+                                "resize": "none",
+                                "outline": "0",
+                                "background-color": "white"
+                            });
+                            $clickedButton.text("수정");
+                            console.log("댓글 수정 완료");
+                            alert(response.data.msg);
+                            location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("댓글 수정 실패:", error);
+                            location.reload();
+                        }
+                    });
+                });
+            }
+        } else {
+            alert("본인이 작성한 댓글만 수정 가능합니다.");
+        }
+    }
+
+    function commentDelete(clickedButton) {
+        if (loginUserId === data1.userId) {
+            // 클릭된 요소를 변수에 할당하여 사용
+            let $clickedButton = $(clickedButton);
+            let commentSeq = $clickedButton.siblings(".commentSeq").text();
+            console.log("commentSeq : " + commentSeq);
+
+
+            if (confirm("작성한 댓글을 삭제하시겠습니까?")) {
+                $.ajax({
+                    url: "http://" + apiServer + "/community/v1/deleteComment",
+                    type: "POST",
+                    data: {
+                        commentSeq: commentSeq
+                    },
+                    dataType: "JSON",
+                    xhrFields: {
+                        withCredentials: true
+                    }
+                }).then(function (json) {
+                    if (json.data.result === 1) {
+                        alert(json.data.msg);
+                        location.reload();
+                    } else {
+                        alert(json.data.msg);
+                        location.reload();
+                    }
+                })
+            }
+        } else {
+            alert("본인이 작성한 댓글만 삭제 가능합니다.");
+        }
+    }
+
+    $(document).ready(function () {
+
+        loginInfo();
+
+        // 게시글 목록
+        $("#communityList").on("click", function () {
+            communityList();
+        })
+
+        $("#postUpdate").on("click", function () {
+            postUpdate();
+        })
+
+        $("#postDelete").on("click", function () {
+            postDelete();
+        })
+
+        $(document).on("click", ".commentUpdate", function () {
+            commentUpdate.call(this, this); // 클릭된 요소를 commentUpdate 함수 내에서 this로 사용
+        });
+
+        $(document).on("click", ".commentDelete", function () {
+            commentDelete.call(this, this);
+        });
+
+
+        $("#btnComment").on("click", function () {
+
+            $.ajax({
+                url: "http://" + apiServer + "/community/v1/insertComment",
+                type: "post",
+                dataType: "JSON",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: {
+                    postSeq: postSeq,
+                    userId: loginUserId,
+                    nickName: $("#userNickName").text(),
+                    comment: $("#insertComment").val()
+                }
+            }).then(function (json) {
+                if (json.data.result === 1) {
+                    alert(json.data.msg);
+                    location.reload(); // 페이지 새로고침
+                } else {
+                    alert(json.data.msg);
+                }
+            })
+        })
+    });
+
+</script>
+</body>
 </html>

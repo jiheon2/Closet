@@ -86,29 +86,36 @@
         <div class="row d-flex justify-content-center">
             <div class="col-lg-10">
                 <div class="blog__details__content">
-                    <form>
+                    <form id="f">
                         <div class="blog__details__title">
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="text" placeholder="제목"
+                                <input type="text" placeholder="제목" id="title"
                                        style="width: 100%; font-size: inherit; border: none; outline: none; padding: 0; margin: 0;">
                             </div>
                             <div style="margin-bottom: -18px; float: right">
                                 <ul style="list-style: none">
-                                    <li style="font-size: 10px">날짜</li>
-                                    <li style="font-size: 10px">작성자</li>
+                                    <li style="font-size: 10px" id="time"></li>
+                                    <li style="font-size: 10px" id="nickName"></li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="custom-file" style="margin-top: 5px; margin-bottom: 5px">
+                        <div class="custom-file" style="margin-top: 5px; margin-bottom: 5px; width: 75%">
                             <label class="custom-file-label"></label>
-                            <input class="custom-file-input" type="file" name="image" accept="multipart/form-data">
+                            <input class="custom-file-input" type="file" id="image" name="image" accept="image/*" onchange="setImage(event);">
+                        </div>
+                        <button class="btn btn-outline-dark" type="button" style="width: 20%" onclick="clearImage()">취소</button>
+                        <div class="col-lg-12">
+                            <div id="imageContainer"></div>
                         </div>
                         <div class="col-lg-12">
-                            <textarea placeholder="내용을 입력하세요"
+                            <textarea placeholder="내용을 입력하세요" id="contents"
                                       style="width: 100%; height: 500px; border: none;"></textarea>
                         </div>
                     </form>
-                    <button style="float: right" class="btn btn-dark" type="submit">작성</button>
+                    <div style="display: flex; float: right">
+                        <button style="margin-left: 5px" id="postReg" class="btn btn-dark" type="button">작성</button>
+                        <button style="margin-left: 5px" id="postRegCancel" class="btn btn-outline-dark" type="button">취소</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -153,6 +160,118 @@
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery.serializeObject.min.js"></script>
+<script>
+
+    // JavaScript를 사용하여 현재 시간을 가져오는 함수
+    function getCurrentTime() {
+        // 현재 시간을 가져오기 위해 Date 객체를 사용합니다.
+        let now = new Date();
+
+        // 시간을 원하는 형식으로 포맷팅합니다. (예: HH:MM:SS)
+        let formattedTime = (now.getMonth() + 1) + "/" + now.getDate();
+
+        // HTML 요소의 텍스트로 현재 시간을 설정합니다.
+        document.getElementById("time").textContent = formattedTime;
+    }
+
+    function getPostRegUser() {
+        loginInfo().then(function (nickName) {
+            document.getElementById("nickName").textContent = nickName;
+        }).catch(function (error) {
+            // 프라미스가 실패 상태가 되면 해당 함수가 호출됩니다.
+            console.error("에러 : " + error);
+        });
+    }
+
+    // 페이지가 로드되면 현재 시간을 업데이트합니다.
+    window.onload = function () {
+        getCurrentTime();
+        getPostRegUser();
+
+        // 1초마다 현재 시간을 업데이트합니다.
+        setInterval(getCurrentTime, 1000);
+    };
+
+    function setImage(event) {
+        let reader = new FileReader();
+
+        reader.onload = function(event) {
+
+            // 이전 이미지 삭제
+            let imageContainer = document.querySelector("div#imageContainer");
+            while (imageContainer.firstChild) {
+                imageContainer.removeChild(imageContainer.firstChild);
+            }
+
+            // 새 이미지 추가
+            let img = document.createElement("img");
+            img.setAttribute("src", event.target.result);
+            img.setAttribute("width", "100%");
+            img.setAttribute("height", "300px");
+            img.style.objectFit = "contain"
+            document.querySelector("div#imageContainer").appendChild(img);
+        };
+
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function clearImage() {
+        let imageContainer = document.querySelector("div#imageContainer");
+        while (imageContainer.firstChild) {
+            imageContainer.removeChild(imageContainer.firstChild);
+        }
+    }
+
+    $(document).ready(function () {
+        $("#postReg").on("click", function () {
+
+            let f = document.getElementById("f");
+            let title = f.querySelector("#title").value;
+            let time = f.querySelector("#time").innerText;
+            let nickName = f.querySelector("#nickName").innerText;
+            let contents = f.querySelector("#contents").value;
+
+            let formData = new FormData();
+
+            formData.append("title", title);
+            formData.append("regDt", time);
+            formData.append("nickName", nickName);
+            formData.append("contents", contents);
+
+            // 이미지 파일 추가
+            let imageInput = document.getElementById("image");
+            if (imageInput.files.length > 0) {
+                let imageFile = imageInput.files[0];
+                formData.append("image", imageFile);
+            }
+
+            $.ajax({
+                url: "http://" + apiServer + "/community/v1/insertPost",
+                type: "post",
+                dataType: "JSON",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: formData,
+                processData: false,
+                contentType: false
+            }).then(function (json) {
+                if (json.data.result === 1) {
+                    alert(json.data.msg);
+                    location.href = "/community.html";
+                } else {
+                    alert(json.data.msg);
+                }
+            })
+        })
+
+        $("#postRegCancel").on("click", function () {
+            history.back();
+        })
+    })
+</script>
 </body>
 
 </html>

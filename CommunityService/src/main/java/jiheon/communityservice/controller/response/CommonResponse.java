@@ -14,6 +14,8 @@ public class CommonResponse<T> {
     private HttpStatus httpStatus;
     private String message;
     private T data;
+    private T data1;
+    private T data2;
 
     @Builder
     public CommonResponse(HttpStatus httpStatus, String message, T data) {
@@ -21,9 +23,20 @@ public class CommonResponse<T> {
         this.message = message;
         this.data = data;
     }
+    @Builder
+    public CommonResponse(HttpStatus httpStatus, String message, T data1, T data2) {
+        this.httpStatus = httpStatus;
+        this.message = message;
+        this.data1 = data1;
+        this.data2 = data2;
+    }
 
     public static <T> CommonResponse<T> of(HttpStatus httpStatus, String message, T data) {
         return new CommonResponse<>(httpStatus, message, data);
+    }
+
+    public static <T> CommonResponse<T> of(HttpStatus httpStatus, String message, T data1, T data2) {
+        return new CommonResponse<>(httpStatus, message, data1, data2);
     }
 
 

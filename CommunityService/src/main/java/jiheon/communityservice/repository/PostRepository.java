@@ -13,11 +13,11 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
     // 게시글 전체 조회
     List<PostEntity> findAllByOrderByPostSeqDesc();
 
-    // 회원아이디별 게시글 조회
-    List<PostEntity> findAllByUserIdOrderByPostSeqDesc(String userId);
+//    // 회원아이디별 게시글 조회
+//    List<PostEntity> findAllByUserIdOrderByPostSeqDesc(String userId);
 
     // 게시글 상세조회
-    Optional<PostEntity> findByPostSeq(int postSeq);
+    Optional<PostEntity> findByPostSeq(long postSeq);
 
     // 게시글 개수 세기
     long count();

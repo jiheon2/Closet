@@ -84,61 +84,25 @@
 <!-- Blog Section Begin -->
 <section class="blog spad">
     <div class="container" style="margin-top: -80px">
-        <div style="text-align: center; margin: 0 auto">
-            <input type="text" id="search" style="width: 80%; padding: 4px;">
-            <button type="button" class="btn btn-outline-dark" style="width: 15%">검색</button>
-        </div>
+<!--        <div style="text-align: center; margin: 0 auto">-->
+<!--            <input type="text" id="search" style="width: 80%; padding: 4px;">-->
+<!--            <button type="button" onclick="searchPost()" class="btn btn-outline-dark" style="width: 15%">검색</button>-->
+<!--        </div>-->
         <div style="padding: 4px; text-align: center;">
-            <button type="button" class="btn btn-outline-dark" style="width: 45%">내가 쓴 글</button>
-            <button type="button" class="btn btn-outline-dark" style="width: 45%">글 작성</button>
+<!--            <button type="button" onclick="goMyPost()" class="btn btn-outline-dark" style="width: 45%">내가 쓴 글</button>-->
+            <button type="button" onclick="goPostReg()" class="btn btn-outline-dark" style="width: 100%">글 작성</button>
         </div>
-        <div class="row" style="margin-top: 25px" th:each="item : ${items}">
+        <div class="row" style="margin-top: 25px">
             <div class="col-lg-8">
                 <a class="blog__item__list">
-                    <ul style="list-style: none">
+                    <ul style="list-style: none" id="postList">
                         <li>
-                            <div class="blog__item__quote">
-                                <div th:text="${item.title}">오늘의 스타일</div>
+                            <div class="blog__item__quote" onclick="doDetail(postSeq)">
+                                <div></div>
                                 <div style="display: flex; justify-content: space-between">
-                                    <div style="font-size: 12px" th:text="${item.author}">홍길동</div>
-                                    <div style="font-size: 12px" th:text="${item.date}">2024-03-26</div>
-                                    <div style="font-size: 12px" th:text="${item.views}">13</div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </a>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 25px" th:each="item : ${items}">
-            <div class="col-lg-8">
-                <a class="blog__item__list">
-                    <ul style="list-style: none">
-                        <li>
-                            <div class="blog__item__quote">
-                                <div th:text="${item.title}">어제 산 옷 자랑</div>
-                                <div style="display: flex; justify-content: space-between">
-                                    <div style="font-size: 12px" th:text="${item.author}">전우치</div>
-                                    <div style="font-size: 12px" th:text="${item.date}">2024-01-18</div>
-                                    <div style="font-size: 12px" th:text="${item.views}">88</div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </a>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 25px" th:each="item : ${items}">
-            <div class="col-lg-8">
-                <a class="blog__item__list">
-                    <ul style="list-style: none">
-                        <li>
-                            <div class="blog__item__quote">
-                                <div th:text="${item.title}">패션 팝업스토어 후기</div>
-                                <div style="display: flex; justify-content: space-between">
-                                    <div style="font-size: 12px" th:text="${item.author}">임꺽정</div>
-                                    <div style="font-size: 12px" th:text="${item.date}">2024-02-24</div>
-                                    <div style="font-size: 12px" th:text="${item.views}">185</div>
+                                    <div style="font-size: 12px"></div>
+                                    <div style="font-size: 12px"></div>
+                                    <div style="display: none" class="postSeq"></div>
                                 </div>
                             </div>
                         </li>
@@ -187,6 +151,71 @@
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    function goPostReg() {
+        location.href = "/community/postReg.html"
+    }
+
+    function doDetail(postSeq) {
+        location.href = "/community/postInfo.html?postSeq=" + postSeq;
+    }
+
+    // 글내용 불러오기
+    postList();
+
+    // 게시글 불러오기
+    function postList() {
+        // 컨트롤러에 요청하기
+        $.ajax({
+            url: "http://" + apiServer + "/community/v1/postList",
+            type: "post",
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            }
+        }).then(
+            function (json) {
+                $("#postList").empty();
+
+               for (const post of json.data) {
+
+                   console.log(post);
+
+                   let li = $("<li></li>");
+                   let blogItemQuote = $("<div class='blog__item__quote'></div>");
+
+                   let titleDiv = $("<div></div>").text(post.title);
+
+                   let postListDiv = $("<div></div>").css({"display": "flex", "justify-content": "space-between"});
+
+                   let nicknameDiv = $("<div></div>").css("fontSize", "12px").text(post.nickName);
+
+                   let dateDiv = $("<div></div>").css("fontSize", "12px").text(post.regDt);
+
+                   let postSeq = $("<div></div>").attr("class", "postSeq").css("display", "none").text(post.postSeq);
+
+
+                   postListDiv.append(nicknameDiv);
+                   postListDiv.append(dateDiv);
+
+                   blogItemQuote.append(titleDiv);
+                   blogItemQuote.append(postListDiv);
+                   blogItemQuote.append(postSeq);
+
+                   // 클릭 이벤트 핸들러 등록
+                   blogItemQuote.click(function () {
+                       doDetail(post.postSeq); // postSeq를 전달하여 doDetail 함수 호출
+                   });
+
+                   li.append(blogItemQuote);
+
+                   $("#postList").append(li);
+               }
+            }
+        )
+    }
+</script>
 </body>
 
 </html>

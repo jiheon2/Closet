@@ -5,21 +5,27 @@ let loginUserId = "";
 
 // 로그인 정보가 있는지 확인
 function loginInfo() {
-
-    // 컨트롤러에 토큰값에서 userId 정보 가져오기 요청
-    $.ajax({
-        url: "http://" + apiServer + "/user/v1/loginCheck",
-        type: "post",
-        dataType: "JSON",
-        xhrFields: {
-            withCredentials: true
-        }
-    }).then(function (json) {
-        loginUserId = json.data.userId;
-        console.log(loginUserId);
-    })
+    return new Promise(function(resolve, reject) {
+        // 컨트롤러에 토큰값에서 userId 정보 가져오기 요청
+        $.ajax({
+            url: "http://" + apiServer + "/user/v1/userInfo",
+            type: "post",
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            }
+        }).then(function (json) {
+            console.log(json.data.userId);
+            console.log(json.data.nickName);
+            resolve(json.data.nickName);
+            loginUserId = json.data.userId;
+        }).fail(function (xhr, status, error) {
+            alert("접근 권한이 없습니다.");
+            console.log(error);
+            location.href = loginPage;
+        });
+    });
 }
-
 
 // MyPage 링크 클릭 시 처리
 function goToMyPage() {
@@ -28,7 +34,7 @@ function goToMyPage() {
 
 // Closet 링크 클릭 시 처리
 function goToCloset() {
-    location.href = "/closet/closet.html";
+    location.href = "../closet.html";
 }
 
 // Chatbot 링크 클릭 시 처리
@@ -38,7 +44,7 @@ function goToChatbot() {
 
 // Community 링크 클릭 시 처리
 function goToCommunity() {
-    location.href = "/community/community.html";
+    location.href = "../community.html";
 }
 
 // Style Dictionary 링크 클릭 시 처리

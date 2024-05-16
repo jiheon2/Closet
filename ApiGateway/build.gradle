@@ -44,7 +44,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework:spring-webflux'
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
 dependencyManagement {
