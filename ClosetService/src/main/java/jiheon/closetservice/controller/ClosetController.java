@@ -4,91 +4,94 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import jiheon.closetservice.controller.response.CommonResponse;
 import jiheon.closetservice.dto.ClosetDTO;
 import jiheon.closetservice.dto.MsgDTO;
+import jiheon.closetservice.dto.TokenDTO;
 import jiheon.closetservice.service.IClosetService;
+import jiheon.closetservice.service.ITokenService;
 import jiheon.closetservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@CrossOrigin(origins = {"http://localhost:13000", "http://localhost:14000"},
-        allowedHeaders = {"POST", "GET"},
+
+@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000"},
+        allowedHeaders = {"Content-Type, Authorization"},
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS},
         allowCredentials = "true")
 @Tag(name = "옷장 서비스", description = "옷장 서비스 API")
 @Slf4j
-@RequestMapping(value = "/closet")
+@RequestMapping(value = "/closet/v1")
 @RequiredArgsConstructor
 @RestController
 public class ClosetController {
 
     private final IClosetService closetService;
+    private final ITokenService tokenService;
+
+    private final String HEADER_PREFIX = "Bearer "; // Bearer 토큰 사용을 위한 선언값
 
     @Operation(summary = "회원별 옷장 전체 조회 API", description = "회원별 옷장의 전체 이미지를 제공하는 API",
             responses = {@ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "404", description = "Page Not Found")})
     @PostMapping(value = "/list")
-    public List<ClosetDTO> getAllClosetList(HttpSession session) throws Exception {
+    public ResponseEntity getAllClosetList(@CookieValue(value = "${jwt.token.access.name}") String token) throws Exception {
 
-        log.info(this.getClass().getName() + ".getAllClosetList 실행");
+        log.info("[Controller] getAllClosetList Start!");
 
-        String userId = CmmUtil.nvl(session.getId());
+        TokenDTO tDTO = tokenService.getTokenInfo(HEADER_PREFIX + token);
+        String userId = tDTO.userId();
 
-        log.info("userId : " + userId);
+        List<ClosetDTO> rList = closetService.getAllClosetList(userId);
 
-        ClosetDTO pDTO = ClosetDTO.builder().userId(userId).build();
+        log.info("[Controller] getAllClosetList End!");
 
-        List<ClosetDTO> rList = Optional.ofNullable(closetService.getClosetList(pDTO)).orElseGet(ArrayList::new);
-
-        log.info(this.getClass().getName() + ".getAllClosetList 종료");
-
-        return rList;
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), rList));
     }
 
     @Operation(summary = "회원별 파츠별 옷장 조회 API", description = "회원별 파츠별 옷장의 전체 이미지를 제공하는 API",
             responses = {@ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "404", description = "Page Not Found")})
     @PostMapping(value = "/partsList")
-    public List<ClosetDTO> getPartsClosetList(HttpSession session, HttpServletRequest request) throws Exception {
+    public ResponseEntity getAllPartsClosetList(@CookieValue(value = "${jwt.token.access.name}") String token, HttpServletRequest request) throws Exception {
 
-        log.info(this.getClass().getName() + ".getPartsClosetList 실행");
+        log.info("[Controller] getAllPartsClosetList Start!");
 
-        String userId = CmmUtil.nvl(session.getId());
+        TokenDTO tDTO = tokenService.getTokenInfo(HEADER_PREFIX + token);
+        String userId = CmmUtil.nvl(tDTO.userId());
         String parts = CmmUtil.nvl(request.getParameter("parts"));
 
         log.info("userId : " + userId);
         log.info("parts : " + parts);
 
-        ClosetDTO pDTO = ClosetDTO.builder().userId(userId).parts(parts).build();
+        List<ClosetDTO> rList = closetService.getAllPartsClosetList(userId, parts);
 
-        List<ClosetDTO> rList = Optional.ofNullable(closetService.getClosetList(pDTO)).orElseGet(ArrayList::new);
+        log.info("[Controller] getAllPartsClosetList End!");
 
-        log.info(this.getClass().getName() + ".getAllClosetList 종료");
-
-        return rList;
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), rList));
     }
 
     @Operation(summary = "옷장 사진 등록 API", description = "옷장 사진과 메타데이터를 GCP Storage 및 MongoDB에 등록하는 API",
             responses = {@ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "400", description = "Bad Request")})
     @PostMapping(value = "upload")
-    public MsgDTO upload(HttpServletRequest request, HttpSession session
-            , @RequestParam("photo") MultipartFile photo) {
+    public ResponseEntity upload(HttpServletRequest request, @CookieValue(value = "${jwt.token.access.name}") String token, @RequestParam(name = "photo") MultipartFile photo) {
 
-        log.info(this.getClass().getName() + ".upload 실행");
+        log.info("[Controller] upload Start!");
 
         String msg = "";
         int res = 0; // 성공 : 1, 기타 에러 발생 : 0
         MsgDTO dto = null;
 
         try {
-            String userId = CmmUtil.nvl(session.getId());
+            TokenDTO tDTO = tokenService.getTokenInfo(HEADER_PREFIX + token);
+            String userId = CmmUtil.nvl(tDTO.userId());
             String parts = CmmUtil.nvl(request.getParameter("parts"));
 
             log.info("userId : " + userId);
@@ -108,39 +111,27 @@ public class ClosetController {
         } finally {
             dto = MsgDTO.builder().result(res).msg(msg).build();
 
-            log.info(this.getClass().getName() + ".upload 종료");
+            log.info("[Controller] upload End!");
         }
-        return dto;
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
 
     @Operation(summary = "옷장 사진 삭제 API", description = "회원별 등록된 사진을 삭제하는 API",
             responses = {@ApiResponse(responseCode = "200", description = "OK"),
                     @ApiResponse(responseCode = "400", description = "Bad Request")})
     @PostMapping(value = "/delete")
-    public MsgDTO deleteCloset(HttpServletRequest request, HttpSession session) {
+    public ResponseEntity deleteCloset(HttpServletRequest request, @CookieValue(value = "${jwt.token.access.name}") String token) {
+
+        log.info("[Controller] delete Start!");
 
         String msg = "";
         int res = 0; // 성공 : 1, 기타 에러 발생 : 0
         MsgDTO dto = null;
 
         try {
-            log.info(this.getClass().getName() + ".delete 실행");
+            long photoSeq = Long.parseLong(request.getParameter("photoSeq"));
 
-            String photoName = CmmUtil.nvl(request.getParameter("photoName"));
-
-            String[] parsing = photoName.split("/");
-
-            String userId = parsing[0];
-            String parts = parsing[1];
-            int photoSeq = Integer.parseInt(parsing[2]);
-
-            log.info("userId : " + userId);
-            log.info("parts : " + parts);
-            log.info("photoSeq : " + photoSeq);
-
-            ClosetDTO pDTO = ClosetDTO.builder().userId(userId).parts(parts).photoSeq(photoSeq).build();
-
-            res = closetService.deleteCloset(pDTO);
+            res = closetService.deleteCloset(photoSeq);
 
             if (res == 1) {
                 msg = "삭제 성공";
@@ -152,9 +143,8 @@ public class ClosetController {
             log.info(e.toString());
         } finally {
             dto = MsgDTO.builder().result(res).msg(msg).build();
-            log.info(this.getClass().getName() + ".delete 종료");
+            log.info("[Controller] delete End!");
         }
-
-        return dto;
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
 }

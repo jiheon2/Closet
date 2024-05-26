@@ -72,7 +72,7 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>OOO님의 옷장</h2>
+                    <div id="nickName" style="font-size: 32px; color: white"></div>
                 </div>
             </div>
         </div>
@@ -83,67 +83,55 @@
 <!-- Project Page Section Begin -->
 <section class="project-page spad"
          style="background-image: url(/img/closet/closet1.jpg); background-repeat: no-repeat; background-size: cover; min-height: 520px">
-    <div class="container">
-        <label for="topCloset" style="color: white">상의</label>
-        <div id="topCloset" style="display: flex; justify-content: center;">
+    <div class="container" id="container">
+        <label for="topCloset" style="color: white" id="top">상의</label>
+        <div id="topCloset" style="display: flex; justify-content: left;">
             <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px">
-                <label for="topClosetFile" style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
+                <label for="topClosetFile"
+                       style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
                 <input type="file" id="topClosetFile" style="display: none">
             </div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
         </div>
 
-        <label for="pantsCloset" style="color: white">하의</label>
-        <div id="pantsCloset" style="display: flex; justify-content: center;">
+        <label for="pantsCloset" style="color: white" id="pants">하의</label>
+        <div id="pantsCloset" style="display: flex; justify-content: left;">
             <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px">
-                <label for="pantsClosetFile" style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
+                <label for="pantsClosetFile"
+                       style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
                 <input type="file" id="pantsClosetFile" style="display: none">
             </div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
         </div>
 
-        <label for="outerCloset" style="color: white">아우터</label>
-        <div id="outerCloset" style="display: flex; justify-content: center;">
+        <label for="outerCloset" style="color: white" id="outer">아우터</label>
+        <div id="outerCloset" style="display: flex; justify-content: left;">
             <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px">
-                <label for="outerClosetFile" style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
+                <label for="outerClosetFile"
+                       style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
                 <input type="file" id="outerClosetFile" style="display: none">
             </div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
         </div>
 
-        <label for="accessoryCloset" style="color: white">악세서리</label>
-        <div id="accessoryCloset" style="display: flex; justify-content: center;">
+        <label for="accessoryCloset" style="color: white" id="accessory">악세서리</label>
+        <div id="accessoryCloset" style="display: flex; justify-content: left;">
             <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px">
-                <label for="accessoryClosetFile" style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
+                <label for="accessoryClosetFile"
+                       style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
                 <input type="file" id="accessoryClosetFile" style="display: none">
             </div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"  id="showModalButton">
-                <img src="/img/closet/closet3.jpg" style="width: auto; height: auto; max-width: 100%; max-height: 100%; margin: 0 auto">
-            </div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
-            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px"></div>
         </div>
     </div>
 </section>
 <!-- Project Page Section End -->
 
 <!-- 파일삭제 모달창 -->
-<div class="modal align-items-center" id="deleteFile" tabindex="-1" aria-labelledby="deleteFileModalLabel" aria-hidden="true">
+<div class="modal align-items-center" id="deleteFile" tabindex="-1" aria-labelledby="deleteFileModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteFileModalLabel">알림</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal" style="border: none; background-color: white">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"
+                        style="border: none; background-color: white">
                     <span aria-hidden="true">X</span>
                 </button>
             </div>
@@ -152,7 +140,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger">삭제</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelButton">취소</button>
             </div>
         </div>
     </div>
@@ -198,9 +186,235 @@
 <script src="/js/main.js"></script>
 <script src="/js/common.js"></script>
 <script>
-    // 이 div 클릭 시 모달 표시
-    $('#showModalButton').click(function() {
-        $('#deleteFile').modal('show');
+
+    let selectedItemId = null;
+
+    function closetList() {
+        $.ajax({
+            url: "http://" + apiServer + "/closet/v1/list",
+            type: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            dataType: "json",
+        }).then(function (response) {
+            // 성공 시 처리할 내용 작성
+            console.log("이미지 리스트 불러오기:", response);
+            displayClosetList(response.data);
+        }).catch(function (xhr, status, error) {
+            // 실패 시 처리할 내용 작성
+            console.error("error:", error);
+        });
+    }
+
+    function displayClosetList(data) {
+        // 각 옷 종류에 대한 리스트를 받아옴
+        let topClosetList = [];
+        let pantsClosetList = [];
+        let outerClosetList = [];
+        let accessoryClosetList = [];
+
+        // 받아온 데이터를 각각의 옷 종류에 따라 분류
+        data.forEach(function (item) {
+            switch (item.parts) {
+                case '상의':
+                    topClosetList.push(item);
+                    break;
+                case '하의':
+                    pantsClosetList.push(item);
+                    break;
+                case '아우터':
+                    outerClosetList.push(item);
+                    break;
+                case '악세서리':
+                    accessoryClosetList.push(item);
+                    break;
+                default:
+                    break;
+            }
+        });
+        // 각각의 리스트를 UI에 표시
+        displayItemList(topClosetList, "#topCloset");
+        displayItemList(pantsClosetList, "#pantsCloset");
+        displayItemList(outerClosetList, "#outerCloset");
+        displayItemList(accessoryClosetList, "#accessoryCloset");
+    }
+
+    // 각 옷 종류에 대한 아이템 리스트를 UI에 표시하는 함수
+    function displayItemList(itemList, containerId) {
+        // 해당 아이템 리스트를 표시할 컨테이너 엘리먼트 선택
+        let container = $(containerId);
+
+        // 아이템 리스트를 순회하면서 UI에 추가
+        $.each(itemList, function (index, item) {
+            // 아이템을 표시할 div 엘리먼트 생성
+            let itemDiv = $("<div>").css({
+                "background-image": "url(" + item.photoUrl + ")",
+                "background-repeat": "no-repeat",
+                "background-size": "cover",
+                "width": "60px",
+                "height": "60px",
+                "border": "5px solid white",
+                "border-radius": "15px",
+                "margin-left": "10px",
+                "margin-right": "10px",
+                "cursor": "pointer" // 커서를 포인터로 변경하여 클릭 가능하도록 함
+            }).attr("id", item.photoSeq);
+
+            itemDiv.on("click", function () {
+                selectedItemId = $(this).attr("id");
+                // 모달을 보이도록 설정
+                $("#deleteFile").modal("show");
+            });
+
+            // 생성한 div 엘리먼트를 해당 컨테이너에 추가
+            container.append(itemDiv);
+        });
+    }
+    function getNickName() {
+        loginInfo().then(function (nickName) {
+            document.getElementById("nickName").textContent = nickName + "님의 옷장";
+        }).catch(function (error) {
+            // 프라미스가 실패 상태가 되면 해당 함수가 호출됩니다.
+            console.error("에러 : " + error);
+        });
+    }
+    getNickName();
+
+
+    // 모달에서 삭제 버튼 클릭 시 실행되는 함수
+    $("#deleteFile .btn-danger").on("click", function () {
+        console.log("이미지 삭제 요청");
+
+        let photoSeq = selectedItemId;
+        console.log(photoSeq);
+
+        $.ajax({
+            url: "http://" + apiServer + "/closet/v1/delete",
+            type: "POST",
+            data: {photoSeq: photoSeq},
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            }
+        }).then(function (json) {
+            alert(json.data.msg);
+            location.reload();
+        }).catch(function (xhr, status, error) {
+            alert(json.data.msg);
+            console.error("error:", error);
+            location.reload();
+        });
+
+        // 모달 닫기
+        $("#deleteFile").modal("hide");
+    });
+
+    $(document).ready(function () {
+        closetList();
+
+        $("#cancelButton").on("click", function() {
+            // 모달을 숨김
+            $("#deleteFile").modal("hide");
+        });
+
+        // 각 input 요소에 대한 change 이벤트 처리
+        $("#topClosetFile, #pantsClosetFile, #outerClosetFile, #accessoryClosetFile").change(function () {
+            // 선택된 파일
+            let file = this.files[0];
+            // 선택된 파일이 없으면 종료
+            if (!file) return;
+
+            // 선택된 input 요소의 id를 기반으로 선택된 부위 확인
+            let parts = "";
+            switch ($(this).attr("id")) {
+                case "topClosetFile":
+                    parts = "상의";
+                    break;
+                case "pantsClosetFile":
+                    parts = "하의";
+                    break;
+                case "outerClosetFile":
+                    parts = "아우터";
+                    break;
+                case "accessoryClosetFile":
+                    parts = "악세서리";
+                    break;
+                default:
+                    parts = "";
+            }
+
+            // FormData 객체 생성
+            let formData = new FormData();
+            // 부위 정보와 파일을 FormData에 추가
+            formData.append("parts", parts);
+            formData.append("photo", file);
+
+            // 서버에 AJAX 요청 보내기
+            $.ajax({
+                url: "http://" + apiServer + "/closet/v1/upload",
+                type: "POST",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: formData,
+                processData: false,
+                contentType: false
+            }).then(function (response) {
+                // 성공 시 처리할 내용 작성
+                console.log("Upload success:", response);
+                location.reload();
+                // 예를 들어, 등록한 옷의 정보를 화면에 추가하는 등의 작업을 수행할 수 있습니다.
+            }).catch(function (xhr, status, error) {
+                // 실패 시 처리할 내용 작성
+                console.error("Upload error:", error);
+                location.reload();
+            });
+        });
+
+        $("#top").click(function() {
+            // 클릭된 라벨의 텍스트 값을 가져옵니다.
+            var labelText = $(this).text();
+            // 클릭된 라벨의 텍스트 값을 콘솔에 출력합니다.
+            console.log(labelText);
+            // 클릭된 라벨의 텍스트 값을 localStorage에 저장합니다.
+            localStorage.setItem("selectedLabel", labelText);
+            // parts.html 페이지로 이동합니다.
+            window.location.href = "parts.html";
+        });
+
+        $("#pants").click(function() {
+            // 클릭된 라벨의 텍스트 값을 가져옵니다.
+            var labelText = $(this).text();
+            // 클릭된 라벨의 텍스트 값을 콘솔에 출력합니다.
+            console.log(labelText);
+            // 클릭된 라벨의 텍스트 값을 localStorage에 저장합니다.
+            localStorage.setItem("selectedLabel", labelText);
+            // parts.html 페이지로 이동합니다.
+            window.location.href = "parts.html";
+        });
+
+        $("#outer").click(function() {
+            // 클릭된 라벨의 텍스트 값을 가져옵니다.
+            var labelText = $(this).text();
+            // 클릭된 라벨의 텍스트 값을 콘솔에 출력합니다.
+            console.log(labelText);
+            // 클릭된 라벨의 텍스트 값을 localStorage에 저장합니다.
+            localStorage.setItem("selectedLabel", labelText);
+            // parts.html 페이지로 이동합니다.
+            window.location.href = "parts.html";
+        });
+
+        $("#accessory").click(function() {
+            // 클릭된 라벨의 텍스트 값을 가져옵니다.
+            var labelText = $(this).text();
+            // 클릭된 라벨의 텍스트 값을 콘솔에 출력합니다.
+            console.log(labelText);
+            // 클릭된 라벨의 텍스트 값을 localStorage에 저장합니다.
+            localStorage.setItem("selectedLabel", labelText);
+            // parts.html 페이지로 이동합니다.
+            window.location.href = "parts.html";
+        });
     });
 </script>
 </body>

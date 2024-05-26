@@ -2,8 +2,7 @@ package jiheon.communityservice.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.auth.oauth2.ServiceAccountCredentials;
-import com.google.cloud.storage.Blob;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
@@ -15,22 +14,18 @@ import jiheon.communityservice.repository.entity.CommentEntity;
 import jiheon.communityservice.repository.entity.PostEntity;
 import jiheon.communityservice.service.ICommunityService;
 import jiheon.communityservice.util.CmmUtil;
-import jiheon.communityservice.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.BsonBinarySubType;
-import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.io.InputStream;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -39,12 +34,36 @@ public class CommunityService implements ICommunityService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
 
     @Value("${spring.cloud.gcp.storage.project-id}")
     private String projectId;
+
+    @Value("${spring.cloud.gcp.storage.credentials.location")
+    private String fileKey;
+
+    public long findMaxPostValue() {
+        return Objects.requireNonNull(mongoTemplate.aggregate(
+                Aggregation.newAggregation(
+                        Aggregation.group().max("postSeq").as("postSeq")
+                ),
+                "post",
+                PostEntity.class
+        ).getUniqueMappedResult()).getPostSeq();
+    }
+
+    public long findMaxCommentValue() {
+        return Objects.requireNonNull(mongoTemplate.aggregate(
+                Aggregation.newAggregation(
+                        Aggregation.group().max("commentSeq").as("commentSeq")
+                ),
+                "comment",
+                CommentEntity.class
+        ).getUniqueMappedResult()).getCommentSeq();
+    }
 
     @Override
     public int insertPost(PostDTO pDTO) throws Exception {
@@ -59,7 +78,7 @@ public class CommunityService implements ICommunityService {
             String title = CmmUtil.nvl(pDTO.title());
             String contents = CmmUtil.nvl(pDTO.contents());
             String regDt = CmmUtil.nvl(pDTO.regDt());
-            long postSeq = postRepository.count() + 1;
+            long postSeq = findMaxPostValue() + 1;
 
             log.info("userId : " + userId);
             log.info("nickName : " + nickName);
@@ -114,7 +133,7 @@ public class CommunityService implements ICommunityService {
             String title = CmmUtil.nvl(pDTO.title());
             String contents = CmmUtil.nvl(pDTO.contents());
             String regDt = CmmUtil.nvl(pDTO.regDt());
-            long postSeq = postRepository.count() + 1;
+            long postSeq = findMaxPostValue() + 1;
 
             log.info("userId : " + userId);
             log.info("nickName : " + nickName);
@@ -126,12 +145,12 @@ public class CommunityService implements ICommunityService {
             // 이미지 GCS 등록하기
             String ext = image.getContentType(); // 파일형식 가져오기
             String uuid = UUID.randomUUID().toString(); // GCS에 저장될 파일명 및 db에 저장될 경로
+            InputStream keyFile = ResourceUtils.getURL(fileKey).openStream();
 
             Storage storage = StorageOptions
                     .newBuilder()
                     .setProjectId(projectId)
-                    .setCredentials(ServiceAccountCredentials.fromStream(
-                            new FileInputStream("C://Closet/CommunityService/src/main/resources/closetproject-419105-297cdb4ae5b4.json")))
+                    .setCredentials(GoogleCredentials.fromStream(keyFile))
                     .build()
                     .getService();
 
@@ -211,12 +230,12 @@ public class CommunityService implements ICommunityService {
 
                     String ext = image.getContentType(); // 파일형식 가져오기
                     String uuid = UUID.randomUUID().toString(); // GCS에 저장될 파일명 및 db에 저장될 경로
+                    InputStream keyFile = ResourceUtils.getURL(fileKey).openStream();
 
                     Storage storage = StorageOptions
                             .newBuilder()
                             .setProjectId(projectId)
-                            .setCredentials(ServiceAccountCredentials.fromStream(
-                                    new FileInputStream("C://Closet/CommunityService/src/main/resources/closetproject-419105-297cdb4ae5b4.json")))
+                            .setCredentials(GoogleCredentials.fromStream(keyFile))
                             .build()
                             .getService();
 
@@ -466,7 +485,7 @@ public class CommunityService implements ICommunityService {
             String comment = CmmUtil.nvl(pDTO.comment());
             String nickName = CmmUtil.nvl(pDTO.nickName());
             long postSeq = pDTO.postSeq();
-            long commentSeq = commentRepository.count() + 1;
+            long commentSeq = findMaxCommentValue() + 1;
 
             // 댓글 등록 엔터티 생성
             CommentEntity cEntity = CommentEntity.builder()

@@ -5,10 +5,7 @@ spring:
     config:
       name: closet
       profile: prod
-
     gcp:
       storage:
         credentials:
-          location: classpath:/resources/closetproject-419105-297cdb4ae5b4.json
-        bucket: msa-closet-bucket
-        project-id: closetproject-419105
+          location: ClosetService/src/main/resources/closetproject-419105-297cdb4ae5b4.json

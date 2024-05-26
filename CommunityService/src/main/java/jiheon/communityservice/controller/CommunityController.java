@@ -27,7 +27,6 @@ import java.util.Optional;
         allowCredentials = "true",
         allowedHeaders = {"Content-Type, Authorization"},
         methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
-//        originPatterns = {"community/**"})
 @Tag(name = "커뮤니티 서비스", description = "커뮤니티 서비스를 위한 API")
 @Slf4j
 @RequestMapping(value = "/community/v1")
@@ -213,7 +212,7 @@ public class CommunityController {
             }
     )
     @PostMapping(value = "deletePost")
-    public ResponseEntity<CommonResponse> updatePost(HttpServletRequest request,
+    public ResponseEntity<CommonResponse> deletePost(HttpServletRequest request,
                                                      @CookieValue(value = "${jwt.token.access.name}") String token) {
 
         log.info("[Controller] deletePost Start!");

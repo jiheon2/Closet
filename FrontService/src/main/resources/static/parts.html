@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Staging Template">
+    <meta name="keywords" content="Staging, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Closet</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Offcanvas Menu Begin -->
+<div class="offcanvas-menu-overlay"></div>
+<div class="offcanvas-menu-wrapper">
+    <div class="offcanvas__logo">
+        <a href="#" style="font-size: 40px; color: white">MyCloset</a>
+    </div>
+    <div id="mobile-menu-wrap"></div>
+</div>
+<!-- Offcanvas Menu End -->
+
+<!-- Header Section Begin -->
+<header class="header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="header__logo">
+                    <a href="#" style="font-size: 40px; color: white">MyCloset</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li class="active"><a id="goIndex" onclick="goToIndex()">Home</a></li>
+                        <li><a id="goMyPage" onclick="goToMyPage()">MyPage</a></li>
+                        <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
+                        <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
+                        <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
+                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="canvas__open"><i class="fa fa-bars"></i></div>
+    </div>
+</header>
+<!-- Header Section End -->
+
+<!-- Breadcrumb Section Begin -->
+<div class="breadcrumb-option spad set-bg" data-setbg="/img/breadcrumb-bg.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <div id="nickName" style="font-size: 32px; color: white"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb Section End -->
+
+<!-- Project Page Section Begin -->
+<section class="project-page spad"
+         style="background-image: url(/img/closet/closet1.jpg); background-repeat: no-repeat; background-size: cover; min-height: 520px">
+    <div class="container" id="container">
+        <label for="closet" style="color: white"></label>
+        <div id="closet" style="display: flex; justify-content: left;">
+            <div style="border: 5px solid white; border-radius: 15px; width: 60px; height: 60px; margin-left: 10px; margin-right: 10px">
+                <label for="closetFile"
+                       style="color: white; width: 100%; height: 100%; text-align: center; font-size: 30px">+</label>
+                <input type="file" id="closetFile" style="display: none">
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Project Page Section End -->
+
+<!-- 파일삭제 모달창 -->
+<div class="modal align-items-center" id="deleteFile" tabindex="-1" aria-labelledby="deleteFileModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteFileModalLabel">알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"
+                        style="border: none; background-color: white">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <div class="modal-body" style="height: 600px">
+                <img id="modalImage">
+                <p>삭제하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger">삭제</button>
+                <button type="button" class="btn btn-secondary" id="cancelButton">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 모달창 끝 -->
+
+<!-- Footer Section Begin -->
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
+    <div class="container">
+        <div class="copyright" style="margin-top: -90px">
+            <div class="row">
+                <div class="col-lg-8 col-md-7">
+                    <div class="copyright__text">
+                        <p>Copyright ©
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-5">
+                    <div class="copyright__widget">
+                        <a href="#">Terms of use</a>
+                        <a href="#">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+
+<!-- Js Plugins -->
+<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.slicknav.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/slick.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script>
+
+    let selectedItemId = null;
+    let selectedLabelValue = localStorage.getItem("selectedLabel");
+
+    function closetPartsList() {
+        $.ajax({
+            url: "http://" + apiServer + "/closet/v1/partsList",
+            type: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                parts: selectedLabelValue
+            },
+            dataType: "json",
+        }).then(function (response) {
+            // 성공 시 처리할 내용 작성
+            console.log("이미지 리스트 불러오기:", response);
+
+            displayClosetList(response.data);
+
+        }).catch(function (xhr, status, error) {
+            // 실패 시 처리할 내용 작성
+            console.error("error:", error);
+        });
+    }
+
+    function displayClosetList(data) {
+        let itemList = [];
+        data.forEach(function (item) {
+            if (item.parts === selectedLabelValue) {
+                itemList.push(item);
+            }
+        });
+        displayItemList(itemList, "#closet")
+    }
+
+    function displayItemList(itemList, containerId) {
+        // 해당 아이템 리스트를 표시할 컨테이너 엘리먼트 선택
+        let container = $(containerId);
+
+        // 아이템 리스트를 순회하면서 UI에 추가
+        $.each(itemList, function (index, item) {
+            // 아이템을 표시할 div 엘리먼트 생성
+            let itemDiv = $("<div>").css({
+                "background-image": "url(" + item.photoUrl + ")",
+                "background-repeat": "no-repeat",
+                "background-size": "cover",
+                "width": "60px",
+                "height": "60px",
+                "border": "5px solid white",
+                "border-radius": "15px",
+                "margin-left": "10px",
+                "margin-right": "10px",
+                "cursor": "pointer" // 커서를 포인터로 변경하여 클릭 가능하도록 함
+            }).attr("id", item.photoSeq);
+
+            itemDiv.on("click", function () {
+                selectedItemId = $(this).attr("id");
+                // 모달을 보이도록 설정
+                $("#deleteFile").modal("show");
+                $("#modalImage").attr("src", item.photoUrl);
+            });
+
+            // 생성한 div 엘리먼트를 해당 컨테이너에 추가
+            container.append(itemDiv);
+        });
+    }
+
+    function getNickName() {
+        loginInfo().then(function (nickName) {
+            document.getElementById("nickName").textContent = nickName + "님의 " + selectedLabelValue;
+        }).catch(function (error) {
+            // 프라미스가 실패 상태가 되면 해당 함수가 호출됩니다.
+            console.error("에러 : " + error);
+        });
+    }
+
+    getNickName();
+
+
+    // 모달에서 삭제 버튼 클릭 시 실행되는 함수
+    $("#deleteFile .btn-danger").on("click", function () {
+        console.log("이미지 삭제 요청");
+
+        let photoSeq = selectedItemId;
+        console.log(photoSeq);
+
+        $.ajax({
+            url: "http://" + apiServer + "/closet/v1/delete",
+            type: "POST",
+            data: {photoSeq: photoSeq},
+            dataType: "JSON",
+            xhrFields: {
+                withCredentials: true
+            }
+        }).then(function (json) {
+            alert(json.data.msg);
+            location.reload();
+        }).catch(function (xhr, status, error) {
+            alert(json.data.msg);
+            console.error("error:", error);
+            location.reload();
+        });
+
+        // 모달 닫기
+        $("#deleteFile").modal("hide");
+    });
+
+    $(document).ready(function () {
+        closetPartsList();
+
+        $("#cancelButton").on("click", function() {
+            // 모달을 숨김
+            $("#deleteFile").modal("hide");
+        });
+
+        $("#closetFile").change(function () {
+            // 선택된 파일
+            let file = this.files[0];
+            // 선택된 파일이 없으면 종료
+            if (!file) return;
+
+            // 선택된 input 요소의 id를 기반으로 선택된 부위 확인
+            let parts = selectedLabelValue;
+
+            // FormData 객체 생성
+            let formData = new FormData();
+            // 부위 정보와 파일을 FormData에 추가
+            formData.append("parts", parts);
+            formData.append("photo", file);
+
+            // 서버에 AJAX 요청 보내기
+            $.ajax({
+                url: "http://" + apiServer + "/closet/v1/upload",
+                type: "POST",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: formData,
+                processData: false,
+                contentType: false
+            }).then(function (response) {
+                // 성공 시 처리할 내용 작성
+                console.log("Upload success:", response);
+                location.reload();
+                // 예를 들어, 등록한 옷의 정보를 화면에 추가하는 등의 작업을 수행할 수 있습니다.
+            }).catch(function (xhr, status, error) {
+                // 실패 시 처리할 내용 작성
+                console.error("Upload error:", error);
+                location.reload();
+            });
+        });
+    });
+</script>
+</body>
+
+</html>

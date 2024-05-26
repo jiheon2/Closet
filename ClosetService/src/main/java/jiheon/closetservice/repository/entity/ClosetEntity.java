@@ -1,16 +1,18 @@
 package jiheon.closetservice.repository.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "closet")
 @Builder
+@Getter
 public class ClosetEntity {
 
     @Id
-    private String _id; // MongoDB 오브젝트 ID
+    private String id; // MongoDB 오브젝트 ID
 
     @Field
     private String userId; // 회원 ID
@@ -22,5 +24,5 @@ public class ClosetEntity {
     private String photoUrl; // 이미지 URL
 
     @Field
-    private long photoSeq; // 이미지 개수
+    private long photoSeq; // 이미지 번호
 }
