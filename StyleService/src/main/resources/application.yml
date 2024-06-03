@@ -1,0 +1,14 @@
+spring:
+  ai:
+    openai:
+      api-key: sk-proj-eraW7VPjwFB5FHiuX94BT3BlbkFJUsN32BUAn5KWyJq8mo4W
+  config:
+    import: "optional:configserver:http://localhost:8888/"
+  cloud:
+    config:
+      name: style
+      profile: prod
+    gcp:
+      storage:
+        credentials:
+          location: StyleService/src/main/resources/closetproject-419105-297cdb4ae5b4.json
