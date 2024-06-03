@@ -11,6 +11,6 @@ spring:
     gcp:
       storage:
         credentials:
-          location: StyleService/src/main/resources/closetproject-419105-297cdb4ae5b4.json
+
 
 
