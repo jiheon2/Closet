@@ -154,6 +154,27 @@
 <script src="/js/owl.carousel.min.js"></script>
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script>
+
+    function list() {
+        $.ajax({
+            url: "http://" + apiServer + "/style/v1/list",
+            type: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            dataType: "JSON"
+        }).then(function (json) {
+            console.log(json.data)
+        }).catch(function (xhr, status, error) {
+            console.log("에러", error)
+        })
+    }
+
+    list();
+
+</script>
 </body>
 
 </html>

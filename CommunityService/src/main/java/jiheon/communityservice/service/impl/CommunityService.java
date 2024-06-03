@@ -42,7 +42,7 @@ public class CommunityService implements ICommunityService {
     @Value("${spring.cloud.gcp.storage.project-id}")
     private String projectId;
 
-    @Value("${spring.cloud.gcp.storage.credentials.location")
+    @Value("${spring.cloud.gcp.storage.credentials.location}")
     private String fileKey;
 
     public long findMaxPostValue() {
@@ -56,14 +56,21 @@ public class CommunityService implements ICommunityService {
     }
 
     public long findMaxCommentValue() {
-        return Objects.requireNonNull(mongoTemplate.aggregate(
+        CommentEntity result = mongoTemplate.aggregate(
                 Aggregation.newAggregation(
                         Aggregation.group().max("commentSeq").as("commentSeq")
                 ),
                 "comment",
                 CommentEntity.class
-        ).getUniqueMappedResult()).getCommentSeq();
+        ).getUniqueMappedResult();
+
+        if (result == null) {
+            return 0; // 기본값으로 0을 반환
+        }
+
+        return result.getCommentSeq();
     }
+
 
     @Override
     public int insertPost(PostDTO pDTO) throws Exception {
@@ -486,6 +493,12 @@ public class CommunityService implements ICommunityService {
             String nickName = CmmUtil.nvl(pDTO.nickName());
             long postSeq = pDTO.postSeq();
             long commentSeq = findMaxCommentValue() + 1;
+
+            log.info("userId : " + userId);
+            log.info("comment : " + comment);
+            log.info("nickName : " + nickName);
+            log.info("postSeq : " + postSeq);
+            log.info("commentSeq : " + commentSeq);
 
             // 댓글 등록 엔터티 생성
             CommentEntity cEntity = CommentEntity.builder()

@@ -34,17 +34,17 @@ function goToMyPage() {
 
 // Closet 링크 클릭 시 처리
 function goToCloset() {
-    location.href = "../closet.html";
+    location.href = "/closet.html";
 }
 
 // Chatbot 링크 클릭 시 처리
 function goToChatbot() {
-    location.href = "/style/styleAI.html";
+    location.href = "/style/style.html";
 }
 
 // Community 링크 클릭 시 처리
 function goToCommunity() {
-    location.href = "../community.html";
+    location.href = "/community.html";
 }
 
 // Style Dictionary 링크 클릭 시 처리

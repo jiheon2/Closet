@@ -209,8 +209,7 @@ public class SecurityController {
             log.info(this.getClass().getName() + ".insertUserInfo 종료");
         }
 
-        return ResponseEntity.ok(
-                CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
     }
 
     @Operation(summary = "아이디 중복체크 API", description = "DB에 아이디가 중복으로 존재하는지 체크하는 API",
@@ -220,7 +219,7 @@ public class SecurityController {
             }
     )
     @PostMapping(value = "checkId")
-    public ResponseEntity checkId(HttpServletRequest request) throws Exception {
+    public ResponseEntity<CommonResponse> checkId(HttpServletRequest request) throws Exception {
 
         log.info(this.getClass().getName() + ".CheckId API Start");
 
@@ -248,7 +247,7 @@ public class SecurityController {
             }
     )
     @PostMapping(value = "checkNickName")
-    public ResponseEntity checkNickname(HttpServletRequest request) throws Exception {
+    public ResponseEntity<CommonResponse> checkNickname(HttpServletRequest request) throws Exception {
 
         log.info(this.getClass().getName() + ".CheckNickname API Start");
 
@@ -276,7 +275,7 @@ public class SecurityController {
             }
     )
     @PostMapping(value = "checkEmail")
-    public ResponseEntity checkEmail(HttpServletRequest request) throws Exception {
+    public ResponseEntity<CommonResponse> checkEmail(HttpServletRequest request) throws Exception {
 
         log.info(this.getClass().getName() + ".CheckEmail API Start");
 
@@ -307,7 +306,7 @@ public class SecurityController {
             }
     )
     @PostMapping(value = "findId")
-    public ResponseEntity findId(HttpServletRequest request) throws Exception {
+    public ResponseEntity<CommonResponse> findId(HttpServletRequest request) throws Exception {
 
         log.info(this.getClass().getName() + ".아이디 찾기");
 
@@ -361,7 +360,7 @@ public class SecurityController {
             }
     )
     @PostMapping(value = "findPw")
-    public ResponseEntity findPw(HttpServletRequest request) throws Exception {
+    public ResponseEntity<CommonResponse> findPw(HttpServletRequest request) throws Exception {
 
         log.info(this.getClass().getName() + ".비밀번호 찾기 시작");
 

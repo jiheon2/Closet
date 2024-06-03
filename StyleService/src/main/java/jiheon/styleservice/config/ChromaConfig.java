@@ -10,11 +10,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+
+
 @Configuration
 public class ChromaConfig {
     @Bean
     public EmbeddingModel embeddingModel() {
-        return new OpenAiEmbeddingModel(new OpenAiApi("sk-proj-eraW7VPjwFB5FHiuX94BT3BlbkFJUsN32BUAn5KWyJq8mo4W"));
+        return new OpenAiEmbeddingModel(new OpenAiApi("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"));
     }
 
     @Bean
@@ -31,6 +33,6 @@ public class ChromaConfig {
 
     @Bean
     public VectorStore chromaVectorSore(EmbeddingModel embeddingModel, ChromaApi chromaApi) {
-        return new ChromaVectorStore(embeddingModel, chromaApi, "TestCollection");
+        return new ChromaVectorStore(embeddingModel, chromaApi, "TestCollection", true);
     }
 }
