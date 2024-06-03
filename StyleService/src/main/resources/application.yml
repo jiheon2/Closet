@@ -1,7 +1,7 @@
 spring:
   ai:
     openai:
-      api-key: sk-proj-eraW7VPjwFB5FHiuX94BT3BlbkFJUsN32BUAn5KWyJq8mo4W
+#      api-key: sk-proj-eraW7VPjwFB5FHiuX94BT3BlbkFJUsN32BUAn5KWyJq8mo4W
   config:
     import: "optional:configserver:http://localhost:8888/"
   cloud:
