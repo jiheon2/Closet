@@ -42,14 +42,21 @@ public class ClosetService implements IClosetService {
     private String fileKey;
 
     public long findMaxValue() {
-        return Objects.requireNonNull(mongoTemplate.aggregate(
+        ClosetEntity maxPhotoSeq = mongoTemplate.aggregate(
                 Aggregation.newAggregation(
                         Aggregation.group().max("photoSeq").as("photoSeq")
                 ),
                 "closet",
                 ClosetEntity.class
-        ).getUniqueMappedResult()).getPhotoSeq();
+        ).getUniqueMappedResult();
+
+        if (maxPhotoSeq == null) {
+            return 0; // 데이터가 없을 때 반환할 기본값
+        } else {
+            return maxPhotoSeq.getPhotoSeq();
+        }
     }
+
 
     @Override
     public List<ClosetDTO> getAllClosetList(String userId) throws Exception {
@@ -155,6 +162,7 @@ public class ClosetService implements IClosetService {
             }
         } catch (Exception e) {
             log.info(e.toString());
+            e.printStackTrace();
         }
 
         log.info("[Service] uploadPhoto End!");
@@ -173,7 +181,6 @@ public class ClosetService implements IClosetService {
         try {
             log.info("photoSeq : " + photoSeq);
 
-            // 삭제하기 위해 게시글 정보 담기
             Optional<ClosetEntity> pEntity = Optional.ofNullable(closetRepository.findByPhotoSeq(photoSeq));
 
             // 삭제

@@ -6,10 +6,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jiheon.closetservice.controller.response.CommonResponse;
 import jiheon.closetservice.dto.ClosetDTO;
+import jiheon.closetservice.dto.KafkaDTO;
 import jiheon.closetservice.dto.MsgDTO;
 import jiheon.closetservice.dto.TokenDTO;
 import jiheon.closetservice.service.IClosetService;
 import jiheon.closetservice.service.ITokenService;
+import jiheon.closetservice.service.impl.KafkaService;
 import jiheon.closetservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -34,8 +37,11 @@ public class ClosetController {
 
     private final IClosetService closetService;
     private final ITokenService tokenService;
+    private final KafkaService kafkaService;
 
     private final String HEADER_PREFIX = "Bearer "; // Bearer 토큰 사용을 위한 선언값
+    // 이미지 파일만 업로드
+    private static final List<String> ALLOWED_FILE_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif");
 
     @Operation(summary = "회원별 옷장 전체 조회 API", description = "회원별 옷장의 전체 이미지를 제공하는 API",
             responses = {@ApiResponse(responseCode = "200", description = "OK"),
@@ -90,6 +96,13 @@ public class ClosetController {
         MsgDTO dto = null;
 
         try {
+            if (!ALLOWED_FILE_TYPES.contains(photo.getContentType())) {
+                msg = "이미지 파일만 업로드 가능합니다.";
+                dto = MsgDTO.builder().result(0).msg(msg).build();
+                return ResponseEntity.ok(CommonResponse.of(HttpStatus.BAD_REQUEST,
+                        HttpStatus.BAD_REQUEST.series().name(), dto));
+            }
+
             TokenDTO tDTO = tokenService.getTokenInfo(HEADER_PREFIX + token);
             String userId = CmmUtil.nvl(tDTO.userId());
             String parts = CmmUtil.nvl(request.getParameter("parts"));
@@ -146,5 +159,10 @@ public class ClosetController {
             log.info("[Controller] delete End!");
         }
         return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteUser(String userId) throws Exception {
+        kafkaService.consume(userId);
     }
 }

@@ -20,4 +20,6 @@ public interface ClosetRepository extends MongoRepository<ClosetEntity, String> 
 
     // 사진 갯수 세기
     long count();
+
+    void deleteAllByUserId(String userId);
 }

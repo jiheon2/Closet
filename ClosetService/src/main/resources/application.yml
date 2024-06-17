@@ -1,11 +1,50 @@
 spring:
-  config:
-    import: "optional:configserver:http://localhost:8888/"
+  application:
+    name: CLOSET-CLOSET
+  # MongoDB Connection
+  data:
+    mongodb:
+      host: 34.64.55.9
+      port: 27017
+      database: ClosetDB
+      username: closetUser
+      password: 1234
+      uri: mongodb://closetUser:1234@34.64.55.9:27017/ClosetDB
   cloud:
-    config:
-      name: closet
-      profile: prod
     gcp:
       storage:
+        bucket: msa-closet-bucket
+        project-id: closetproject-419105
         credentials:
           location: ClosetService/src/main/resources/closetproject-419105-297cdb4ae5b4.json
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: closet-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+
+jwt:
+  token:
+    access:
+      name: jwtAccessToken
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: 'true'
+    register-with-eureka: 'true'
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+server:
+  port: '14000'
+api:
+  gateway: http://localhost:11000
