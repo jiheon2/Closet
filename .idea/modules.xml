@@ -8,6 +8,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/CommunityService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/CommunityService.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/StyleService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/StyleService.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/UserService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/UserService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redisSessionService_main.iml" filepath="$PROJECT_DIR$/.idea/modules/redisSessionService_main.iml" group="redisSessionService" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redisSessionService_test.iml" filepath="$PROJECT_DIR$/.idea/modules/redisSessionService_test.iml" group="redisSessionService" />
     </modules>
   </component>
 </project>

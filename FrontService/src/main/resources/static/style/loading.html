@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        /* CSS 스타일링 예시 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.1); /* 배경을 반투명하게 설정 */
+        }
+        .loading-spinner {
+            border: 8px solid #f3f3f3; /* 회전하는 테두리의 색상 */
+            border-top: 8px solid #3498db; /* 회전하는 테두리의 상단 색상 */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite; /* 회전 애니메이션 */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body style="background-image: url('/img/blog/details/bi-2.jpg'); background-repeat: no-repeat; background-size: cover">
+<div class="loading">
+    <div class="loading-spinner"></div>
+</div>
+</body>
+</html>

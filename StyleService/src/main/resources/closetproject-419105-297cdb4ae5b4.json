@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "closetproject-419105",
+  "private_key_id": "297cdb4ae5b49d37fc4b45da4f401c91e2b80c9d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCmkcFb3TmsqH7d\nCYiq0wam+eRRQnQSGxB4dzcigzDqYevqD8TF0vqRQ40Aw7MWGT7TAVkin2Dcbr1U\nTx33ANUTh7nR+QGMyikMo/F4e8llSaZspqJazJ+r7pUAMUUUZfUBHGvMqyYo7uwF\nNHj0SEnsicsDYKf9FxfPXwm1OYdGZ6XfTQzeNg7on1lCcX8GTKhABcuHDhdX2J0s\nnpu0yyCN8FDgMUG4v56n9fMRhWdseYZjq2FyCozfSLX2W1FH73r21rEoorooTV0N\np+ykQYG9LmnFHawE5mC5LRZms/nQhbXhnrTARfg5pqqITNgOIW6occEYupS8b2EK\n2Dblt9TbAgMBAAECggEAAQf4KCi57l/KpttwwHH2+0cJV7FvUej5LjqHf/JLXFNH\n23z5s5A0Fq/rqjxyTUNrWD4MmBv5d9Pdqy09ziVWRfBgp5qaT/QbOSW1dt2S6EqC\nhu8PJG9acha56GeyeeDAGZ/Ct3nvWtbqMh9AvAf+7fTUA2Zwei7pUFJryna1NJJC\nggjgr13YI/HqAlmSHNzZpC5IWgTAwTAV0D1xCsOo8oZ//HvrlexldHXzNYyQ5p59\nuQLnkBXbR4lQUslYkGSwfKRCDFUiiJeykivqZdfrNz+3IO+foBAEhkB6qaGIb2OJ\nfnu10elL4OvBu0EjeHDX5deeBFhh3qdxVuwO6IGOlQKBgQDrQNNONRnzwALCnYsF\ncjJQwDGWHkqyVcgELiaGs43/WJuoNtwv75tA7C+JHKWdw/qAfEsy0Y/GG6/x1SQq\nMDzazQsY++5IBudVqtVqAlW5Ie5onT/DPvOz1wwdYWN1KNPyI8eZe7pP3SjUoHpj\nB+BF7WNo2kc2RlCYdi0N9cYybQKBgQC1QktabbaitLlkL6vw4Y0OeN9rjIndECyd\nFGS4r0UCjPKn6hHSuG6F9LBY+6RAjKx+C9Suula0eCHo2rAl7pXdOasanCbOTaz6\nJ4QYZYXmyfzxSPY6PsJJA5Hp/xIBtQa1h/MO4usSjI1TR6DH87G04v1FJeenglqb\nbDjtpSDXZwKBgQDS0n5KyOWf/gO7Oon6cHNM0F/fovfXx23+6QjXkBOBsHuWDMvY\nHYbpcH/NBSIaNyXHfRu6x/hrViaftx24vQ/cGQKH+kV4wM8Rg43LeZou1YycrccV\nhtXI5b/SmJMTzGnbxlq6XhoCNjTAD6x+EPHYWLvMnEhTCEJzzvvjVcyvJQKBgDpE\n0YyEcI3loyN937xUBdB9MvWT/E3AgVcN00M7tOeY//jS2l/vQjh17KruWmMV1e2/\nR+PTq0PgyqXch3vqMusnOsYXJLJ1bgIM6f4dxOnoTRQT7HPU8Qgfyax7fwJle36n\n8Y77i64u2M/I2vrscFhCEEFGai4DTbVhGPvsdZ5JAoGAS6vgSHN6mWpXxJlPAUj4\nTUOyNAvuCNHus4aRWd/2C8iHiuUnMj4IUMJvxWjutaTztqbf6g+bdql+ObNRSQoe\n+lRc6eBj5cyl0Gb0sYKpp2bXB4pWkO4ctEAL2s2f7czZvBjj3sgjQKCBsSX3eGu0\nHhzxdHAbsR+nn/UcQ4tY+Dw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "springboot-storage-access@closetproject-419105.iam.gserviceaccount.com",
+  "client_id": "100918951148907615188",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/springboot-storage-access%40closetproject-419105.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

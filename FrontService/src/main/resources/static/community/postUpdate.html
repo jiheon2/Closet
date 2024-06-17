@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -112,7 +113,8 @@
                                       style="width: 100%; height: 500px; border: none;" id="contents"></textarea>
                         </div>
                     </form>
-                    <button style="float: right" id="postUpdate" class="btn btn-dark" type="button">수정</button>
+                    <button style="float: right; margin: 3px" onclick="history.back()" class="btn btn-outline-dark" type="button">취소</button>
+                    <button style="float: right; margin: 3px" id="postUpdate" class="btn btn-dark" type="button">수정</button>
                 </div>
             </div>
         </div>
@@ -159,6 +161,8 @@
 <script src="/js/main.js"></script>
 <script src="/js/common.js"></script>
 <script>
+    loginInfo();
+
     let param = new URLSearchParams(window.location.search);
     const postSeq = param.get("postSeq")
     let data1;
@@ -184,7 +188,7 @@
                 $("#title").val(data1.title)
                 $("#nickName").text("작성자 : " + data1.nickName)
                 $("#regDt").text("날짜 : " + data1.regDt)
-                $("#contents").append(data1.contents)
+                $("#contents").val(data1.contents)
 
                 if (data1.imagePath !== "none" && data1.imagePath !== null) {
                     // 새 이미지 추가
@@ -243,6 +247,16 @@
             let regDt = f.querySelector("#regDt").innerText;
             let nickName = f.querySelector("#nickName").innerText;
             let contents = f.querySelector("#contents").value;
+
+            if (title === "") {
+                alert("제목을 입력하여 주시기 바랍니다.")
+                return;
+            }
+
+            if (contents === "") {
+                alert("내용을 입력하여 주시기 바랍니다.")
+                return;
+            }
 
             let formData = new FormData();
 

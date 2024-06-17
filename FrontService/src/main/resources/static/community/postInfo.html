@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -99,18 +100,22 @@
                             </button>
                         </div>
                         <div style="margin: 25px 10px 25px 10px">
-                            <h3 id="title"></h3>
+                            <div id="title"
+                                 style="width: 100%; font-size: inherit; border: none; outline: none; padding: 0; margin: 0;"></div>
                         </div>
-                        <div style="margin-bottom: -18px">
+                        <div style="margin-bottom: -18px; text-align: right">
                             <ul style="list-style: none">
                                 <li style="font-size: 10px" id="regDt">날짜</li>
                                 <li style="font-size: 10px" id="nickName">작성자</li>
                             </ul>
                         </div>
                     </div>
-                    <img src="" alt="" style="margin-bottom: 25px; height: 300px; object-fit: contain" id="image">
+                    <div style="margin: 0 auto; text-align: center">
+                        <img src="" alt="" style="margin-bottom: 25px; height: 300px; object-fit: contain" id="image">
+                    </div>
                     <div class="blog__details__text">
-                        <div id="contents"></div>
+                            <textarea readonly id="contents"
+                                      style="width: 100%; height: 500px; border: none;"></textarea>
                     </div>
                     <div>댓글</div>
                     <hr>
@@ -208,10 +213,10 @@
                 data2 = json.data2;
                 console.log("게시글 정보 : ", data1);
                 console.log("댓글 정보 : ", data2)
-                $("#title").append(data1.title)
+                $("#title").text(data1.title)
                 $("#nickName").text("작성자 : " + data1.nickName)
                 $("#regDt").text("날짜 : " + data1.regDt)
-                $("#contents").append(data1.contents)
+                $("#contents").text(data1.contents)
                 if (data1.imagePath !== null) {
                     $("#image").attr("src", data1.imagePath)
                 }
@@ -348,6 +353,11 @@
                     // 수정된 내용 가져오기
                     let updatedComment = textarea.val();
 
+                    if (updatedComment === "") {
+                        alert("빈 댓글을 작성할 수 없습니다.");
+                        return;
+                    }
+
                     // 서버로 수정된 내용 전송
                     $.ajax({
                         url: "http://" + apiServer + "/community/v1/updateComment",
@@ -451,6 +461,16 @@
 
 
         $("#btnComment").on("click", function () {
+
+            console.log(postSeq);
+            console.log(loginUserId);
+            console.log($("#userNickName").text());
+            console.log($("#insertComment").val());
+
+            if ($("#insertComment").val() === "") {
+                alert("댓글을 입력하시길 바랍니다.");
+                return;
+            }
 
             $.ajax({
                 url: "http://" + apiServer + "/community/v1/insertComment",

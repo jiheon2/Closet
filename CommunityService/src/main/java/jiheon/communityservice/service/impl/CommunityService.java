@@ -17,6 +17,9 @@ import jiheon.communityservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.stereotype.Service;
@@ -45,17 +48,7 @@ public class CommunityService implements ICommunityService {
     @Value("${spring.cloud.gcp.storage.credentials.location}")
     private String fileKey;
 
-    public long findMaxPostValue() {
-        return Objects.requireNonNull(mongoTemplate.aggregate(
-                Aggregation.newAggregation(
-                        Aggregation.group().max("postSeq").as("postSeq")
-                ),
-                "post",
-                PostEntity.class
-        ).getUniqueMappedResult()).getPostSeq();
-    }
-
-    public long findMaxCommentValue() {
+    public String findMaxCommentValue() {
         CommentEntity result = mongoTemplate.aggregate(
                 Aggregation.newAggregation(
                         Aggregation.group().max("commentSeq").as("commentSeq")
@@ -65,12 +58,51 @@ public class CommunityService implements ICommunityService {
         ).getUniqueMappedResult();
 
         if (result == null) {
-            return 0; // 기본값으로 0을 반환
+            return "0"; // 기본값으로 0을 반환
         }
 
         return result.getCommentSeq();
     }
 
+    @Override
+    public List<PostDTO> post(int page, int size) throws Exception {
+
+        log.info("[Service] post Start");
+        log.info("page : " + page + " size : " + size);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "_id"));
+        List<PostEntity> postEntity = postRepository.findAll(pageable).getContent();
+
+        List<PostDTO> nList = new ArrayList<>();
+        for (PostEntity entity : postEntity) {
+            PostDTO dto = new ObjectMapper().convertValue(entity, PostDTO.class);
+            nList.add(dto);
+        }
+
+        log.info("[Service] post End");
+
+        return nList;
+    }
+
+    @Override
+    public List<PostDTO> myPost(int page, int size, String userId) throws Exception {
+
+        log.info("[Service] myPost Start");
+        log.info("page : " + page + " size : " + size + " userId : " + userId);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "_id"));
+        List<PostEntity> postEntity = postRepository.findByUserId(pageable, userId).getContent();
+
+        List<PostDTO> nList = new ArrayList<>();
+        for (PostEntity entity : postEntity) {
+            PostDTO dto = new ObjectMapper().convertValue(entity, PostDTO.class);
+            nList.add(dto);
+        }
+
+        log.info("[Service] myPost End");
+
+        return nList;
+    }
 
     @Override
     public int insertPost(PostDTO pDTO) throws Exception {
@@ -85,7 +117,7 @@ public class CommunityService implements ICommunityService {
             String title = CmmUtil.nvl(pDTO.title());
             String contents = CmmUtil.nvl(pDTO.contents());
             String regDt = CmmUtil.nvl(pDTO.regDt());
-            long postSeq = findMaxPostValue() + 1;
+            long postSeq = postRepository.count() + 1;
 
             log.info("userId : " + userId);
             log.info("nickName : " + nickName);
@@ -97,7 +129,7 @@ public class CommunityService implements ICommunityService {
             // 게시글 등록 엔터티 생성
             PostEntity pEntity = PostEntity.builder()
                     .userId(userId)
-                    .postSeq(postSeq)
+                    .postSeq(String.valueOf(postSeq))
                     .nickName(nickName)
                     .title(title)
                     .contents(contents)
@@ -109,7 +141,7 @@ public class CommunityService implements ICommunityService {
             postRepository.save(pEntity);
 
             // 등록이 잘 되었는지 확인
-            Optional<PostEntity> rEntity = postRepository.findByPostSeq(postSeq);
+            Optional<PostEntity> rEntity = postRepository.findByPostSeq(String.valueOf(postSeq));
 
             log.info("등록한 게시글 정보");
             log.info("rEntity : " + rEntity);
@@ -140,7 +172,7 @@ public class CommunityService implements ICommunityService {
             String title = CmmUtil.nvl(pDTO.title());
             String contents = CmmUtil.nvl(pDTO.contents());
             String regDt = CmmUtil.nvl(pDTO.regDt());
-            long postSeq = findMaxPostValue() + 1;
+            long postSeq = postRepository.count() + 1;
 
             log.info("userId : " + userId);
             log.info("nickName : " + nickName);
@@ -175,7 +207,7 @@ public class CommunityService implements ICommunityService {
             // 게시글 등록 엔터티 생성
             PostEntity pEntity = PostEntity.builder()
                     .userId(userId)
-                    .postSeq(postSeq)
+                    .postSeq(String.valueOf(postSeq))
                     .nickName(nickName)
                     .title(title)
                     .contents(contents)
@@ -187,7 +219,7 @@ public class CommunityService implements ICommunityService {
             postRepository.save(pEntity);
 
             // 등록이 잘 되었는지 확인
-            Optional<PostEntity> rEntity = postRepository.findByPostSeq(postSeq);
+            Optional<PostEntity> rEntity = postRepository.findByPostSeq(String.valueOf(postSeq));
 
             log.info("등록한 게시글 정보");
             log.info("rEntity : " + rEntity);
@@ -216,7 +248,7 @@ public class CommunityService implements ICommunityService {
             String userId = CmmUtil.nvl(pDTO.userId());
             String title = CmmUtil.nvl(pDTO.title());
             String contents = CmmUtil.nvl(pDTO.contents());
-            long postSeq = pDTO.postSeq();
+            String postSeq = CmmUtil.nvl(pDTO.postSeq());
 
             log.info("userId : " + userId);
             log.info("title : " + title);
@@ -305,7 +337,7 @@ public class CommunityService implements ICommunityService {
 
         try {
             // DB에서 조회
-            long postSeq = pDTO.postSeq();
+            String postSeq = CmmUtil.nvl(pDTO.postSeq());
             Optional<PostEntity> postEntity = postRepository.findByPostSeq(postSeq);
 
             if (postEntity.isPresent()) {
@@ -367,7 +399,7 @@ public class CommunityService implements ICommunityService {
 
         try {
             // 컨트롤러 값 받기
-            long postSeq = pDTO.postSeq();
+            String postSeq = CmmUtil.nvl(pDTO.postSeq());
             log.info("postSeq : " + postSeq);
 
             // seq를 통해 삭제할 게시글 정보 담기
@@ -398,36 +430,7 @@ public class CommunityService implements ICommunityService {
     }
 
     @Override
-    public List<PostDTO> getAllPostList() {
-
-        log.info("[Service] getAllPostList Start!");
-
-        // 게시글 전체조회
-        List<PostEntity> rList = postRepository.findAllByOrderByPostSeqDesc();
-        for (PostEntity post : rList) {
-            log.info("PostEntity 정보 : {}", post.toString());
-        }
-
-        // 엔티티 값을 DTO에 맞게 변화
-        List<PostDTO> nList = new ArrayList<>();
-        for (PostEntity entity : rList) {
-            PostDTO dto = new ObjectMapper().convertValue(entity, PostDTO.class);
-            nList.add(dto);
-        }
-        for (PostDTO dto : nList) {
-            log.info("PostDTO 정보 : {}", dto.toString());
-        }
-
-        int dataSize = nList.size();
-        log.info("조회된 데이터의 개수 : " + dataSize);
-
-        log.info("[Service] getAllPostList End!");
-
-        return nList;
-    }
-
-    @Override
-    public PostDTO getPostInfo(long postSeq) throws Exception {
+    public PostDTO getPostInfo(String postSeq) throws Exception {
 
         log.info("[Service] getPostInfo Start!");
 
@@ -453,7 +456,7 @@ public class CommunityService implements ICommunityService {
     }
 
     @Override
-    public List<CommentDTO> getCommentList(long postSeq) throws Exception {
+    public List<CommentDTO> getCommentList(String postSeq) throws Exception {
 
         log.info("[Service] getComment Start!");
 
@@ -491,8 +494,8 @@ public class CommunityService implements ICommunityService {
             String userId = CmmUtil.nvl(pDTO.userId());
             String comment = CmmUtil.nvl(pDTO.comment());
             String nickName = CmmUtil.nvl(pDTO.nickName());
-            long postSeq = pDTO.postSeq();
-            long commentSeq = findMaxCommentValue() + 1;
+            String postSeq = CmmUtil.nvl(pDTO.postSeq());
+            int commentSeq = Integer.parseInt(findMaxCommentValue()) + 1;
 
             log.info("userId : " + userId);
             log.info("comment : " + comment);
@@ -506,7 +509,7 @@ public class CommunityService implements ICommunityService {
                     .postSeq(postSeq)
                     .comment(comment)
                     .nickName(nickName)
-                    .commentSeq(commentSeq)
+                    .commentSeq(String.valueOf(commentSeq))
                     .build();
 
             // 저장
@@ -515,7 +518,7 @@ public class CommunityService implements ICommunityService {
             log.info("cEntity : " + cEntity);
 
             // 댓글 확인하기
-            Optional<CommentEntity> rEntity = Optional.ofNullable(commentRepository.findByCommentSeq(commentSeq));
+            Optional<CommentEntity> rEntity = Optional.ofNullable(commentRepository.findByCommentSeq(String.valueOf(commentSeq)));
             log.info("작성된 댓글 정보");
             log.info("rEntity : " + rEntity);
 
@@ -541,7 +544,7 @@ public class CommunityService implements ICommunityService {
         try {
             // 컨트롤러에서 받아온 값
             String comment = pDTO.comment();
-            long commentSeq = pDTO.commentSeq();
+            String commentSeq = pDTO.commentSeq();
 
             log.info("수정 내용");
             log.info("comment : " + comment);
@@ -584,7 +587,7 @@ public class CommunityService implements ICommunityService {
     }
 
     @Override
-    public int deleteComment(long commentSeq) throws Exception {
+    public int deleteComment(String commentSeq) throws Exception {
 
         log.info("[Service] deleteComment Start!");
 

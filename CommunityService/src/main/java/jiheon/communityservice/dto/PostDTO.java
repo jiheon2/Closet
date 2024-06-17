@@ -9,7 +9,7 @@ public record PostDTO(
         String id, // mongoDB ObjectId
         String userId, // 회원 아이디
         String nickName, // 닉네임
-        long postSeq, // 게시글 번호
+        String postSeq, // 게시글 번호
         String title, // 제목
         String contents, // 내용
         String regDt, // 등록일

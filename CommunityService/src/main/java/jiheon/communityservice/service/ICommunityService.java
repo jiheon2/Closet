@@ -23,14 +23,11 @@ public interface ICommunityService {
     // 게시글 삭제
     int deletePost(PostDTO pDTO) throws Exception;
 
-    // 게시글 전체 조회
-    List<PostDTO> getAllPostList();
-
     // 게시글 상세 조회
-    PostDTO getPostInfo(long postSeq) throws Exception;
+    PostDTO getPostInfo(String postSeq) throws Exception;
 
     // 댓글 불러오기
-    List<CommentDTO> getCommentList(long postSeq) throws Exception;
+    List<CommentDTO> getCommentList(String postSeq) throws Exception;
 
     // 댓글 등록
     int insertComment(CommentDTO pDTO) throws Exception;
@@ -39,5 +36,10 @@ public interface ICommunityService {
     int updateComment(CommentDTO pDTO) throws Exception;
 
     // 댓글 삭제
-    int deleteComment(long commentSeq) throws Exception;
+    int deleteComment(String commentSeq) throws Exception;
+
+    // 게시글 전체조회 (무한 스크롤)
+    List<PostDTO> post(int page, int size) throws Exception;
+    // 작성한 게시글 조회(무한 스크롤)
+    List<PostDTO> myPost(int page, int size, String userId) throws Exception;
 }

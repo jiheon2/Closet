@@ -20,7 +20,7 @@ function loginInfo() {
             resolve(json.data.nickName);
             loginUserId = json.data.userId;
         }).fail(function (xhr, status, error) {
-            alert("접근 권한이 없습니다.");
+            alert("로그인 해주시길 바랍니다..");
             console.log(error);
             location.href = loginPage;
         });
@@ -39,12 +39,16 @@ function goToCloset() {
 
 // Chatbot 링크 클릭 시 처리
 function goToChatbot() {
-    location.href = "/style/style.html";
+    location.href = "/style/styleAI.html";
 }
 
 // Community 링크 클릭 시 처리
 function goToCommunity() {
     location.href = "/community.html";
+}
+
+function goToStyle() {
+    location.href = "/style/style.html";
 }
 
 // Style Dictionary 링크 클릭 시 처리

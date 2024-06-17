@@ -1,11 +1,57 @@
 spring:
-  config:
-    import: "optional:configserver:http://localhost:8888/"
+  application:
+    name: CLOSET-COMMUNITY
+  # MongoDB Connection
+  data:
+    mongodb:
+      host: 34.64.55.9
+      port: 27017
+      database: CommunityDB
+      username: communityUser
+      password: 1234
+      uri: mongodb://communityUser:1234@34.64.55.9:27017/CommunityDB
   cloud:
-    config:
-      name: community
-      profile: prod
     gcp:
       storage:
+        bucket: msa-post-bucket
+        project-id: closetproject-419105
         credentials:
           location: CommunityService/src/main/resources/closetproject-419105-297cdb4ae5b4.json
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: community-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+servlet:
+  multipart:
+    max-file-size: 256MB
+    max-request-size: 256MB
+    enabled: true
+
+jwt:
+  token:
+    access:
+      name: jwtAccessToken
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: 'true'
+    register-with-eureka: 'true'
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+server:
+  port: '16000'
+api:
+  gateway: http://localhost:11000
+
+

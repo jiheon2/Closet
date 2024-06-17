@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -156,10 +157,6 @@
 
     // HTML 로딩이 완료되고, 실행
     $(document).ready(function () {
-
-        // 로그인 된 사용자인지 확인하기
-        loginUserId = loginInfo();
-
         // 회원정보 가져오기
         userInfo();
 
@@ -202,7 +199,7 @@
                 console.log(userInfo.age);
             },
             function () {
-                alert("접근 권한이 없습니다.");
+                alert("로그인 해주시길 바랍니다.");
                 location.href = loginPage;
             }
         );

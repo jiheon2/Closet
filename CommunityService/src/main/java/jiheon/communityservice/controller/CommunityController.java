@@ -5,12 +5,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jiheon.communityservice.controller.response.CommonResponse;
-import jiheon.communityservice.dto.CommentDTO;
-import jiheon.communityservice.dto.MsgDTO;
-import jiheon.communityservice.dto.PostDTO;
-import jiheon.communityservice.dto.TokenDTO;
+import jiheon.communityservice.dto.*;
 import jiheon.communityservice.service.ICommunityService;
 import jiheon.communityservice.service.ITokenService;
+import jiheon.communityservice.service.impl.KafkaService;
 import jiheon.communityservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +35,12 @@ public class CommunityController {
 
     private final ITokenService tokenService;
     private final ICommunityService communityService;
-    private final String HEADER_PREFIX = "Bearer "; // Bearer 토큰 사용을 위한 선언값
+    private final KafkaService kafkaService;
+    // Bearer 토큰 사용을 위한 선언값
+    private final String HEADER_PREFIX = "Bearer ";
+    // 이미지 파일만 업로드
+    private static final List<String> ALLOWED_FILE_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif");
+
 
     @Operation(summary = "게시글 리스트 조회 API", description = "게시글 정보를 MongoDB에서 전체 조회하는 API",
             responses = {
@@ -44,16 +48,21 @@ public class CommunityController {
                     @ApiResponse(responseCode = "404", description = "Page Not Found!"),
             }
     )
-    @PostMapping(value = "postList")
-    public ResponseEntity<CommonResponse> postList() {
+    @PostMapping(value = "post")
+    public ResponseEntity<CommonResponse> post(HttpServletRequest request) throws Exception {
+        int page = Integer.parseInt(request.getParameter("page"));
+        int size = Integer.parseInt(request.getParameter("size"));
+        return ResponseEntity.ok(CommonResponse.of(
+                HttpStatus.OK, HttpStatus.OK.series().name(), communityService.post(page, size)));
+    }
 
-        log.info(this.getClass().getName() + ".postList Start!");
-
-        List<PostDTO> rList = Optional.ofNullable(communityService.getAllPostList()).orElseGet(ArrayList::new);
-
-        log.info(this.getClass().getName() + ".postList End!");
-
-        return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), rList));
+    @PostMapping(value = "myPost")
+    public ResponseEntity<CommonResponse> myPost(HttpServletRequest request) throws Exception {
+        int page = Integer.parseInt(request.getParameter("page"));
+        int size = Integer.parseInt(request.getParameter("size"));
+        String userId = CmmUtil.nvl(request.getParameter("userId"));
+        return ResponseEntity.ok(CommonResponse.of(
+                HttpStatus.OK, HttpStatus.OK.series().name(), communityService.myPost(page, size, userId)));
     }
 
     @Operation(summary = "게시글 상세조회 API", description = "게시글 단건 정보를 MongoDB에서 조회하는 API",
@@ -63,7 +72,7 @@ public class CommunityController {
             }
     )
     @PostMapping(value = "postInfo")
-    public ResponseEntity<CommonResponse> postInfo(@RequestParam long postSeq) throws Exception {
+    public ResponseEntity<CommonResponse> postInfo(@RequestParam String postSeq) throws Exception {
 
         log.info("[Controller] postInfo Start!");
         log.info("게시글 번호 : " + postSeq);
@@ -114,7 +123,6 @@ public class CommunityController {
             String nickName = CmmUtil.nvl(request.getParameter("nickName"));
             String regDt = CmmUtil.nvl(request.getParameter("regDt"));
 
-
             PostDTO pDTO = PostDTO.builder()
                     .title(title)
                     .nickName(nickName)
@@ -125,6 +133,12 @@ public class CommunityController {
 
             // 게시글 저장 로직
             if (image != null && !image.isEmpty()) {
+                if (!ALLOWED_FILE_TYPES.contains(image.getContentType())) {
+                    msg = "이미지 파일만 업로드 가능합니다.";
+                    dto = MsgDTO.builder().result(0).msg(msg).build();
+                    return ResponseEntity.ok(CommonResponse.of(HttpStatus.BAD_REQUEST,
+                            HttpStatus.BAD_REQUEST.series().name(), dto));
+                }
                 communityService.insertPost(pDTO, image);
             } else {
                 communityService.insertPost(pDTO);
@@ -173,8 +187,7 @@ public class CommunityController {
 
             String title = CmmUtil.nvl(request.getParameter("title"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
-            long postSeq = Long.parseLong(request.getParameter("postSeq"));
-
+            String postSeq = CmmUtil.nvl(request.getParameter("postSeq"));
 
             PostDTO pDTO = PostDTO.builder()
                     .title(title)
@@ -185,6 +198,12 @@ public class CommunityController {
 
             // 게시글 수정 로직
             if (image != null && !image.isEmpty()) {
+                if (!ALLOWED_FILE_TYPES.contains(image.getContentType())) {
+                    msg = "이미지 파일만 업로드 가능합니다.";
+                    dto = MsgDTO.builder().result(0).msg(msg).build();
+                    return ResponseEntity.ok(CommonResponse.of(HttpStatus.BAD_REQUEST,
+                            HttpStatus.BAD_REQUEST.series().name(), dto));
+                }
                 communityService.updatePost(pDTO, image);
             } else {
                 communityService.updatePost(pDTO);
@@ -222,7 +241,7 @@ public class CommunityController {
         MsgDTO dto;
 
         try {
-            long postSeq = Long.parseLong(request.getParameter("postSeq"));
+            String postSeq = CmmUtil.nvl(request.getParameter("postSeq"));
             log.info("postSeq : " + postSeq);
 
             PostDTO pDTO = PostDTO.builder()
@@ -271,7 +290,7 @@ public class CommunityController {
 
             String comment = CmmUtil.nvl(request.getParameter("comment"));
             String nickName = CmmUtil.nvl(request.getParameter("nickName"));
-            long postSeq = Long.parseLong(request.getParameter("postSeq"));
+            String postSeq = CmmUtil.nvl(request.getParameter("postSeq"));
 
             log.info("comment : " + comment);
             log.info("nickName : " + nickName);
@@ -311,7 +330,7 @@ public class CommunityController {
 
         try {
             String comment = CmmUtil.nvl(request.getParameter("comment"));
-            long commentSeq = Long.parseLong(request.getParameter("commentSeq"));
+            String commentSeq = CmmUtil.nvl(request.getParameter("commentSeq"));
 
             CommentDTO pDTO = CommentDTO.builder()
                     .commentSeq(commentSeq)
@@ -343,7 +362,7 @@ public class CommunityController {
         MsgDTO dto;
 
         try {
-            long commentSeq = Long.parseLong(request.getParameter("commentSeq"));
+            String commentSeq = CmmUtil.nvl(request.getParameter("commentSeq"));
 
             res = communityService.deleteComment(commentSeq);
             msg = "댓글 삭제에 완료하였습니다.";
@@ -358,5 +377,10 @@ public class CommunityController {
         }
 
         return ResponseEntity.ok(CommonResponse.of(HttpStatus.OK, HttpStatus.OK.series().name(), dto));
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteUser(String userId) throws Exception {
+        kafkaService.consume(userId);
     }
 }

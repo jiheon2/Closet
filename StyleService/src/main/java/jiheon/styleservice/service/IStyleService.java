@@ -1,19 +1,22 @@
 package jiheon.styleservice.service;
 
-import jiheon.styleservice.dto.BlobDTO;
+import jiheon.styleservice.dto.ShopDTO;
 import jiheon.styleservice.dto.StyleDTO;
-import org.springframework.ai.document.Document;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IStyleService {
 
     void saveVector(String folderPath);
 
-    List<Document> answer(String question) throws Exception;
+    String answer(String question) throws Exception;
 
-    List<Document> answer(StyleDTO pDTO) throws Exception;
+    String answer(StyleDTO pDTO) throws Exception;
 
-    List<String> styleList() throws Exception;
+    List<String> styleDictionary(String style) throws Exception;
 
+    Map styleInfo(int imageNum) throws Exception;
+
+    List<ShopDTO.Item> shop(String item) throws Exception;
 }

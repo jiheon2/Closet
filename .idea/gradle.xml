@@ -13,15 +13,6 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/AppManager" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/AppManager" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/ClosetService" />
         <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
@@ -54,15 +45,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/FrontService" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/SpringConfigServer" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/SpringConfigServer" />
           </set>
         </option>
       </GradleProjectSettings>

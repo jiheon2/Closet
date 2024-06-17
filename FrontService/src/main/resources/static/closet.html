@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -362,11 +363,12 @@
                 contentType: false
             }).then(function (response) {
                 // 성공 시 처리할 내용 작성
-                console.log("Upload success:", response);
+                alert(response.data.msg);
                 location.reload();
                 // 예를 들어, 등록한 옷의 정보를 화면에 추가하는 등의 작업을 수행할 수 있습니다.
             }).catch(function (xhr, status, error) {
                 // 실패 시 처리할 내용 작성
+                alert(response.data.msg)
                 console.error("Upload error:", error);
                 location.reload();
             });

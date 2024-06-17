@@ -149,6 +149,17 @@
         let nickName = $("#nickName").val();
         let email = $("#email").val();
 
+        if (nickName === "") {
+            alert("닉네임을 입력해주시기 바랍니다.");
+            return;
+        }
+
+        if (email === "") {
+            alert("이메일을 입력해주시기 바랍니다.");
+            return;
+        }
+
+
         console.log(nickName);
         console.log(email);
 
@@ -164,9 +175,16 @@
                 email: email
             }
         }).then(function (json) {
+            if (json.data.result === 1) {
+                alert(json.data.msg);
+                location.href = "/security/login.html";
+            } else {
+                alert(json.data.msg);
+            }
+        }).catch(function (xhr, status, error) {
             alert(json.data.msg);
-            location.href = "/security/login.html";
-        })
+            console.error("error:", error);
+        });
     })
 
 </script>

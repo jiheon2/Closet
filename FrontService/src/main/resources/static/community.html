@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -84,28 +85,18 @@
 <!-- Blog Section Begin -->
 <section class="blog spad">
     <div class="container" style="margin-top: -80px">
-<!--        <div style="text-align: center; margin: 0 auto">-->
+<!--        <div style="text-align: center; margin: 0 auto; align-items: center">-->
 <!--            <input type="text" id="search" style="width: 80%; padding: 4px;">-->
 <!--            <button type="button" onclick="searchPost()" class="btn btn-outline-dark" style="width: 15%">검색</button>-->
 <!--        </div>-->
         <div style="padding: 4px; text-align: center;">
-<!--            <button type="button" onclick="goMyPost()" class="btn btn-outline-dark" style="width: 45%">내가 쓴 글</button>-->
-            <button type="button" onclick="goPostReg()" class="btn btn-outline-dark" style="width: 100%">글 작성</button>
+            <button type="button" onclick="goMyPost()" class="btn btn-outline-dark" style="width: 45%">내가 쓴 글</button>
+            <button type="button" onclick="goPostReg()" class="btn btn-outline-dark" style="width: 45%">글 작성</button>
         </div>
-        <div class="row" style="margin-top: 25px">
+        <div class="row" id="scrollableDiv" style="margin-top: 25px; height: 800px; overflow: auto">
             <div class="col-lg-8">
                 <a class="blog__item__list">
                     <ul style="list-style: none" id="postList">
-                        <li>
-                            <div class="blog__item__quote" onclick="doDetail(postSeq)">
-                                <div></div>
-                                <div style="display: flex; justify-content: space-between">
-                                    <div style="font-size: 12px"></div>
-                                    <div style="font-size: 12px"></div>
-                                    <div style="display: none" class="postSeq"></div>
-                                </div>
-                            </div>
-                        </li>
                     </ul>
                 </a>
             </div>
@@ -153,6 +144,13 @@
 <script src="/js/main.js"></script>
 <script src="/js/common.js"></script>
 <script>
+
+    let page = 0;
+    const size = 10;
+    let isFetching = false;
+
+    loginInfo();
+
     function goPostReg() {
         location.href = "/community/postReg.html"
     }
@@ -161,60 +159,168 @@
         location.href = "/community/postInfo.html?postSeq=" + postSeq;
     }
 
-    // 글내용 불러오기
-    postList();
-
-    // 게시글 불러오기
     function postList() {
+        if (isFetching) return;
+        isFetching = true;
+
         // 컨트롤러에 요청하기
         $.ajax({
-            url: "http://" + apiServer + "/community/v1/postList",
+            url: "http://" + apiServer + "/community/v1/post",
             type: "post",
-            dataType: "JSON",
+            dataType: "json",
+            data: { page: page, size: size },
             xhrFields: {
                 withCredentials: true
+            },
+            success: function(json) {
+                if (json.data.length > 0) {
+                    for (const post of json.data) {
+                        let li = $("<li></li>");
+                        let blogItemQuote = $("<div class='blog__item__quote'></div>");
+
+                        let titleDiv = $("<div></div>").text(post.title);
+
+                        let postListDiv = $("<div></div>").css({"display": "flex", "justify-content": "space-between"});
+
+                        let nicknameDiv = $("<div></div>").css("fontSize", "12px").text(post.nickName);
+
+                        let dateDiv = $("<div></div>").css("fontSize", "12px").text(post.regDt);
+
+                        let postSeq = $("<div></div>").attr("class", "postSeq").css("display", "none").text(post.postSeq);
+
+                        postListDiv.append(nicknameDiv);
+                        postListDiv.append(dateDiv);
+
+                        blogItemQuote.append(titleDiv);
+                        blogItemQuote.append(postListDiv);
+                        blogItemQuote.append(postSeq);
+
+                        // 클릭 이벤트 핸들러 등록
+                        blogItemQuote.click(function () {
+                            doDetail(post.postSeq); // postSeq를 전달하여 doDetail 함수 호출
+                        });
+
+                        li.append(blogItemQuote);
+
+                        $("#postList").append(li);
+                    }
+                    page++;
+                }
+                isFetching = false;
+            },
+            error: function() {
+                isFetching = false;
             }
-        }).then(
-            function (json) {
-                $("#postList").empty();
-
-               for (const post of json.data) {
-
-                   console.log(post);
-
-                   let li = $("<li></li>");
-                   let blogItemQuote = $("<div class='blog__item__quote'></div>");
-
-                   let titleDiv = $("<div></div>").text(post.title);
-
-                   let postListDiv = $("<div></div>").css({"display": "flex", "justify-content": "space-between"});
-
-                   let nicknameDiv = $("<div></div>").css("fontSize", "12px").text(post.nickName);
-
-                   let dateDiv = $("<div></div>").css("fontSize", "12px").text(post.regDt);
-
-                   let postSeq = $("<div></div>").attr("class", "postSeq").css("display", "none").text(post.postSeq);
-
-
-                   postListDiv.append(nicknameDiv);
-                   postListDiv.append(dateDiv);
-
-                   blogItemQuote.append(titleDiv);
-                   blogItemQuote.append(postListDiv);
-                   blogItemQuote.append(postSeq);
-
-                   // 클릭 이벤트 핸들러 등록
-                   blogItemQuote.click(function () {
-                       doDetail(post.postSeq); // postSeq를 전달하여 doDetail 함수 호출
-                   });
-
-                   li.append(blogItemQuote);
-
-                   $("#postList").append(li);
-               }
-            }
-        )
+        });
     }
+
+    // // 특정 div 요소에 스크롤 이벤트 추가
+    // $('.row').scroll(function() {
+    //     const element = $(this);
+    //     if (element.scrollTop() + element.innerHeight() >= element[0].scrollHeight) {
+    //         postList();
+    //     }
+    // });
+    //
+    // // Initial load
+    // postList();
+
+    function goMyPost() {
+        page = 0; // 페이지 초기화
+        $("#postList").empty(); // 리스트 초기화
+        if (isFetching) return;
+        isFetching = true;
+
+
+        // 컨트롤러에 요청하기
+        $.ajax({
+            url: "http://" + apiServer + "/community/v1/myPost",
+            type: "post",
+            dataType: "json",
+            data: { page: page, size: size, userId: loginUserId},
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function(json) {
+                if (json.data.length > 0) {
+                    for (const post of json.data) {
+                        let li = $("<li></li>");
+                        let blogItemQuote = $("<div class='blog__item__quote'></div>");
+
+                        let titleDiv = $("<div></div>").text(post.title);
+
+                        let postListDiv = $("<div></div>").css({"display": "flex", "justify-content": "space-between"});
+
+                        let nicknameDiv = $("<div></div>").css("fontSize", "12px").text(post.nickName);
+
+                        let dateDiv = $("<div></div>").css("fontSize", "12px").text(post.regDt);
+
+                        let postSeq = $("<div></div>").attr("class", "postSeq").css("display", "none").text(post.postSeq);
+
+                        postListDiv.append(nicknameDiv);
+                        postListDiv.append(dateDiv);
+
+                        blogItemQuote.append(titleDiv);
+                        blogItemQuote.append(postListDiv);
+                        blogItemQuote.append(postSeq);
+
+                        // 클릭 이벤트 핸들러 등록
+                        blogItemQuote.click(function () {
+                            doDetail(post.postSeq); // postSeq를 전달하여 doDetail 함수 호출
+                        });
+
+                        li.append(blogItemQuote);
+
+                        $("#postList").append(li);
+                    }
+                    page++;
+                }
+                isFetching = false;
+            },
+            error: function() {
+                isFetching = false;
+            }
+        });
+    }
+
+    // 특정 div 요소에 스크롤 이벤트 추가
+    $('#scrollableDiv').scroll(function() {
+        const element = $(this);
+        if (element.scrollTop() + element.innerHeight() >= element[0].scrollHeight) {
+            postList();
+        }
+    });
+
+    // Initial load
+    postList();
+
+    // 버튼 클릭 시 스크롤 이벤트 변경
+    function setupScrollEventForMyPosts() {
+        $('#scrollableDiv').off('scroll'); // 기존 스크롤 이벤트 제거
+        $('#scrollableDiv').scroll(function() {
+            const element = $(this);
+            if (element.scrollTop() + element.innerHeight() >= element[0].scrollHeight) {
+                goMyPost();
+            }
+        });
+    }
+
+    // "내가 쓴 글" 버튼 클릭 시 스크롤 이벤트 설정
+    $('button:contains("내가 쓴 글")').click(function() {
+        setupScrollEventForMyPosts();
+    });
+
+    // "글 작성" 버튼 클릭 시 스크롤 이벤트 초기화
+    $('button:contains("글 작성")').click(function() {
+        $('#scrollableDiv').off('scroll'); // 기존 스크롤 이벤트 제거
+        $('#scrollableDiv').scroll(function() {
+            const element = $(this);
+            if (element.scrollTop() + element.innerHeight() >= element[0].scrollHeight) {
+                postList();
+            }
+        });
+    });
+
 </script>
 </body>
 

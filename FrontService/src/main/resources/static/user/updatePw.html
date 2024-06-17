@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -138,9 +139,16 @@
 <script src="/js/common.js"></script>
 <script>
 
+    loginInfo();
+
     // 취소 버튼 누를 시 마이페이지로 돌아가기
     function goBack() {
         window.history.back();
+    }
+
+    // 비밀번호 8글자 이상, 영문, 숫자, 특수문자 사용
+    function strongPassword (str) {
+        return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(str);
     }
 
     // 비밀번호 수정
@@ -154,12 +162,15 @@
 
         if (oldPassword === "") {
             alert("기존 비밀번호를 입력하세요.");
-            oldPassword.focus();
             return;
         }
         if (newPassword === "") {
             alert("새 비밀번호를 입력하세요.");
-            newPassword.focus();
+            return;
+        }
+
+        if (strongPassword(newPassword) === false) {
+            alert("비밀번호는 최소 8글자 이상, 알파벳과 숫자와 특수문자를 포함해야합니다.")
             return;
         }
 

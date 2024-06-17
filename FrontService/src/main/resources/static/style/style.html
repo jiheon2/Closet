@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -214,6 +215,21 @@
 <script src="/js/common.js"></script>
 <script>
 
+    loginInfo();
+
+    function showLoadingScreen() {
+        // 로딩 화면을 보여주는 로직
+        document.body.innerHTML = '<iframe src="loading.html" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"></iframe>';
+    }
+
+    function hideLoadingScreen() {
+        // 로딩 화면을 숨기는 로직 (로딩이 완료되면 로딩 화면 iframe을 제거)
+        const iframe = document.querySelector('iframe[src="loading.html"]');
+        if (iframe) {
+            iframe.remove();
+        }
+    }
+
     function addPartsAndSize() {
         addAdditionalParts();
         addSizeOption();
@@ -343,42 +359,107 @@
         }
     }
 
-    function answerSheet() {
-
-        let selectedValue = $('input[name="optionsRadios"]:checked').val();
-        console.log(selectedValue);
-
-        $.ajax({
-            url: "http://" + apiServer + "/style/v1/answerSheet",
-            type: "POST",
-            xhrFields: {
-                withCredentials: true
-            },
-            dataType: "JSON",
-            data: {
-                mainStyle: $("#style").val(),
-                subStyle: $("#additionalSelect").val(),
-                mainCategory: $("#parts").val(),
-                subCategory: $("#additionalParts").val(),
-                age: $("#age").val(),
-                size: $("#size").val(),
-                color: $("#color").val(),
-                gender: selectedValue
-            }
-        }).then(function (json) {
-            console.log(json.data)
-        }).catch(function (xhr, status, error) {
-            console.log("에러입니다.", error)
-        })
+    // 숫자만 가능
+    function onlyNumber(value) {
+        return /^[0-9]{1,2}$/.test(value);
     }
 
     $(document).ready(function () {
-        $("#answerSheet").on("click", function () {
-            answerSheet();
-        })
 
         $("#gpt").on("click", function () {
             location.href = "/style/styleAI.html"
+        })
+
+        $("#answerSheet").on("click", function () {
+
+            let selectedValue = $('input[name="optionsRadios"]:checked').val();
+            console.log("Main Style:", $("#style").val());
+            console.log("Sub Style:", $("#additionalSelect").val());
+            console.log("Main Category:", $("#parts").val());
+            console.log("Sub Category:", $("#additionalParts").val());
+            console.log("Age:", $("#age").val());
+            console.log("Size:", $("#size").val());
+            console.log("Color:", $("#color").val());
+            console.log("Gender:", selectedValue);
+
+            if ($("#style").val() === "none") {
+                alert("메인 스타일을 선택해주시길 바랍니다.")
+                return
+            }
+
+            if ($("#additionalSelect").val() === "none") {
+                alert("서브 스타일을 선택해주시길 바랍니다.")
+                return
+            }
+
+            if ($("#parts").val() === "none") {
+                alert("메인 카테고리를 선택해주시길 바랍니다.")
+                return
+            }
+
+            if ($("#additionalParts").val() === "none") {
+                alert("서브 카테고리를 선택해주시길 바랍니다.")
+                return
+            }
+
+            if ($("#age").val() === "") {
+                alert("나이를 입력해주시길 바랍니다.")
+                return
+            }
+
+            if (onlyNumber($("#age").val()) === false) {
+                alert("숫자만 입력 가능합니다.")
+                return;
+            }
+
+            if ($("#color").val() === "") {
+                alert("색상을 입력해주시길 바랍니다.")
+                return
+            }
+
+            if ($("#size").val() === "none") {
+                alert("핏을 선택해주시길 바랍니다.")
+                return
+            }
+
+            if (selectedValue === "none") {
+                alert("성별을 선택해주시길 바랍니다.")
+                return
+            }
+
+            let formData = new FormData();
+            formData.append("mainStyle", $("#style").val());
+            formData.append("subStyle", $("#additionalSelect").val());
+            formData.append("mainCategory", $("#parts").val());
+            formData.append("subCategory", $("#additionalParts").val());
+            formData.append("age", $("#age").val());
+            formData.append("size", $("#size").val());
+            formData.append("color", $("#color").val());
+            formData.append("gender", selectedValue);
+
+            // 로딩 화면 표시
+            showLoadingScreen();
+
+            $.ajax({
+                url: "http://" + apiServer + "/style/v1/answerSheet",
+                type: "POST",
+                xhrFields: {
+                    withCredentials: true
+                },
+                dataType: "JSON",
+                data: formData,
+                contentType: false,
+                processData: false
+            }).then(function (json) {
+                console.log(json.data)
+                localStorage.setItem('answer',json.data);
+                location.href = '/style/styleList.html'
+            }).catch(function (xhr, status, error) {
+                console.log("에러입니다.", error)
+            }).always(function () {
+                // AJAX 요청 완료 후 로딩 화면 숨기기
+                hideLoadingScreen();
+            });
         })
     })
 

@@ -1,14 +1,54 @@
 spring:
+  application:
+    name: CLOSET-STYLE
   ai:
     openai:
-      api-key: sk-proj-eraW7VPjwFB5FHiuX94BT3BlbkFJUsN32BUAn5KWyJq8mo4W
-  config:
-    import: "optional:configserver:http://localhost:8888/"
+      api-key: 'sk-proj-OZcdjXdSJ45jKfkViXOzT3BlbkFJq6XWUTIp7UB97E7XjnWa'
+      chat:
+        options:
+          model: gpt-4o
+          temperature: 0.7
+    vectorstore:
+      pgvector:
+        index-type: hnsw
+        distance-type: cosine_distance
+        dimensions: 1536
+
   cloud:
-    config:
-      name: style
-      profile: prod
     gcp:
       storage:
+        bucket: msa-style-dictionary
+        project-id: closetproject-419105
         credentials:
           location: StyleService/src/main/resources/closetproject-419105-297cdb4ae5b4.json
+
+  # MongoDB Connection
+  data:
+    mongodb:
+      host: 34.64.55.9
+      port: 27017
+      database: StyleDB
+      username: styleUser
+      password: 1234
+      uri: mongodb://styleUser:1234@34.64.55.9:27017/StyleDB
+
+  datasource:
+    url: jdbc:postgresql://34.64.92.111:5432/style
+    username: styleUser
+    password: 1234
+
+jwt:
+  token:
+    access:
+      name: jwtAccessToken
+
+eureka:
+  client:
+    fetch-registry: 'true'
+    register-with-eureka: 'true'
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+server:
+  port: '18000'
+api:
+  gateway: http://localhost:11000

@@ -149,6 +149,16 @@
         let userId = $("#userId").val();
         let email = $("#email").val();
 
+        if (userId === "") {
+            alert("아이디를 입력해주시기 바랍니다.");
+            return;
+        }
+
+        if (email === "") {
+            alert("이메일을 입력해주시기 바랍니다.");
+            return;
+        }
+
         console.log(email);
         console.log(userId);
 
@@ -164,8 +174,12 @@
                 email: email
             }
         }).then(function (json) {
-            alert(json.data.msg);
-            location.href = "/security/login.html";
+            if (json.data.result === 1) {
+                alert(json.data.msg);
+                location.href = "/security/login.html";
+            } else {
+                alert(json.data.msg);
+            }
         })
     })
 

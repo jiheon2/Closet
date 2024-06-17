@@ -8,15 +8,26 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
         </processorPath>
-        <module name="StyleService.main" />
+        <module name="CommunityService.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="AppManager" target="17" />
+      <module name="AppManager.main" target="17" />
+      <module name="AppManager.test" target="17" />
+      <module name="CloudRun.SpringConfigServer" target="17" />
+      <module name="CloudRun.SpringConfigServer.main" target="17" />
+      <module name="CloudRun.SpringConfigServer.test" target="17" />
       <module name="LangChainService" target="17" />
       <module name="LangChainService.main" target="17" />
       <module name="LangChainService.test" target="17" />
       <module name="ReactService.main" target="17" />
       <module name="ReactService.test" target="17" />
+      <module name="redisSessionService_main" target="17" />
+      <module name="redisSessionService_test" target="17" />
+      <module name="SpringConfigServer" target="17" />
+      <module name="SpringConfigServer.main" target="17" />
+      <module name="SpringConfigServer.test" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

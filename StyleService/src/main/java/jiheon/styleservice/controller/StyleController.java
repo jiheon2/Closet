@@ -7,6 +7,8 @@ import jiheon.styleservice.service.impl.StyleService;
 import jiheon.styleservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +25,14 @@ public class StyleController {
 
     private final StyleService styleService;
 
-    @GetMapping(value = "/saveVector")
-    public void saveVector() throws Exception {
+    @PostMapping(value = "/saveVector")
+    public void saveVector(@RequestParam(value = "folder") String folder) throws Exception {
 
         log.info("[Controller] saveVector Start");
 
-        String folderPath = "C:\\Closet\\StyleService\\src\\main\\resources\\json\\힙합";
+        log.info("folder : " + folder);
+
+        String folderPath = "C:\\Closet\\StyleService\\src\\main\\resources\\json\\" + folder;
 
         styleService.saveVector(folderPath);
 
@@ -75,37 +79,26 @@ public class StyleController {
     }
 
     @PostMapping(value = "/answer")
-    public ResponseEntity<CommonResponse> answer(HttpServletRequest request) throws Exception {
-
-        log.info("[Controller] answer Start");
-
-        String question = CmmUtil.nvl(request.getParameter("question"));
-
-        log.info("question : " + question);
-
-        log.info("[Controller] answer End");
-
+    public ResponseEntity<CommonResponse> answer(@RequestParam(value = "question", defaultValue = "의류 스타일 3가지만 추천해줘") String question) throws Exception {
         return ResponseEntity.ok(CommonResponse.of(
                 HttpStatus.OK, HttpStatus.OK.series().name(), styleService.answer(question)));
     }
-    
-    @PostMapping(value = "/recommend")
-    public ResponseEntity<CommonResponse> recommend() throws Exception {
 
-        log.info("[Controller] recommend Start");
-
-
-
-
-        log.info("[Controller] recommend End");
-
+    @PostMapping(value = "/dictionary")
+    public ResponseEntity<CommonResponse> dictionary(@RequestParam(value = "style", defaultValue = "레트로") String style) throws Exception {
         return ResponseEntity.ok(CommonResponse.of(
-                HttpStatus.OK, HttpStatus.OK.series().name(), null));
+                HttpStatus.OK, HttpStatus.OK.series().name(), styleService.styleDictionary(style)));
     }
 
-    @PostMapping(value = "/list")
-    public ResponseEntity<CommonResponse> list() throws Exception {
+    @PostMapping(value = "/styleInfo")
+    public ResponseEntity<CommonResponse> styleInfo(@RequestParam(value = "imageNum") int imageNum) throws Exception {
         return ResponseEntity.ok(CommonResponse.of(
-                HttpStatus.OK, HttpStatus.OK.series().name(), styleService.styleList()));
+                HttpStatus.OK, HttpStatus.OK.series().name(), styleService.styleInfo(imageNum)));
+    }
+
+    @GetMapping(value = "/shop")
+    public ResponseEntity<CommonResponse> shop(@RequestParam(value = "item") String item) throws Exception {
+        return ResponseEntity.ok(CommonResponse.of(
+                HttpStatus.OK, HttpStatus.OK.series().name(), styleService.shop(item)));
     }
 }

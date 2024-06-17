@@ -15,9 +15,9 @@ public class CommentEntity {
     @Id // MongoDB primary key 지정
     private String id; // MongoDB ObjectId (String 형식으로 저장)
     @Field
-    private long commentSeq; // 댓글 번호
+    private String commentSeq; // 댓글 번호
     @Field
-    private long postSeq; // 게시글 번호
+    private String postSeq; // 게시글 번호
     @Field
     private String userId; // 회원아이디
     @Field

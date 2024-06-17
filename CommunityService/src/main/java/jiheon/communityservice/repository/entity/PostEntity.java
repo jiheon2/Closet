@@ -1,9 +1,7 @@
 package jiheon.communityservice.repository.entity;
 
-import jiheon.communityservice.dto.PostDTO;
 import lombok.Builder;
 import lombok.Getter;
-import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -20,7 +18,7 @@ public class PostEntity {
     @Field
     private String nickName; // 닉네임
     @Field
-    private long postSeq; // 게시글 번호
+    private String postSeq; // 게시글 번호
     @Field
     private String title; // 게시글 제목
     @Field

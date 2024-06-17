@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -106,16 +107,19 @@
                     </div>
                     <div style="float: left; width: 45%">
                         <label for="userId" class="form-label mt-4">age</label>
-                        <input type="text" class="form-control" id="age" name="age" aria-describedby="emailHelp" placeholder="age">
+                        <input type="text" class="form-control" id="age" name="age" aria-describedby="emailHelp"
+                               placeholder="age">
                     </div>
                     <div style="clear: both"></div>
                     <hr>
-                    <div class="card-body" style="float: left; width: 49%">
-                        <button type="button" class="btn btn-danger" style="width: 100%" id="openModalBtn">탈퇴하기</button>
+                    <div class="card-body" style="float: left; width: 33%">
+                        <button type="button" class="btn btn-danger" style="width: 100%" id="openModalBtn">탈퇴</button>
                     </div>
-                    <div class="card-body" style="float: right; width: 49%">
-                        <button id="btnUpdateUserInfo" type="button" class="btn btn-outline-dark" style="width: 100%">내
-                            정보 수정
+                    <div class="card-body" style="float: right; width: 33%">
+                        <button id="btnUpdateUserInfo" type="button" class="btn btn-outline-dark" style="width: 100%">수정</button>
+                    </div>
+                    <div class="card-body" style="float: right; width: 33%">
+                        <button onclick="history.back()" type="button" class="btn btn-outline-dark" style="width: 100%">취소
                         </button>
                     </div>
                 </div>
@@ -202,6 +206,11 @@
         $('#exampleModal').modal('hide');
     });
 
+    // 숫자만 가능
+    function onlyNumber(value) {
+        return /^[0-9]{1,2}$/.test(value);
+    }
+
     let olderEmail = "";
     let olderNickName = "";
 
@@ -218,8 +227,6 @@
         let emailResult = 0;
         let nickNameResult = 0;
 
-        // 로그인 된 사용자인지 확인하기
-        loginInfo();
         console.log(loginUserId);
 
         // 회원정보 가져오기
@@ -258,46 +265,66 @@
                 f.email.focus();
                 return;
             }
-            if (f.userId.value === "") {
-                alert("아이디를 입력하세요.");
-                f.userId.focus();
-                return;
-            }
             if (f.age.value === "") {
                 alert("나이를 입력하세요.");
                 f.age.focus();
                 return;
             }
+            if (onlyNumber(f.age.value) === false) {
+                alert("숫자만 입력 가능합니다.")
+                return;
+            }
+            if (emailResult === 0) {
+                alert("Email 중복확인을 하시길 바랍니다.")
+                return;
+            }
+            if (nickNameResult === 0) {
+                alert("닉네임 중복확인을 하시길 바랍니다.")
+                return;
+            }
 
-            $.ajax({
-                url: "http://" + apiServer + "/user/v1/updateUserInfo",
-                type: "post",
-                dataType: "JSON",
-                xhrFields: {
-                    withCredentials: true
-                },
-                data: $("#f").serializeObject()
-            }).then(
-                function (json) {
-                    if (json.data.result === 1) {
-                        alert(json.data.msg);
-                        console.log("이거실행")
-                        location.href = "/user/myPage.html"
-                    } else {
-                        alert(json.data.msg);
-                        console.log("이거실행")
-                        $("#name").focus();
+            if (emailResult === 1 && nickNameResult === 1) {
+                $.ajax({
+                    url: "http://" + apiServer + "/user/v1/updateUserInfo",
+                    type: "post",
+                    dataType: "JSON",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: $("#f").serializeObject()
+                }).then(
+                    function (json) {
+                        if (json.data.result === 1) {
+                            alert(json.data.msg);
+                            console.log("이거실행")
+                            location.href = "/user/myPage.html"
+                        } else {
+                            alert(json.data.msg);
+                            console.log("이거실행")
+                            $("#name").focus();
+                        }
                     }
-                }
-            )
+                )
+            } else {
+                alert("회원정보 수정에 실패하였습니다. 다시 시도하시길 바랍니다.");
+                return;
+            }
         })
 
         $("#checkEmail").on("click", function () {
+
+                let emailFormat = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
 
                 console.log(olderEmail);
 
                 if (f.email.value === "") {
                     alert("이메일을 입력하세요.");
+                    f.email.focus();
+                    return;
+                }
+
+                if (!emailFormat.test(f.email.value)) {
+                    alert("올바른 이메일 형식으로 입력하세요.");
                     f.email.focus();
                     return;
                 }
@@ -327,6 +354,7 @@
                     )
                 } else {
                     alert("동일한 이메일을 사용합니다.")
+                    emailResult = 1;
                     console.log(f.email.value)
                 }
             }
@@ -367,6 +395,7 @@
                 )
             } else {
                 alert("동일한 닉네임을 사용합니다.");
+                nickNameResult =1;
                 console.log(f.nickName.value);
             }
         })
@@ -405,7 +434,7 @@
                 olderNickName = userInfo.nickName;
             },
             function () {
-                alert("접근 권한이 없습니다.");
+                alert("로그인 해주시길 바랍니다.");
 
             }
         );

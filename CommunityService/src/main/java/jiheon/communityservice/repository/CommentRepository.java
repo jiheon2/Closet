@@ -10,14 +10,13 @@ import java.util.List;
 public interface CommentRepository extends MongoRepository<CommentEntity, String> {
 
     // 댓글 조회
-    List<CommentEntity> findAllByPostSeq(long postSeq);
+    List<CommentEntity> findAllByPostSeq(String postSeq);
 
     // 작성된 댓글 확인하기
-    CommentEntity findByCommentSeq(long commentSeq);
-
-    // 댓글 갯수 세기
-    long count();
+    CommentEntity findByCommentSeq(String commentSeq);
 
     // POST SEQ를 기반으로 삭제
-    void deleteAllByPostSeq(long postSeq);
+    void deleteAllByPostSeq(String postSeq);
+
+    void deleteAllByUserId(String userId);
 }

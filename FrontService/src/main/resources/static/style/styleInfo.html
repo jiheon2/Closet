@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -72,7 +73,7 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>Post</h2>
+                    <h2>스타일 사전</h2>
                 </div>
             </div>
         </div>
@@ -88,40 +89,17 @@
                 <div class="blog__details__content">
                     <div class="blog__details__title">
                         <div style="margin: 25px 10px 25px 10px">
-                            <h3>힙합 스타일</h3>
+                            <h3>스타일 정보</h3>
                         </div>
                     </div>
-                    <img src="/img/blog/details/blog-details.jpg" alt="" style="margin-bottom: 25px">
-                    <div class="blog__details__text">
-                        <div>대분류 : x</div>
-                        <div>소분류 : x</div>
+                    <img id="imageUrl" alt="" style="margin-bottom: 25px">
+                    <div class="blog__details__text" id="imageInfo">
                     </div>
-                    <div class="blog__details__text">
-                        <div>라프 시몬스, 릭 오웬스 등이 2000년대에 틀을 다져 놓았으며 2010년대 중반 카니예 웨스트, 알렉산드로 미켈레, 뎀나 바실리아 등을 필두로 패션 위크에서 메인스트림에 올라선 뒤, 2010년대 후반을 지배했다. 이후 발렌시아가가 하이엔드 스트릿패션을 주도하였으며 스트릿패션이 가라앉은 2022년 이후로도 여전히 좋은 인기를 얻고 있다.
-                        </div>
-                    </div>
-                    <div>댓글</div>
-                    <hr>
-                    <div>
-                        <div style="margin-bottom: 10px; display: flex; justify-content: space-between">
-                            <div style="margin-bottom: 10px;">홍길동</div>
-                            <textarea rows="1" style="overflow: hidden; overflow-wrap: break-word;
-                                      max-height: 500px; width: 80%; border: 0; font-size: 13px; height: 25px; resize: none; outline: 0;">이건 첫번째 댓글입니다.</textarea>
-                            <div style="font-size: 10px">수정</div>
-                        </div>
-                    </div>
-                    <div style="margin: 12px 0; padding: 16px 10px 10px 18px; border: 2px solid darkgray;
-                                border-radius: 6px; box-sizing: border-box; background: white;">
-                        <div style="margin-bottom: 10px">
-                            <div style="margin-bottom: 10px;">작성자</div>
-                            <div style="display: flex">
-                            <textarea placeholder="댓글 남겨보세요" rows="1" style="overflow: hidden; overflow-wrap: break-word;
-                                      max-height: 500px; width: 80%; border: 0; font-size: 13px; height: 25px; resize: none; outline: 0;"></textarea>
-                                <button style="width: 15%; border: 1px solid darkgray; border-radius: 5px; font-size: 13px; height: 25px; resize: none;">
-                                    등록
-                                </button>
-                            </div>
-                        </div>
+                    <div class="answer"></div>
+                    <div style="text-align: center">
+                        <button type="button" class="btn btn-outline-dark" onclick="recommend()">
+                            추천상품 보러가기
+                        </button>
                     </div>
                 </div>
             </div>
@@ -168,6 +146,49 @@
 <script src="/js/slick.min.js"></script>
 <script src="/js/main.js"></script>
 <script src="/js/common.js"></script>
-</body>
+<script>
 
+    loginInfo();
+
+    function imageInfo() {
+        var imageUrl = localStorage.getItem('imageUrl');
+        var imageInfo = localStorage.getItem('imageInfo');
+
+        // 이미지 URL을 <img> 요소에 설정
+        var imgElement = document.getElementById('imageUrl');
+        imgElement.src = imageUrl;
+
+        // 이미지 정보를 객체로 파싱
+        var infoElement = document.getElementById('imageInfo');
+        var infoData = JSON.parse(imageInfo);
+
+        // 라벨링 정보 출력
+        var labelingContent = '';
+        for (var category in infoData.labeling) {
+            if (infoData.labeling.hasOwnProperty(category)) {
+                labelingContent += '<div style="font-size: 15px">' + category + '</div>';
+                infoData.labeling[category].forEach(function (item) {
+                    for (var key in item) {
+                        if (item.hasOwnProperty(key)) {
+                            labelingContent += '<div style="font-size: 12px">' + key + ': ' + item[key] + '</div>';
+                        }
+                    }
+                });
+            }
+        }
+
+        infoElement.innerHTML = labelingContent;
+    }
+
+    function recommend() {
+        let imageInfo = JSON.parse(localStorage.getItem('imageInfo'))
+        let styleArray = imageInfo.labeling.스타일;
+        console.log("styleArray:", JSON.stringify(styleArray));
+        localStorage.setItem("recommend", JSON.stringify(styleArray))
+        location.href = "/style/styleRecommend.html"
+    }
+
+    imageInfo();
+</script>
+</body>
 </html>

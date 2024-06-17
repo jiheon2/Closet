@@ -86,7 +86,8 @@
                     <div>
                         <label for="email" class="form-label mt-4">email</label>
                         <div style="display: flex; justify-content: space-between">
-                            <input type="text" class="form-control" id="email" name="email" placeholder="name" style="width: 75%">
+                            <input type="text" class="form-control" id="email" name="email" placeholder="name"
+                                   style="width: 75%">
                             <button id="checkEmail" class="btn btn-outline-dark" type="button" style="width: 20%">확인
                             </button>
                         </div>
@@ -94,7 +95,8 @@
                     <div>
                         <label for="userId" class="form-label mt-4">ID</label>
                         <div style="display: flex; justify-content: space-between">
-                            <input type="text" class="form-control" id="userId" name="userId" placeholder="ID" style="width: 75%">
+                            <input type="text" class="form-control" id="userId" name="userId" placeholder="ID"
+                                   style="width: 75%">
                             <button id="checkUserId" class="btn btn-outline-dark" type="button" style="width: 20%">확인
                             </button>
                         </div>
@@ -126,11 +128,13 @@
                         </div>
                         <div style="width: 50%">
                             <label for="age" class="form-label mt-4">나이</label>
-                            <input type="text" class="form-control" id="age" name="age" placeholder="age" style="width: 90%">
+                            <input type="text" class="form-control" id="age" name="age" placeholder="age"
+                                   style="width: 90%">
                         </div>
                         <div style="display: none">
                             <label for="age" class="form-label mt-4">isKakao</label>
-                            <input type="text" class="form-control" id="isKakao" value="normal" name="isKakao" placeholder="age" style="width: 90%">
+                            <input type="text" class="form-control" id="isKakao" value="normal" name="isKakao"
+                                   placeholder="age" style="width: 90%">
                         </div>
                     </div>
                     <hr>
@@ -184,6 +188,28 @@
 <script src="/js/jquery.serializeObject.min.js"></script>
 <script type="text/javascript">
 
+    // 유효성 검사 함수
+    // 아이디 글자수 제한 4 ~ 12자
+    function idLength(value) {
+        return value.length >= 4 && value.length <= 12
+    }
+
+    // 아이디 영어 또는 숫자만 가능
+    function onlyNumberAndEnglish(str) {
+        return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(str);
+    }
+
+    // 숫자만 가능
+    function onlyNumber(value) {
+        return /^[0-9]{1,2}$/.test(value);
+    }
+
+
+    // 비밀번호 8글자 이상, 영문, 숫자, 특수문자 사용
+    function strongPassword (str) {
+        return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(str);
+    }
+
     $(document).ready(function () {
 
         let f = document.getElementById("f");
@@ -193,14 +219,22 @@
             ev.preventDefault();
         })
 
-        let emailResult = 0;
-        let nickNameResult = 0;
-        let userIdResult = 0;
+        let emailResult;
+        let nickNameResult;
+        let userIdResult;
 
         $("#checkEmail").on("click", function () {
 
+            let emailFormat = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+
                 if (f.email.value === "") {
                     alert("이메일을 입력하세요.");
+                    f.email.focus();
+                    return;
+                }
+
+                if (!emailFormat.test(f.email.value)) {
+                    alert("올바른 이메일 형식으로 입력하세요.");
                     f.email.focus();
                     return;
                 }
@@ -244,7 +278,7 @@
                 xhrFields: {
                     withCredentials: true
                 },
-                data: {nickName : f.nickName.value}
+                data: {nickName: f.nickName.value}
             }).then(
                 function (json) {
                     if (json.data.result == 1) {
@@ -268,6 +302,18 @@
                 return;
             }
 
+            if (idLength(f.userId.value) === false) {
+                alert("아이디는 4글자 이상 12글자 이하만 입력 가능합니다.");
+                f.userId.focus();
+                return;
+            }
+
+            if (onlyNumberAndEnglish(f.userId.value) === false) {
+                alert("아이디는 영어, 숫자만 입력 가능합니다.");
+                f.userId.focus();
+                return;
+            }
+
             $.ajax({
                 url: "http://" + apiServer + "/security/v1/checkId",
                 type: "post",
@@ -275,7 +321,7 @@
                 xhrFields: {
                     withCredentials: true
                 },
-                data: {userId : f.userId.value}
+                data: {userId: f.userId.value}
             }).then(
                 function (json) {
                     if (json.data.result == 1) {
@@ -315,17 +361,37 @@
                 f.password.focus();
                 return;
             }
+            if (strongPassword(f.password.value) === false) {
+                alert("비밀번호는 최소 8글자 이상, 알파벳과 숫자와 특수문자를 포함해야합니다.")
+                f.password.focus();
+                return;
+            }
             if (f.age.value === "") {
                 alert("나이를 입력하세요.");
                 f.age.focus();
                 return;
+            }
+            if (onlyNumber(f.age.value) === false) {
+                alert("숫자만 입력 가능합니다.")
+                return;
+            }
+            if (userIdResult === undefined) {
+                alert("ID 중복체크를 하시길 바랍니다.");
+                return
+            }
+            if (emailResult === undefined) {
+                alert("Email 중복체크를 하시길 바랍니다.");
+                return
+            }
+            if (nickNameResult === undefined) {
+                alert("닉네임 중복체크를 하시길 바랍니다.")
+                return
             }
 
             console.log(userIdResult)
             console.log(emailResult)
             console.log(nickNameResult)
             if (userIdResult === 1 && emailResult === 1 && nickNameResult === 1) {
-
                 $.ajax({
                     url: "http://" + apiServer + "/security/v1/signUp",
                     type: "post",
@@ -351,6 +417,8 @@
                         }
                     }
                 )
+            } else {
+                alert("회원가입에 실패하였습니다. 다시 시도해주시길 바랍니다.")
             }
         })
     })

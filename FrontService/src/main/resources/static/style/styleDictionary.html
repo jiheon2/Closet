@@ -1,10 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta name="description" content="Staging Template">
+    <meta name="keywords" content="Staging, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Style</title>
 
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Offcanvas Menu Begin -->
+<div class="offcanvas-menu-overlay"></div>
+<div class="offcanvas-menu-wrapper">
+    <div class="offcanvas__logo">
+        <a href="#" style="font-size: 40px; color: white">MyCloset</a>
+    </div>
+    <div id="mobile-menu-wrap"></div>
+</div>
+<!-- Offcanvas Menu End -->
+
+<!-- Header Section Begin -->
+<header class="header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="header__logo">
+                    <a href="#" style="font-size: 40px; color: white">MyCloset</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li class="active"><a id="goIndex" onclick="goToIndex()">Home</a></li>
+                        <li><a id="goMyPage" onclick="goToMyPage()">MyPage</a></li>
+                        <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
+                        <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
+                        <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="canvas__open"><i class="fa fa-bars"></i></div>
+    </div>
+</header>
+<!-- Header Section End -->
+
+
+<!-- Breadcrumb Section Begin -->
+<div class="breadcrumb-option spad set-bg" data-setbg="/img/breadcrumb-bg.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Style Dictionary</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb Section End -->
+
+<!-- Blog Section Begin -->
+<section class="blog spad" style="margin-bottom: -120px">
+    <div class="container" style="margin-top: -90px">
+        <div style="text-align: center; margin: 0 auto">
+            <div style="display: table; border-spacing: 10px; margin: 0 auto;">
+                <div style="display: table-row; font-size: 11px;">
+                    <div style="display: table-cell;" onclick="list('레트로')">레트로</div>
+                    <div style="display: table-cell;" onclick="list('로맨틱')">로맨틱</div>
+                    <div style="display: table-cell;" onclick="list('리조트')">리조트</div>
+                    <div style="display: table-cell;" onclick="list('매니시')">매니시</div>
+                    <div style="display: table-cell;" onclick="list('모던')">모던</div>
+                    <div style="display: table-cell;" onclick="list('밀리터리')">밀리터리</div>
+                    <div style="display: table-cell;" onclick="list('섹시')">섹시</div>
+                    <div style="display: table-cell;" onclick="list('소피스트케이티드')">소피스트케이티드</div>
+                </div>
+                <div style="display: table-row; font-size: 11px;">
+                    <div style="display: table-cell;" onclick="list('스트리트')">스트리트</div>
+                    <div style="display: table-cell;" onclick="list('스포티')">스포티</div>
+                    <div style="display: table-cell;" onclick="list('아방가르드')">아방가르드</div>
+                    <div style="display: table-cell;" onclick="list('오리엔탈')">오리엔탈</div>
+                    <div style="display: table-cell;" onclick="list('웨스턴')">웨스턴</div>
+                    <div style="display: table-cell;" onclick="list('젠더리스')">젠더리스</div>
+                    <div style="display: table-cell;" onclick="list('컨트리')">컨트리</div>
+                    <div style="display: table-cell;" onclick="list('클래식')">클래식</div>
+                </div>
+                <div style="display: table-row; font-size: 11px;">
+                    <div style="display: table-cell;" onclick="list('키치')">키치</div>
+                    <div style="display: table-cell;" onclick="list('톰보이')">톰보이</div>
+                    <div style="display: table-cell;" onclick="list('펑크')">펑크</div>
+                    <div style="display: table-cell;" onclick="list('페미닌')">페미닌</div>
+                    <div style="display: table-cell;" onclick="list('프레피')">프레피</div>
+                    <div style="display: table-cell;" onclick="list('히피')">히피</div>
+                    <div style="display: table-cell;" onclick="list('힙합')">힙합</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="hero" style="margin-top: 20px">
+        <div class="hero__slider owl-carousel" id="slider" style="height: 400px">
+        </div>
+        <div class="slide-num"></div>
+        <div class="slider__progress"><span></span></div>
+    </section>
+</section>
+<!-- Blog Section End -->
+
+<!-- Footer Section Begin -->
+<footer class="footer set-bg" data-setbg="/img/footer-bg.jpg">
+    <div class="container">
+        <div class="copyright" style="margin-top: -90px">
+            <div class="row">
+                <div class="col-lg-8 col-md-7">
+                    <div class="copyright__text">
+                        <p>Copyright ©
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i>
+                            by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-5">
+                    <div class="copyright__widget">
+                        <a href="#">Terms of use</a>
+                        <a href="#">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+<!-- Js Plugins -->
+<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.slicknav.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/slick.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/common.js"></script>
+<script>
+
+    loginInfo();
+
+    let imageNum = "";
+
+    function list(selectedStyle) {
+
+        console.log("selectedStyle : " + selectedStyle);
+
+        $.ajax({
+            url: "http://" + apiServer + "/style/v1/dictionary",
+            type: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                style: selectedStyle
+            },
+            dataType: "JSON"
+        }).then(function (json) {
+            console.log(json.data);
+            let imageArray = Object.values(json.data);
+            console.log(imageArray);
+
+            // Destroy the previous owl carousel instance
+            $('#slider').trigger('destroy.owl.carousel');
+
+            // Remove existing slides
+            $('#slider').empty();
+
+            for (let i = 0; i < imageArray.length; i++) {
+                var newSlide = $('<div class="hero__items set-bg"></div>')
+                    .attr('data-setbg', imageArray[i])
+                    .css('background-size', 'contain')
+                    .css('background-repeat', 'no-repeat')
+
+                // 클릭 이벤트 추가
+                newSlide.click(function() {
+                    // styleInfo 함수 실행
+                    styleInfo(imageArray[i]); // 클릭한 이미지의 정보 전달
+                });
+
+
+                $("#slider").append(newSlide);
+            }
+
+            // Set the background images for newly added slides
+            $('.set-bg').each(function () {
+                var bg = $(this).data('setbg');
+                $(this).css('background-image', 'url(' + bg + ')');
+            });
+
+            $('#slider').owlCarousel({
+                loop: true,
+                margin: 0,
+                items: 1,
+                autoplay: true,
+                nav: true,
+                dots: false,
+                autoplayTimeout: 5000,
+                smartSpeed: 1200,
+                animateOut: 'fadeOut',
+                animateIn: 'fadeIn'
+            });
+
+        }).catch(function (xhr, status, error) {
+            console.log("에러", error);
+        })
+    }
+
+    function styleInfo(imageUrl) {
+        console.log('클릭한 div의 URL:', imageUrl);
+
+        // URL에서 파일 이름 추출
+        var fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1, imageUrl.lastIndexOf('.'));
+        console.log('파일 이름:', fileName);
+
+        $.ajax({
+            url: "http://" + apiServer + "/style/v1/styleInfo",
+            type: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                imageNum: fileName
+            },
+            dataType: "JSON"
+        }).then(function (json) {
+            console.log(json.data);
+            localStorage.setItem("imageUrl", imageUrl);
+            localStorage.setItem("imageInfo", JSON.stringify(json.data))
+            location.href = "/style/styleInfo.html"
+        })
+    };
+
+    list();
+
+</script>
 </body>
+
 </html>

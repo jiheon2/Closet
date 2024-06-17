@@ -14,6 +14,8 @@
     <file type="web" url="file://$PROJECT_DIR$/SpringConfigServer" />
     <file type="web" url="file://$PROJECT_DIR$/StyleService" />
     <file type="web" url="file://$PROJECT_DIR$/UserService" />
+    <file type="web" url="file://$PROJECT_DIR$/../CloudRun/SpringConfigServer" />
+    <file type="web" url="file://$PROJECT_DIR$/../msaJava17/SpringConfigServer" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

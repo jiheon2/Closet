@@ -56,7 +56,8 @@
                         <li><a id="goCloset" onclick="goToCloset()">Closet</a></li>
                         <li><a id="goChatbot" onclick="goToChatbot()">Chatbot</a></li>
                         <li><a id="goCommunity" onclick="goToCommunity()">Community</a></li>
-                        <li><a id="goStyle" onclick="goToStyleDictionary()">Style Dictionary</a></li>
+                        <li><a id="goStyle" onclick="goToStyle()">Style</a></li>
+                        <li><a id="goStyleDictionary" onclick="goToStyleDictionary()">Style Dictionary</a></li>
                     </ul>
                 </nav>
             </div>
@@ -232,6 +233,16 @@
             let time = f.querySelector("#time").innerText;
             let nickName = f.querySelector("#nickName").innerText;
             let contents = f.querySelector("#contents").value;
+
+            if (title === "") {
+                alert("제목을 입력하여 주시기 바랍니다.")
+                return;
+            }
+
+            if (contents === "") {
+                alert("내용을 입력하여 주시기 바랍니다.")
+                return;
+            }
 
             let formData = new FormData();
 
