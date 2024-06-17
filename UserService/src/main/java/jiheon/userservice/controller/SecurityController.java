@@ -1,6 +1,5 @@
 package jiheon.userservice.controller;
 
-import ch.qos.logback.core.util.NetworkAddressUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +14,6 @@ import jiheon.userservice.dto.MsgDTO;
 import jiheon.userservice.dto.UserInfoDTO;
 import jiheon.userservice.service.IRedisService;
 import jiheon.userservice.service.ISecurityService;
-import jiheon.userservice.service.IUserInfoService;
 import jiheon.userservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -311,6 +307,7 @@ public class SecurityController {
         log.info(this.getClass().getName() + ".아이디 찾기");
 
         String msg = ""; // 결과에 대한 메세지를 전달할 변수
+        int res = 0;
         MsgDTO dto; // 결과 메세지 구조
 
         try {
@@ -327,23 +324,24 @@ public class SecurityController {
                     .build();
 
             UserInfoDTO rDTO = securityService.findId(pDTO);
+            log.info("rDTO : " + rDTO);
 
-            log.info("userId : " + rDTO.userId());
-
-            if (rDTO.userId().isEmpty()) {
+            if (rDTO == null) {
                 msg = "아이디가 존재하지 않습니다.";
+                res = 0;
             } else {
                 msg = "회원님의 아이디는 " + rDTO.userId() + "입니다";
+                res = 1;
             }
 
         } catch (Exception e) {
 
-            msg = "실패하였습니다 : " + e;
+            msg = "서버 오류가 발생하였습니다. 다시 시도해주시길 바랍니다.";
             log.info(e.toString());
 
         } finally {
 
-            dto = MsgDTO.builder().result(1).msg(msg).build();
+            dto = MsgDTO.builder().result(res).msg(msg).build();
 
             log.info(this.getClass().getName() + "아이디 찾기 종료");
 
@@ -390,6 +388,7 @@ public class SecurityController {
                 msg = "입력하신 정보가 존재하지 않습니다.";
             }
         } catch (Exception e) {
+            msg = "서버측 오류가 발생하였습니다. 다시 시도해주시길 바랍니다.";
             log.info(e.toString());
         } finally {
             log.info(this.getClass().getName() + ".비밀번호 찾기 종료");

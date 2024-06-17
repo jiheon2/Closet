@@ -1,7 +1,65 @@
 spring:
-  config:
-    import: "optional:configserver:http://localhost:8888/"
-  cloud:
-    config:
-      name: user
-      profile: prod
+  application:
+    name: CLOSET-USER
+  jpa:
+    generate-ddl: 'false'
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        default_batch_fetch_size: 100
+        format_sql: 'true'
+    show-sql: 'true'
+    open-in-viw: 'false'
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    password: '1234'
+    username: user
+    url: jdbc:mariadb://34.64.55.9:3306/userDB
+  data:
+    redis:
+      host: 34.64.55.9
+      port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: user-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer-properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+jwt:
+  token:
+    creator: closet
+    refresh:
+      valid:
+        time: '3000'
+      name: jwtRefreshToken
+    access:
+      valid:
+        time: '3000'
+      name: jwtAccessToken
+  secret:
+    key: '12345678123456781234567812345678123456781234'
+
+eureka:
+  client:
+    fetch-registry: 'true'
+    register-with-eureka: 'true'
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+server:
+  port: '13000'
+api:
+  gateway: http://localhost:11000
+
+kakao:
+  apiKey: ed10bfc27141294be50ae347e58f1008
