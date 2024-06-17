@@ -1,7 +1,29 @@
 spring:
-  config:
-    import: "optional:configserver:http://localhost:8888/"
-  cloud:
-    config:
-      name: gateway
-      profile: prod
+  application:
+    name: CLOSET-GATEWAY
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: 'true'
+    fetch-registry: 'true'
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 11000
+
+jwt:
+  token:
+    creator: closet
+    refresh:
+      valid:
+        time: '3000'
+      name: jwtRefreshToken
+    access:
+      valid:
+        time: '3000'
+      name: jwtAccessToken
+  secret:
+    key: '12345678123456781234567812345678123456781234'
