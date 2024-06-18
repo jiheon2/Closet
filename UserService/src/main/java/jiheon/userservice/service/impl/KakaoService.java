@@ -43,7 +43,7 @@ public class KakaoService implements IKakaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", kakaoKey); // yml파일에 정의
-        body.add("redirect_uri", "http://localhost:13000/kakao/kakaoLogin");
+        body.add("redirect_uri", "http://user:13000/kakao/kakaoLogin");
         body.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);

@@ -2,7 +2,6 @@ package jiheon.userservice.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jiheon.userservice.dto.KafkaDTO;
 import jiheon.userservice.dto.UserInfoDTO;
 import jiheon.userservice.repository.UserInfoRepository;
 import jiheon.userservice.repository.entity.UserInfoEntity;
@@ -10,15 +9,12 @@ import jiheon.userservice.service.IUserInfoService;
 import jiheon.userservice.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Slf4j

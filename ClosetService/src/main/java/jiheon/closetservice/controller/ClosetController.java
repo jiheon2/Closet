@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000"},
+@CrossOrigin(origins = {"http://gateway:11000", "http://front:12000"},
         allowedHeaders = {"Content-Type, Authorization"},
         methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS},
         allowCredentials = "true")

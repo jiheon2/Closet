@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000", "http://localhost:13000"},
+@CrossOrigin(origins = {"http://gateway:11000", "http://front:12000", "http://user:13000"},
         allowedHeaders = {"*"},
         allowCredentials = "true",
         methods = {RequestMethod.POST, RequestMethod.GET},
@@ -84,7 +84,7 @@ public class SecurityController {
         log.info("accessToken : " + accessToken);
 
         ResponseCookie cookie = ResponseCookie.from(accessTokenName, accessToken)
-                .domain("localhost")
+                //.domain("localhost")
                 .path("/")
                 .maxAge(accessTokenValidTime)
                 .httpOnly(true)

@@ -5,7 +5,7 @@ server:
 # Eureka Server name
 spring:
   application:
-    name: CLOSET-EUREKA
+    name: eureka
 
 # Eureka Server
 eureka:

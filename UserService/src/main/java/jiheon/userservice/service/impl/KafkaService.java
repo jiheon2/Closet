@@ -24,7 +24,7 @@ public class KafkaService {
 
         log.info("userId : " + userId);
 
-        String closetUrl = "http://localhost:14000/closet/v1/delete";
+        String closetUrl = "http://closet:14000/closet/v1/delete";
         HttpHeaders closetHeaders = new HttpHeaders();
 
         HttpEntity<String> closetEntity = new HttpEntity<>(userId, closetHeaders);
@@ -34,7 +34,7 @@ public class KafkaService {
             log.error("삭제 요청 중 오류 발생", e);
         }
 
-        String communityUrl = "http://localhost:16000/community/v1/delete";
+        String communityUrl = "http://community:16000/community/v1/delete";
         HttpHeaders communityHeaders = new HttpHeaders();
 
         HttpEntity<String> communityEntity = new HttpEntity<>(userId, communityHeaders);

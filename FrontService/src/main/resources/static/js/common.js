@@ -1,5 +1,5 @@
 // API 서버 정보 기입
-const apiServer = "localhost:11000";
+const apiServer = "gateway:11000";
 const loginPage = "/security/login.html"
 let loginUserId = "";
 

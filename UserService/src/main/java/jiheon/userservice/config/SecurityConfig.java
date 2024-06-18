@@ -78,7 +78,7 @@ public class SecurityConfig {
                         .logoutUrl("/security/v1/logout") // 로그아웃 요청 URL
                         .clearAuthentication(true)
                         .deleteCookies(accessTokenName, refreshTokenName)
-                        .logoutSuccessUrl("http://localhost:12000/security/login.html") // 로그아웃 처리 URL
+                        .logoutSuccessUrl("http://front:12000/security/login.html") // 로그아웃 처리 URL
 
                 ).sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

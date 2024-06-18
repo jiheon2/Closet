@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = {"http://localhost:11000", "http://localhost:12000", "http://localhost:18000"},
+@CrossOrigin(origins = {"http://gateway:11000", "http://front:12000", "http://style:18000"},
         allowCredentials = "true",
         allowedHeaders = {"Content-Type, Authorization"},
         methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})

@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter implements WebFilter {
         log.info("token : " + token);
 
         ResponseCookie cookie = ResponseCookie.from(tokenName, token)
-                .domain("localhost")
+                //.domain("localhost")
                 .path("/")
 //                .secure(true)
 //                .sameSite("None")

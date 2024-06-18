@@ -1,6 +1,6 @@
 spring:
   application:
-    name: CLOSET-USER
+    name: user
   jpa:
     generate-ddl: 'false'
     hibernate:
@@ -24,7 +24,7 @@ spring:
       host: 34.64.55.9
       port: 6379
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: user-group
       auto-offset-reset: earliest
@@ -51,15 +51,17 @@ jwt:
     key: '12345678123456781234567812345678123456781234'
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     fetch-registry: 'true'
     register-with-eureka: 'true'
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka:8761/eureka
 server:
   port: '13000'
 api:
-  gateway: http://localhost:11000
+  gateway: http://gateway:11000
 
 kakao:
   apiKey: ed10bfc27141294be50ae347e58f1008

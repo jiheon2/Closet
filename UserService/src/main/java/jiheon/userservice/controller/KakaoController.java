@@ -84,7 +84,7 @@ public class KakaoController {
 
                 if (res == 1) {
                     log.info("회원가입되었습니다.");
-                    url = "redirect:http://localhost:12000/security/login.html";
+                    url = "redirect:http://front:12000/security/login.html";
                 } else if (res == 2) {
                     log.info("이미 가입된 아이디입니다");
                 }
@@ -94,7 +94,7 @@ public class KakaoController {
                 log.info("accessToken : " + accessToken);
 
                 ResponseCookie cookie = ResponseCookie.from(accessTokenName, accessToken)
-                        .domain("localhost")
+                        //.domain("localhost")
                         .path("/")
                         .maxAge(accessTokenValidTime)
                         .httpOnly(true)
@@ -117,7 +117,7 @@ public class KakaoController {
                 redisService.setValues(refreshToken, infoRes.id());
 
                 log.info("로그인 되었습니다.");
-                url = "redirect:http://localhost:12000/security/afterLogin.html";
+                url = "redirect:http://front:12000/security/afterLogin.html";
             }
         } catch (Exception e) {
             log.info("에러 : " + e);

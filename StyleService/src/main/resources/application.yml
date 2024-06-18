@@ -1,6 +1,6 @@
 spring:
   application:
-    name: CLOSET-STYLE
+    name: style
   ai:
     openai:
       api-key: 'sk-proj-OZcdjXdSJ45jKfkViXOzT3BlbkFJq6XWUTIp7UB97E7XjnWa'
@@ -43,12 +43,14 @@ jwt:
       name: jwtAccessToken
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     fetch-registry: 'true'
     register-with-eureka: 'true'
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka:8761/eureka
 server:
   port: '18000'
 api:
-  gateway: http://localhost:11000
+  gateway: http://gateway:11000
