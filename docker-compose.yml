@@ -3,7 +3,7 @@ services:
   gateway:
     image: docker.io/jiheonk/msa/gateway:latest
     build:
-      context: ./gateway
+      context: ./ApiGateway
     ports:
       - "11000:11000"
     depends_on:
@@ -11,20 +11,19 @@ services:
       - user
       - closet
       - community
-      - user
       - style
 
   eureka:
     image: docker.io/jiheonk/msa/eureka:latest
     build:
-      context: ./eureka
+      context: ./EurekaServer
     ports:
       - "8761:8761"
 
   user:
     image: docker.io/jiheonk/msa/user:latest
     build:
-      context: ./user
+      context: ./UserService
     ports:
       - "13000:13000"
     environment:
@@ -33,7 +32,7 @@ services:
   closet:
     image: docker.io/jiheonk/msa/closet:latest
     build:
-      context: ./closet
+      context: ./ClosetService
     ports:
       - "14000:14000"
     environment:
@@ -42,7 +41,7 @@ services:
   community:
     image: docker.io/jiheonk/msa/community:latest
     build:
-      context: ./community
+      context: ./CommunityService
     ports:
       - "16000:16000"
     environment:
@@ -51,7 +50,7 @@ services:
   style:
     image: docker.io/jiheonk/msa/style:latest
     build:
-      context: ./style
+      context: ./StyleService
     ports:
       - "18000:18000"
     environment:
@@ -60,7 +59,7 @@ services:
   front:
     image: docker.io/jiheonk/msa/front:latest
     build:
-      context: ./front
+      context: ./FrontService
     ports:
       - "12000:12000"
 
