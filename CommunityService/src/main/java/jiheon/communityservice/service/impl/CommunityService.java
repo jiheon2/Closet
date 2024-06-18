@@ -64,6 +64,22 @@ public class CommunityService implements ICommunityService {
         return result.getCommentSeq();
     }
 
+    public String findMaxPostValue() {
+        PostEntity result = mongoTemplate.aggregate(
+                Aggregation.newAggregation(
+                        Aggregation.group().max("postSeq").as("postSeq")
+                ),
+                "post",
+                PostEntity.class
+        ).getUniqueMappedResult();
+
+        if (result == null) {
+            return "0"; // 기본값으로 0을 반환
+        }
+
+        return result.getPostSeq();
+    }
+
     @Override
     public List<PostDTO> post(int page, int size) throws Exception {
 
@@ -117,7 +133,7 @@ public class CommunityService implements ICommunityService {
             String title = CmmUtil.nvl(pDTO.title());
             String contents = CmmUtil.nvl(pDTO.contents());
             String regDt = CmmUtil.nvl(pDTO.regDt());
-            long postSeq = postRepository.count() + 1;
+            int postSeq = Integer.parseInt(findMaxPostValue()) + 1;
 
             log.info("userId : " + userId);
             log.info("nickName : " + nickName);
@@ -172,7 +188,7 @@ public class CommunityService implements ICommunityService {
             String title = CmmUtil.nvl(pDTO.title());
             String contents = CmmUtil.nvl(pDTO.contents());
             String regDt = CmmUtil.nvl(pDTO.regDt());
-            long postSeq = postRepository.count() + 1;
+            int postSeq = Integer.parseInt(findMaxPostValue()) + 1;
 
             log.info("userId : " + userId);
             log.info("nickName : " + nickName);
